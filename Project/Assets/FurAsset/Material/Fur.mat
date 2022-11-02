@@ -1,0 +1,122 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 6
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Fur
+  m_Shader: {fileID: 4800000, guid: f76f99c6965924734bb8f867a1d6d182, type: 3}
+  m_ShaderKeywords: _BRDF _NORMALMAP
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _AnisoMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _BumpMap:
+        m_Texture: {fileID: 2800000, guid: 928b919063a51c0419938a86dfc30832, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _DetailAlbedoMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _DetailMask:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _DetailNormalMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _EmissionMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _ForceMap:
+        m_Texture: {fileID: 2800000, guid: 2c7949f59f9814b7188c3fd11f48f06a, type: 3}
+        m_Scale: {x: 10, y: 5}
+        m_Offset: {x: 5.87462, y: 0}
+    - _FurGrowthMap:
+        m_Texture: {fileID: 2800000, guid: 728b905965f1246f99602c9d57d2f104, type: 3}
+        m_Scale: {x: 5, y: 5}
+        m_Offset: {x: 0, y: 0}
+    - _LayerTex:
+        m_Texture: {fileID: 2800000, guid: ed6c26386a1b64a0ab1c3733e728a74b, type: 3}
+        m_Scale: {x: 20, y: 20}
+        m_Offset: {x: 0, y: 0}
+    - _MainTex:
+        m_Texture: {fileID: 2800000, guid: 79796825a2ee329439a7e85260061098, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _MetallicGlossMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _OcclusionMap:
+        m_Texture: {fileID: 2800000, guid: de207d8f5cd3bc944807063352ece8be, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _ParallaxMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _TipLocateMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Floats:
+    - _AO: 0.22
+    - _AnisoGloss1: 0.7
+    - _AnisoGloss2: 0.7
+    - _AnisoSpec1: 3
+    - _AnisoSpec2: 3
+    - _BumpScale: 1
+    - _Cutoff: 0.032
+    - _CutoffEnd: 0.536
+    - _DetailNormalMapScale: 1
+    - _DstBlend: 10
+    - _EdgeFade: 0.521
+    - _FabricScatterScale: 0
+    - _ForceMapScale: 0.452
+    - _FurGrowth: 0.075
+    - _FurLength: 0.1
+    - _GlossMapScale: 1
+    - _Glossiness: 0.48
+    - _GlossyReflections: 1
+    - _GravityStrength: 0.25
+    - _LayerChoice: 0
+    - _Metallic: 0
+    - _Mode: 0
+    - _OcclusionStrength: 1
+    - _Parallax: 0.02
+    - _RenderChoice: 0
+    - _SmoothnessTextureChannel: 0
+    - _SpecularHighlights: 1
+    - _SrcBlend: 5
+    - _TangentDir: 0
+    - _TangentShift1: 0
+    - _TangentShift2: 0
+    - _TipChoice: 0
+    - _TipControl: 5
+    - _UVSec: 0
+    - _ZWrite: 1
+    m_Colors:
+    - _Color: {r: 1, g: 1, b: 1, a: 1}
+    - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
+    - _FabricScatterColor: {r: 1, g: 1, b: 1, a: 1}
+    - _Gravity: {r: 0, g: 0, b: 1, a: 0}
+    - _RotationSpot: {r: 0, g: 0, b: 0, a: 1}
+    - _SpecColor1: {r: 1, g: 1, b: 1, a: 1}
+    - _SpecColor2: {r: 1, g: 1, b: 1, a: 1}
+    - _TipColor: {r: 1, g: 1, b: 1, a: 1}
