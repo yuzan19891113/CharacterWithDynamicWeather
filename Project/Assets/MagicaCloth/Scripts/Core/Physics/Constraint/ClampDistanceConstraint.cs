@@ -177,6 +177,7 @@ namespace MagicaCloth
 
                 flagList = Manager.Particle.flagList.ToJobArray(),
                 nextPosList = Manager.Particle.InNextPosList.ToJobArray(),
+                basePosList = Manager.Particle.basePosList.ToJobArray(),
 
                 posList = Manager.Particle.posList.ToJobArray(),
                 frictionList = Manager.Particle.frictionList.ToJobArray(),
@@ -212,6 +213,8 @@ namespace MagicaCloth
             public NativeArray<PhysicsManagerParticleData.ParticleFlag> flagList;
             [NativeDisableParallelForRestriction]
             public NativeArray<float3> nextPosList;
+            [Unity.Collections.ReadOnly]
+            public NativeArray<float3> basePosList;
             public NativeArray<float3> posList;
             [Unity.Collections.ReadOnly]
             public NativeArray<float> frictionList;
@@ -241,7 +244,11 @@ namespace MagicaCloth
                 if (gdata.active == 0)
                     return;
 
+                // アニメーションされた距離の使用
+                bool useAnimatedDistance = team.IsFlag(PhysicsManagerTeamData.Flag_AnimatedDistance);
+
                 var nextpos = nextPosList[index];
+                var basepos = basePosList[index];
 
                 // 参照データ情報
                 var refdata = refDataList[gdata.refChunk.startIndex + vindex];
@@ -261,6 +268,11 @@ namespace MagicaCloth
 
                     // 復元長さ
                     float length = data.length; // v1.7.0
+                    if (useAnimatedDistance)
+                    {
+                        // アニメーションされた距離を使用
+                        length = math.distance(basepos, basePosList[pindex2]);
+                    }
                     length *= team.scaleRatio; // チームスケール倍率
 
                     // ベクトル長クランプ

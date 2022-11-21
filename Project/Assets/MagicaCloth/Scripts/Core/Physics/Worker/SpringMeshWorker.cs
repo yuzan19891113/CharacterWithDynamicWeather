@@ -137,8 +137,10 @@ namespace MagicaCloth
                 flagList = Manager.Particle.flagList.ToJobArray(),
                 particlePosList = Manager.Particle.posList.ToJobArray(),
                 particleRotList = Manager.Particle.rotList.ToJobArray(),
-                particleBasePosList = Manager.Particle.basePosList.ToJobArray(),
-                particleBaseRotList = Manager.Particle.baseRotList.ToJobArray(),
+                //particleBasePosList = Manager.Particle.basePosList.ToJobArray(),
+                //particleBaseRotList = Manager.Particle.baseRotList.ToJobArray(),
+                snapBasePosList = Manager.Particle.snapBasePosList.ToJobArray(),
+                snapBaseRotList = Manager.Particle.snapBaseRotList.ToJobArray(),
 
                 virtualPosList = Manager.Mesh.virtualPosList.ToJobArray(),
                 virtualVertexFlagList = Manager.Mesh.virtualVertexFlagList.ToJobArray(),
@@ -165,10 +167,14 @@ namespace MagicaCloth
             public NativeArray<float3> particlePosList;
             [Unity.Collections.ReadOnly]
             public NativeArray<quaternion> particleRotList;
+            //[Unity.Collections.ReadOnly]
+            //public NativeArray<float3> particleBasePosList;
+            //[Unity.Collections.ReadOnly]
+            //public NativeArray<quaternion> particleBaseRotList;
             [Unity.Collections.ReadOnly]
-            public NativeArray<float3> particleBasePosList;
+            public NativeArray<float3> snapBasePosList;
             [Unity.Collections.ReadOnly]
-            public NativeArray<quaternion> particleBaseRotList;
+            public NativeArray<quaternion> snapBaseRotList;
 
             [NativeDisableParallelForRestriction]
             public NativeArray<float3> virtualPosList;
@@ -231,8 +237,10 @@ namespace MagicaCloth
                         var prot = particleRotList[pindex];
 
                         // パーティクル原点姿勢
-                        var pbpos = particleBasePosList[pindex];
-                        var pbrot = particleBaseRotList[pindex];
+                        //var pbpos = particleBasePosList[pindex];
+                        //var pbrot = particleBaseRotList[pindex];
+                        var pbpos = snapBasePosList[pindex];
+                        var pbrot = snapBaseRotList[pindex];
                         var ivpbrot = math.inverse(pbrot);
 
                         // (1)パーティクルBaseからの相対位置

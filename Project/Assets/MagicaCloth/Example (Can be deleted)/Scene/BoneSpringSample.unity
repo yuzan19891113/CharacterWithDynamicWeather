@@ -268,60 +268,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 298924975}
   m_CullTransparentMesh: 0
---- !u!114 &913791984
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0548f9dc46468d94c96cbbd1e5c05f74, type: 3}
-  m_Name: BoneSpringData_BoneSpring
-  m_EditorClassIdentifier: 
-  dataHash: -289598664
-  dataVersion: 5
-  useVertexList: 00000000
-  selectionData: 01000000
-  maxLevel: 1
-  vertexFlagLevelList: 00000100
-  vertexDepthList:
-  - 0
-  rootList: ffffffff
-  parentList: ffffffff
-  structDistanceDataList: []
-  structDistanceReferenceList: []
-  bendDistanceDataList: []
-  bendDistanceReferenceList: []
-  nearDistanceDataList: []
-  nearDistanceReferenceList: []
-  rootDistanceDataList: []
-  rootDistanceReferenceList: []
-  clampDistance2DataList: []
-  clampDistance2RootInfoList: []
-  restoreRotationDataList: []
-  restoreRotationReferenceList: []
-  clampRotationDataList: []
-  clampRotationRootInfoList: []
-  adjustRotationDataList: []
-  triangleBendDataList: []
-  triangleBendReferenceList: []
-  triangleBendWriteBufferCount: 0
-  volumeDataList: []
-  volumeReferenceList: []
-  volumeWriteBufferCount: 0
-  lineRotationDataList: []
-  lineRotationRootInfoList: []
-  triangleRotationDataList: []
-  triangleRotationIndexList: 
-  edgeCollisionDataList: []
-  edgeCollisionReferenceList: []
-  edgeCollisionWriteBufferCount: 0
-  penetrationDataList: []
-  penetrationReferenceList: []
-  penetrationMode: 0
-  initScale: {x: 1.0000002, y: 1, z: 1.0000002}
 --- !u!1 &961339451
 GameObject:
   m_ObjectHideFlags: 0
@@ -788,8 +734,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 64cf32dda670fde4198398db706c7d1b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dataHash: -715961406
-  dataVersion: 5
+  dataHash: -1279804519
+  dataVersion: 7
   teamData:
     colliderList: []
     penetrationIgnoreColliderList: []
@@ -797,7 +743,9 @@ MonoBehaviour:
   userBlendWeight: 1
   updateMode: 0
   cullingMode: 0
+  useAnimatedDistance: 0
   clothParams:
+    algorithm: 1
     radius:
       startValue: 0.02
       endValue: 0.02
@@ -881,6 +829,12 @@ MonoBehaviour:
       useEndValue: 1
       curveValue: 0
       useCurveValue: 0
+    clampRotationAngle2:
+      startValue: 0
+      endValue: 45
+      useEndValue: 1
+      curveValue: 0
+      useCurveValue: 0
     clampRotationVelocityLimit: 1
     clampRotationVelocityInfluence: 0.3
     restoreDistanceVelocityInfluence: 1
@@ -920,7 +874,14 @@ MonoBehaviour:
       useEndValue: 1
       curveValue: 0
       useCurveValue: 0
+    restoreRotation2:
+      startValue: 0.05
+      endValue: 0.005
+      useEndValue: 1
+      curveValue: 0
+      useCurveValue: 0
     restoreRotationVelocityInfluence: 0.2
+    restoreRotationVelocityInfluence2: 0.2
     useSpring: 1
     springPower: 0.005
     springRadius: 0.17
@@ -943,9 +904,16 @@ MonoBehaviour:
     adjustMode: 1
     adjustRotationPower: 5
     useTriangleBend: 0
+    useTriangleBendTwistCorrection: 1
     triangleBend:
       startValue: 0.5
       endValue: 0.5
+      useEndValue: 1
+      curveValue: 0
+      useCurveValue: 0
+    triangleBend2:
+      startValue: 1
+      endValue: 1
       useEndValue: 1
       curveValue: 0
       useCurveValue: 0
@@ -990,16 +958,16 @@ MonoBehaviour:
       useCurveValue: 0
     useLineAvarageRotation: 1
     useFixedNonRotation: 0
-  clothParamDataHashList: 00000000000000000000000000000000000000000000000000000000f61b9937000000000000000000000000d0d3bfb3000000000000000000000000000000000000000000000000000000000000000000000000
-  clothData: {fileID: 913791984}
-  clothDataHash: -289598664
+  clothParamDataHashList: 00000000000000000000000000000000000000000000000000000000f61b9937000000000000000000000000d0d3bfb3000000000000000000000000000000000000000000000000000000000000000000000000f61b9937
+  clothData: {fileID: 1625412818}
+  clothDataHash: -853441777
   clothDataVersion: 5
   clothSelection: {fileID: 0}
   clothSelectionHash: 0
   clothSelectionVersion: 0
   cullRendererList:
   - {fileID: 1211961748}
-  meshData: {fileID: 1697352741}
+  meshData: {fileID: 2088134334}
   meshDataHash: 600315589
   meshDataVersion: 2
   clothTarget:
@@ -1081,7 +1049,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1697352741
+--- !u!114 &1625412818
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1090,26 +1058,57 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2b8ed8fdca875474bbc1b8d6dcfb79bc, type: 3}
-  m_Name: BoneSpringMeshData_BoneSpring
+  m_Script: {fileID: 11500000, guid: 0548f9dc46468d94c96cbbd1e5c05f74, type: 3}
+  m_Name: BoneSpringData_BoneSpring
   m_EditorClassIdentifier: 
-  dataHash: 600315589
-  dataVersion: 2
-  isSkinning: 0
-  vertexCount: 1
-  vertexInfoList: 00000010
-  vertexWeightList: []
-  vertexHashList: 
-  uvList: []
-  lineCount: 0
-  lineList: 
-  triangleCount: 0
-  triangleList: 
-  boneCount: 0
-  vertexToTriangleInfoList: 
-  vertexToTriangleIndexList: 
-  childDataList: []
-  baseScale: {x: 0, y: 0, z: 0}
+  dataHash: -853441777
+  dataVersion: 5
+  triangleBendAlgorithm: 1
+  restoreRotationAlgorithm: 1
+  clampRotationAlgorithm: 1
+  useVertexList: 00000000
+  selectionData: 01000000
+  maxLevel: 1
+  vertexFlagLevelList: 00000100
+  vertexDepthList:
+  - 0
+  rootList: ffffffff
+  parentList: ffffffff
+  structDistanceDataList: []
+  structDistanceReferenceList: []
+  bendDistanceDataList: []
+  bendDistanceReferenceList: []
+  nearDistanceDataList: []
+  nearDistanceReferenceList: []
+  rootDistanceDataList: []
+  rootDistanceReferenceList: []
+  clampDistance2DataList: []
+  clampDistance2RootInfoList: []
+  restoreRotationDataList: []
+  restoreRotationReferenceList: []
+  clampRotationDataList: []
+  clampRotationRootInfoList: []
+  compositeRotationDataList: []
+  compositeRotationRootInfoList: []
+  twistDataList: []
+  adjustRotationDataList: []
+  triangleBendDataList: []
+  triangleBendReferenceList: []
+  triangleBendWriteBufferCount: 0
+  volumeDataList: []
+  volumeReferenceList: []
+  volumeWriteBufferCount: 0
+  lineRotationDataList: []
+  lineRotationRootInfoList: []
+  triangleRotationDataList: []
+  triangleRotationIndexList: 
+  edgeCollisionDataList: []
+  edgeCollisionReferenceList: []
+  edgeCollisionWriteBufferCount: 0
+  penetrationDataList: []
+  penetrationReferenceList: []
+  penetrationMode: 0
+  initScale: {x: 1.0000002, y: 1, z: 1.0000002}
 --- !u!1 &1836509488
 GameObject:
   m_ObjectHideFlags: 0
@@ -1317,6 +1316,35 @@ MonoBehaviour:
   m_ChildForceExpandHeight: 1
   m_ChildControlWidth: 0
   m_ChildControlHeight: 0
+--- !u!114 &2088134334
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2b8ed8fdca875474bbc1b8d6dcfb79bc, type: 3}
+  m_Name: BoneSpringMeshData_BoneSpring
+  m_EditorClassIdentifier: 
+  dataHash: 600315589
+  dataVersion: 2
+  isSkinning: 0
+  vertexCount: 1
+  vertexInfoList: 00000010
+  vertexWeightList: []
+  vertexHashList: 
+  uvList: []
+  lineCount: 0
+  lineList: 
+  triangleCount: 0
+  triangleList: 
+  boneCount: 0
+  vertexToTriangleInfoList: 
+  vertexToTriangleIndexList: 
+  childDataList: []
+  baseScale: {x: 0, y: 0, z: 0}
 --- !u!1001 &2547635729620357194
 PrefabInstance:
   m_ObjectHideFlags: 0

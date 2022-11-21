@@ -520,6 +520,112 @@ namespace MagicaCloth
         }
 
         /// <summary>
+        /// 頂点が接続するトライアングルを辞書にして返す
+        /// </summary>
+        /// <param name="triangleList"></param>
+        /// <returns></returns>
+        public static Dictionary<int, HashSet<int>> GetVertexToTriangles(List<int> triangleList)
+        {
+            var vtdict = new Dictionary<int, HashSet<int>>();
+
+            for (int i = 0; i < triangleList.Count; i++)
+            {
+                int vindex = triangleList[i];
+                int tindex = i / 3;
+
+                if (vtdict.ContainsKey(vindex) == false)
+                    vtdict.Add(vindex, new HashSet<int>());
+                vtdict[vindex].Add(tindex);
+            }
+
+            return vtdict;
+        }
+
+        /// <summary>
+        /// ポリゴン番号とその２つの頂点を与え、残り１つの頂点番号を返す
+        /// </summary>
+        /// <param name="tindex"></param>
+        /// <param name="v0"></param>
+        /// <param name="v1"></param>
+        /// <param name="triangleList"></param>
+        /// <returns></returns>
+        public static int RestTriangleVertex(int tindex, int v0, int v1, List<int> triangleList)
+        {
+            int index = tindex * 3;
+            for (int i = 0; i < 3; i++)
+            {
+                int n = triangleList[index + i];
+                if (n != v0 && n != v1)
+                    return n;
+            }
+
+            return 0;
+        }
+
+        /// <summary>
+        /// トライアングル番頭とその１つの頂点を与え、残りの２つの頂点番号を返す
+        /// </summary>
+        /// <param name="tindex"></param>
+        /// <param name="v0"></param>
+        /// <param name="triangleList"></param>
+        /// <param name="v1"></param>
+        /// <param name="v2"></param>
+        public static void RestTriangleVertex(int tindex, int v0, List<int> triangleList, out int v1, out int v2)
+        {
+            int index = tindex * 3;
+            int n0 = triangleList[index];
+            int n1 = triangleList[index + 1];
+            int n2 = triangleList[index + 2];
+
+            if (n0 == v0)
+            {
+                v1 = n1;
+                v2 = n2;
+            }
+            else if (n1 == v0)
+            {
+                v1 = n0;
+                v2 = n2;
+            }
+            else if (n2 == v0)
+            {
+                v1 = n0;
+                v2 = n1;
+            }
+            else
+            {
+                Debug.LogError("RestTriangleVertex() failed!");
+                v1 = -1;
+                v2 = -1;
+            }
+        }
+
+        /// <summary>
+        /// ２つのトライアングルが隣接しているか判定する
+        /// </summary>
+        /// <param name="tindex0"></param>
+        /// <param name="tindex1"></param>
+        /// <param name="triangleList"></param>
+        /// <returns></returns>
+        public static bool CheckAdjacentTriangle(int tindex0, int tindex1, List<int> triangleList)
+        {
+            int index0 = tindex0 * 3;
+            int index1 = tindex1 * 3;
+            int cnt = 0;
+            for (int i = 0; i < 3; i++, index0++)
+            {
+                int v = triangleList[index0];
+                for (int j = 0; j < 3; j++)
+                {
+                    if (v == triangleList[index1 + j])
+                        cnt++;
+                }
+            }
+
+            return cnt >= 2;
+        }
+
+        /// <summary>
         /// エッジをキーとして隣接するトライアングルインデックスを辞書に変換して返す
         /// </summary>
         /// <param name="vcnt"></param>

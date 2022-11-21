@@ -942,18 +942,28 @@ namespace MagicaCloth
                 int pindex0 = team.ParticleChunk.startIndex + data.vindex0;
                 int pindex1 = team.ParticleChunk.startIndex + data.vindex1;
                 int pindex2 = team.ParticleChunk.startIndex + data.vindex2;
-                int pindex3 = team.ParticleChunk.startIndex + data.vindex3;
 
                 Vector3 pos0 = manager.Particle.posList[pindex0];
                 Vector3 pos1 = manager.Particle.posList[pindex1];
                 Vector3 pos2 = manager.Particle.posList[pindex2];
-                Vector3 pos3 = manager.Particle.posList[pindex3];
 
-                Gizmos.DrawLine(pos0, pos2);
-                Gizmos.DrawLine(pos0, pos3);
-                Gizmos.DrawLine(pos2, pos3);
-                Gizmos.DrawLine(pos2, pos1);
-                Gizmos.DrawLine(pos3, pos1);
+                if (data.IsPositionBend() == false)
+                {
+                    int pindex3 = team.ParticleChunk.startIndex + data.vindex3;
+                    Vector3 pos3 = manager.Particle.posList[pindex3];
+
+                    Gizmos.DrawLine(pos0, pos2);
+                    Gizmos.DrawLine(pos0, pos3);
+                    Gizmos.DrawLine(pos2, pos3);
+                    Gizmos.DrawLine(pos2, pos1);
+                    Gizmos.DrawLine(pos3, pos1);
+                }
+                else
+                {
+                    Gizmos.DrawLine(pos0, pos1);
+                    Gizmos.DrawLine(pos0, pos2);
+                    Gizmos.DrawLine(pos1, pos2);
+                }
             }
         }
 
@@ -982,18 +992,28 @@ namespace MagicaCloth
                 int vindex0 = clothData.useVertexList[data.vindex0];
                 int vindex1 = clothData.useVertexList[data.vindex1];
                 int vindex2 = clothData.useVertexList[data.vindex2];
-                int vindex3 = clothData.useVertexList[data.vindex3];
 
                 Vector3 pos0 = posList[vindex0];
                 Vector3 pos1 = posList[vindex1];
                 Vector3 pos2 = posList[vindex2];
-                Vector3 pos3 = posList[vindex3];
 
-                Gizmos.DrawLine(pos0, pos2);
-                Gizmos.DrawLine(pos0, pos3);
-                Gizmos.DrawLine(pos2, pos3);
-                Gizmos.DrawLine(pos2, pos1);
-                Gizmos.DrawLine(pos3, pos1);
+                if (data.IsPositionBend() == false)
+                {
+                    int vindex3 = clothData.useVertexList[data.vindex3];
+                    Vector3 pos3 = posList[vindex3];
+
+                    Gizmos.DrawLine(pos0, pos2);
+                    Gizmos.DrawLine(pos0, pos3);
+                    Gizmos.DrawLine(pos2, pos3);
+                    Gizmos.DrawLine(pos2, pos1);
+                    Gizmos.DrawLine(pos3, pos1);
+                }
+                else
+                {
+                    Gizmos.DrawLine(pos0, pos1);
+                    Gizmos.DrawLine(pos0, pos2);
+                    Gizmos.DrawLine(pos1, pos2);
+                }
             }
         }
 

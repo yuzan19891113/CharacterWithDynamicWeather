@@ -284,7 +284,8 @@ namespace MagicaCloth
             {
                 // 参照カウンタ＋
                 boneIndex = boneList.Add(target);
-                if (addParent && boneParentIndexList[boneIndex] < 0)
+                // 親ボーンは後登録優先の上書き方式にする(v1.10.2)
+                if (addParent)
                 {
                     boneParentIndexList[boneIndex] = boneList.GetIndex(target.parent);
                 }
@@ -401,6 +402,7 @@ namespace MagicaCloth
                 if (writeBoneList.Exist(writeIndex) == false)
                 {
                     boneToWriteIndexDict.Remove(boneIndex);
+                    //Debug.Log("RemoveWriteBone: index:" + boneIndex);
                 }
             }
 
@@ -577,6 +579,13 @@ namespace MagicaCloth
 
                     // FixedUpdate更新での未来予測補間率を求める
                     float fixedFutureRatio = updateTime.FixedUpdateCount > 0 ? (1.0f / updateTime.FixedUpdateCount) * futureRate : 0.0f;
+#if true
+                    // 次に予想されるフレーム時間を加算することにより実行されるFixedUpdateの回数を予測する
+                    float fixedNextTime = Time.time + Time.smoothDeltaTime;
+                    float fixedInterval = fixedNextTime - Time.fixedTime;
+                    int nextFixedCount = math.max((int)(fixedInterval / Time.fixedDeltaTime), 1);
+                    fixedFutureRatio *= nextFixedCount;
+#endif
 
                     //Debug.Log($"normalFutureRatio = {normalFutureRatio}");
 
@@ -586,6 +595,8 @@ namespace MagicaCloth
                         fixedUpdateCount = updateTime.FixedUpdateCount,
                         normalFutureRatio = normalFutureRatio,
                         fixedFutureRatio = fixedFutureRatio,
+                        normalDeltaTime = Time.smoothDeltaTime,
+                        fixedDeltaTime = Time.fixedDeltaTime,
 
                         bonePosList = bonePosList.ToJobArray(),
                         boneRotList = boneRotList.ToJobArray(),
@@ -696,6 +707,8 @@ namespace MagicaCloth
             public int fixedUpdateCount;
             public float normalFutureRatio;
             public float fixedFutureRatio;
+            public float normalDeltaTime;
+            public float fixedDeltaTime;
 
             [Unity.Collections.WriteOnly]
             public NativeArray<float3> bonePosList;
@@ -752,10 +765,28 @@ namespace MagicaCloth
                         basePosList[index] = pos;
                         baseRotList[index] = rot;
 
+                        // 速度制限(v1.11.1)
+                        float moveRatio = 0;
+                        float angRatio = 0;
+                        float deltaLength = math.distance(oldPos, pos);
+                        float deltaAngle = math.degrees(math.abs(MathUtility.Angle(oldRot, rot)));
+                        float dtime = unityPhysics ? fixedDeltaTime : normalDeltaTime;
+                        if (dtime > Define.Compute.Epsilon)
+                        {
+                            float moveSpeed = deltaLength / dtime;
+                            float angSpeed = deltaAngle / dtime;
+                            //if (deltaLength > 1e-06f)
+                            //    Debug.Log($"read bone :{index}, movesp:{moveSpeed}, angsp:{angSpeed}");
+                            const float maxMoveSpeed = 1.0f;
+                            moveRatio = moveSpeed > maxMoveSpeed ? maxMoveSpeed / moveSpeed : 1.0f;
+                            const float maxAngleSpeed = 360.0f; // deg
+                            angRatio = angSpeed > maxAngleSpeed ? maxAngleSpeed / angSpeed : 1.0f;
+                        }
+
                         // 未来予測
                         float ratio = unityPhysics ? fixedFutureRatio : normalFutureRatio; // ボーンの更新モードにより変化
-                        pos = math.lerp(oldPos, pos, 1.0f + ratio);
-                        rot = math.slerp(oldRot, rot, 1.0f + ratio);
+                        pos = math.lerp(oldPos, pos, 1.0f + ratio * moveRatio);
+                        rot = math.slerp(oldRot, rot, 1.0f + ratio * angRatio);
                         rot = math.normalize(rot);
 
                         bonePosList[index] = pos;
@@ -925,11 +956,14 @@ namespace MagicaCloth
             {
                 var job = new WriteBontToTransformJob2()
                 {
+                    fixedUpdateCount = manager.UpdateTime.FixedUpdateCount,
+
                     boneFlagList = boneFlagList.ToJobArray(bufferIndex),
                     writeBoneIndexList = writeBoneIndexList.ToJobArray(bufferIndex),
                     boneParentIndexList = boneParentIndexList.ToJobArray(),
                     writeBonePosList = writeBonePosList.ToJobArray(bufferIndex),
                     writeBoneRotList = writeBoneRotList.ToJobArray(bufferIndex),
+                    boneUnityPhysicsList = boneUnityPhysicsList.ToJobArray(),
                 };
                 Compute.MasterJob = job.Schedule(writeBoneList.GetTransformAccessArray(), Compute.MasterJob);
             }
@@ -941,6 +975,8 @@ namespace MagicaCloth
         [BurstCompile]
         struct WriteBontToTransformJob2 : IJobParallelForTransform
         {
+            public int fixedUpdateCount;
+
             [Unity.Collections.ReadOnly]
             public NativeArray<byte> boneFlagList;
             [Unity.Collections.ReadOnly]
@@ -951,6 +987,8 @@ namespace MagicaCloth
             public NativeArray<float3> writeBonePosList;
             [Unity.Collections.ReadOnly]
             public NativeArray<quaternion> writeBoneRotList;
+            [Unity.Collections.ReadOnly]
+            public NativeArray<short> boneUnityPhysicsList;
 
             // 書き込みトランスフォームごと
             public void Execute(int index, TransformAccess transform)
@@ -968,24 +1006,28 @@ namespace MagicaCloth
                 if ((flag & Flag_Write) == 0)
                     return;
 
-                var pos = writeBonePosList[index];
-                var rot = writeBoneRotList[index];
-
-                int parentIndex = boneParentIndexList[bindex];
-                if (parentIndex >= 0)
+                bool unityPhysics = boneUnityPhysicsList[bindex] > 0;
+                if (unityPhysics == false || fixedUpdateCount > 0)
                 {
-                    // 親を参照する場合はローカル座標で書き込む
-                    transform.localPosition = pos;
-                    transform.localRotation = rot;
-                }
-                else
-                {
-                    // 親がいない場合はワールドで書き込む
-                    transform.position = pos;
-                    transform.rotation = rot;
-                }
+                    var pos = writeBonePosList[index];
+                    var rot = writeBoneRotList[index];
 
-                //Debug.Log($"Bone Write:{bindex}");
+                    int parentIndex = boneParentIndexList[bindex];
+                    //Debug.Log($"Write Bone:{bindex} Parent:{parentIndex} Pos:{pos}");
+
+                    if (parentIndex >= 0)
+                    {
+                        // 親を参照する場合はローカル座標で書き込む
+                        transform.localPosition = pos;
+                        transform.localRotation = rot;
+                    }
+                    else
+                    {
+                        // 親がいない場合はワールドで書き込む
+                        transform.position = pos;
+                        transform.rotation = rot;
+                    }
+                }
             }
         }
 

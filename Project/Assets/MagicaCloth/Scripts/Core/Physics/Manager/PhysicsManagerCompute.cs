@@ -40,6 +40,8 @@ namespace MagicaCloth
         public ColliderCollisionConstraint Collision { get; private set; }
         public PenetrationConstraint Penetration { get; private set; }
         public ColliderExtrusionConstraint ColliderExtrusion { get; private set; }
+        public TwistConstraint Twist { get; private set; }
+        public CompositeRotationConstraint CompositeRotation { get; private set; }
         //public ColliderAfterCollisionConstraint AfterCollision { get; private set; }
         //public EdgeCollisionConstraint EdgeCollision { get; private set; }
         //public VolumeConstraint Volume { get; private set; }
@@ -119,10 +121,14 @@ namespace MagicaCloth
             // 主なクロスシミュレーション
             Spring = new SpringConstraint();
             constraints.Add(Spring);
+            Twist = new TwistConstraint();
+            constraints.Add(Twist);
             RestoreDistance = new RestoreDistanceConstraint();
             constraints.Add(RestoreDistance);
             RestoreRotation = new RestoreRotationConstraint();
             constraints.Add(RestoreRotation);
+            CompositeRotation = new CompositeRotationConstraint();
+            constraints.Add(CompositeRotation);
 
             // コリジョン
             //EdgeCollision = new EdgeCollisionConstraint();
@@ -527,8 +533,13 @@ namespace MagicaCloth
                 flagList = Particle.flagList.ToJobArray(),
                 teamIdList = Particle.teamIdList.ToJobArray(),
                 depthList = Particle.depthList.ToJobArray(),
+
+                snapBasePosList = Particle.snapBasePosList.ToJobArray(),
+                snapBaseRotList = Particle.snapBaseRotList.ToJobArray(),
                 basePosList = Particle.basePosList.ToJobArray(),
                 baseRotList = Particle.baseRotList.ToJobArray(),
+                oldBasePosList = Particle.oldBasePosList.ToJobArray(),
+                oldBaseRotList = Particle.oldBaseRotList.ToJobArray(),
 
                 nextPosList = Particle.InNextPosList.ToJobArray(),
                 nextRotList = Particle.InNextRotList.ToJobArray(),
@@ -582,8 +593,8 @@ namespace MagicaCloth
                 nextPosList = Particle.InNextPosList.ToJobArray(),
                 nextRotList = Particle.InNextRotList.ToJobArray(),
 
-                basePosList = Particle.basePosList.ToJobArray(),
-                baseRotList = Particle.baseRotList.ToJobArray(),
+                //basePosList = Particle.basePosList.ToJobArray(),
+                //baseRotList = Particle.baseRotList.ToJobArray(),
 
                 oldPosList = Particle.oldPosList.ToJobArray(),
                 oldRotList = Particle.oldRotList.ToJobArray(),
@@ -628,19 +639,33 @@ namespace MagicaCloth
             public NativeArray<int> teamIdList;
             [Unity.Collections.ReadOnly]
             public NativeArray<float> depthList;
+
             [Unity.Collections.ReadOnly]
+            public NativeArray<float3> snapBasePosList;
+            [Unity.Collections.ReadOnly]
+            public NativeArray<quaternion> snapBaseRotList;
+            [Unity.Collections.WriteOnly]
             public NativeArray<float3> basePosList;
-            [Unity.Collections.ReadOnly]
+            [Unity.Collections.WriteOnly]
             public NativeArray<quaternion> baseRotList;
+            [Unity.Collections.ReadOnly]
+            public NativeArray<float3> oldBasePosList;
+            [Unity.Collections.ReadOnly]
+            public NativeArray<quaternion> oldBaseRotList;
 
             public NativeArray<float3> nextPosList;
             public NativeArray<quaternion> nextRotList;
             public NativeArray<float> frictionList;
+            [Unity.Collections.WriteOnly]
             public NativeArray<float3> posList;
+            [Unity.Collections.WriteOnly]
             public NativeArray<quaternion> rotList;
-            public NativeArray<float3> velocityList;
+            [Unity.Collections.ReadOnly]
             public NativeArray<float3> oldPosList;
+            [Unity.Collections.ReadOnly]
             public NativeArray<quaternion> oldRotList;
+            [Unity.Collections.ReadOnly]
+            public NativeArray<float3> velocityList;
 
             // パーティクルごと
             public void Execute(int index)
@@ -663,9 +688,48 @@ namespace MagicaCloth
                 quaternion nextRot = oldrot;
                 var friction = frictionList[index];
 
+                // 基準姿勢のステップ補間(v1.11.1)
+                var oldBasePos = oldBasePosList[index];
+                var oldBaseRot = oldBaseRotList[index];
+                var snapBasePos = snapBasePosList[index];
+                var snapBaseRot = snapBaseRotList[index];
+                float stime = teamData.startTime + updateDeltaTime * runCount;
+                float oldtime = teamData.startTime - updateDeltaTime;
+                float interval = teamData.time - oldtime;
+                float step = interval >= 1e-06f ? math.saturate((stime - oldtime) / interval) : 0.0f;
+                float3 basePos = math.lerp(oldBasePos, snapBasePos, step);
+                quaternion baseRot = math.slerp(oldBaseRot, snapBaseRot, step);
+                //baseRot = math.normalize(baseRot); // 必要?
+                basePosList[index] = basePos;
+                baseRotList[index] = baseRot;
+
+
                 if (flag.IsFixed())
                 {
                     // キネマティックパーティクル
+                    nextPos = basePos;
+                    nextRot = baseRot;
+
+                    // nextPos/nextRotが１ステップ前の姿勢
+                    var oldNextPos = nextPosList[index];
+                    var oldNextRot = nextRotList[index];
+
+                    // 前回の姿勢をoldpos/rotとしてposList/rotListに格納する
+                    if (flag.IsCollider() && teamId == 0)
+                    {
+                        // グローバルコライダー
+                        // 移動量と回転量に制限をかける(1.7.5)
+                        // 制限をかけないと高速移動／回転時に遠く離れたパーティクルが押し出されてしまう問題が発生する。
+                        oldpos = MathUtility.ClampDistance(nextPos, oldNextPos, Define.Compute.GlobalColliderMaxMoveDistance);
+                        oldrot = MathUtility.ClampAngle(nextRot, oldNextRot, math.radians(Define.Compute.GlobalColliderMaxRotationAngle));
+                    }
+                    else
+                    {
+                        oldpos = oldNextPos;
+                        oldrot = oldNextRot;
+                    }
+
+#if false
                     // nextPos/nextRotが１ステップ前の姿勢
                     var oldNextPos = nextPosList[index];
                     var oldNextRot = nextRotList[index];
@@ -695,6 +759,7 @@ namespace MagicaCloth
                         oldpos = oldNextPos;
                         oldrot = oldNextRot;
                     }
+#endif
 
                     // debug
                     //nextPos = basePosList[index];
@@ -731,19 +796,7 @@ namespace MagicaCloth
                     // フォースは空気抵抗を無視して加算する
                     float3 force = 0;
 
-                    // 重力
-                    // 重力は質量に関係なく一定
-#if false
-                    // 方向減衰
-                    if (teamData.IsFlag(PhysicsManagerTeamData.Flag_DirectionalDamping) && teamData.directionalDampingBoneIndex >= 0)
-                    {
-                        float3 dampDir = math.mul(boneRotList[teamData.directionalDampingBoneIndex], teamData.directionalDampingLocalDir);
-                        var dot = math.dot(dampDir, new float3(0, -1, 0)) * 0.5f + 0.5f; // 1.0(0) - 0.5(90) - 0.0(180)
-                        var damp = teamDirectionalDampingList[teamId].Evaluate(dot);
-                        gravity *= damp;
-                    }
-#endif
-
+                    // 重力（質量に関係なく一定）
                     // (最後に質量で割るためここでは質量をかける）
                     force += gravityDirection * (gravity * mass);
 
@@ -824,10 +877,10 @@ namespace MagicaCloth
             public NativeArray<quaternion> nextRotList;
             [Unity.Collections.ReadOnly]
             public NativeArray<float> frictionList;
-            [Unity.Collections.ReadOnly]
-            public NativeArray<float3> basePosList;
-            [Unity.Collections.ReadOnly]
-            public NativeArray<quaternion> baseRotList;
+            //[Unity.Collections.ReadOnly]
+            //public NativeArray<float3> basePosList;
+            //[Unity.Collections.ReadOnly]
+            //public NativeArray<quaternion> baseRotList;
 
             public NativeArray<float3> velocityList;
             [Unity.Collections.WriteOnly]
@@ -972,8 +1025,12 @@ namespace MagicaCloth
                 flagList = Particle.flagList.ToJobArray(),
                 teamIdList = Particle.teamIdList.ToJobArray(),
 
+                snapBasePosList = Particle.snapBasePosList.ToJobArray(),
+                snapBaseRotList = Particle.snapBaseRotList.ToJobArray(),
                 basePosList = Particle.basePosList.ToJobArray(),
                 baseRotList = Particle.baseRotList.ToJobArray(),
+                oldBasePosList = Particle.oldBasePosList.ToJobArray(),
+                oldBaseRotList = Particle.oldBaseRotList.ToJobArray(),
 
                 oldPosList = Particle.oldPosList.ToJobArray(),
                 oldRotList = Particle.oldRotList.ToJobArray(),
@@ -1008,9 +1065,17 @@ namespace MagicaCloth
 
             // パーティクルごと
             [Unity.Collections.ReadOnly]
+            public NativeArray<float3> snapBasePosList;
+            [Unity.Collections.ReadOnly]
+            public NativeArray<quaternion> snapBaseRotList;
+            [Unity.Collections.ReadOnly]
             public NativeArray<float3> basePosList;
             [Unity.Collections.ReadOnly]
             public NativeArray<quaternion> baseRotList;
+            [Unity.Collections.WriteOnly]
+            public NativeArray<float3> oldBasePosList;
+            [Unity.Collections.WriteOnly]
+            public NativeArray<quaternion> oldBaseRotList;
             [Unity.Collections.ReadOnly]
             public NativeArray<float3> velocityList;
             [Unity.Collections.ReadOnly]
@@ -1044,8 +1109,10 @@ namespace MagicaCloth
                 float3 viewPos = 0;
                 quaternion viewRot = quaternion.identity;
 
-                var basePos = basePosList[index];
-                var baseRot = baseRotList[index];
+                //var basePos = basePosList[index];
+                //var baseRot = baseRotList[index];
+                var snapBasePos = snapBasePosList[index];
+                var snapBaseRot = snapBaseRotList[index];
 
                 if (flag.IsFixed() == false)
                 {
@@ -1084,8 +1151,10 @@ namespace MagicaCloth
                 else
                 {
                     // 固定パーティクルの表示位置は常にベース位置
-                    viewPos = basePos;
-                    viewRot = baseRot;
+                    //viewPos = basePos;
+                    //viewRot = baseRot;
+                    viewPos = snapBasePos;
+                    viewRot = snapBaseRot;
 
                     // 固定パーティクルは今回のbasePosを記録する（更新時のみ）
                     if (teamData.IsRunning())
@@ -1099,14 +1168,28 @@ namespace MagicaCloth
                 // ブレンド
                 if (teamData.blendRatio < 0.99f)
                 {
-                    viewPos = math.lerp(basePos, viewPos, teamData.blendRatio);
-                    viewRot = math.slerp(baseRot, viewRot, teamData.blendRatio);
+                    //viewPos = math.lerp(basePos, viewPos, teamData.blendRatio);
+                    //viewRot = math.slerp(baseRot, viewRot, teamData.blendRatio);
+                    viewPos = math.lerp(snapBasePos, viewPos, teamData.blendRatio);
+                    viewRot = math.slerp(snapBaseRot, viewRot, teamData.blendRatio);
                     viewRot = math.normalize(viewRot); // 回転蓄積で精度が落ちていくので正規化しておく
                 }
+
+                // test
+                //viewPos = snapBasePos;
+                //viewRot = snapBaseRot;
+
 
                 // 表示位置
                 posList[index] = viewPos;
                 rotList[index] = viewRot;
+
+                // １つ前の基準位置を記録
+                if (teamData.IsRunning())
+                {
+                    oldBasePosList[index] = basePosList[index];
+                    oldBaseRotList[index] = baseRotList[index];
+                }
             }
         }
 

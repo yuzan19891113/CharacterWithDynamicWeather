@@ -58,8 +58,10 @@ namespace MagicaCloth
 
             var property1 = serializedObject.FindProperty("deformer.normalAndTangentUpdateMode");
             var value1 = property1.boolValue;
+            var property2 = serializedObject.FindProperty("deformer.boundsUpdateMode");
 
             EditorGUILayout.PropertyField(property1);
+            EditorGUILayout.PropertyField(property2);
 
             serializedObject.ApplyModifiedProperties();
 

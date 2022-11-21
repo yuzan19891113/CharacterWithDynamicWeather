@@ -47,6 +47,8 @@ namespace MagicaCloth
             EditorPresetUtility.DrawPresetButton(scr, scr.Params);
             {
                 var cparam = serializedObject.FindProperty("clothParams");
+                if (EditorInspectorUtility.AlgorithmInspector(cparam, scr.HasChangedParam(ClothParams.ParamType.Algorithm), ConvertToLatestAlgorithmParameters))
+                    scr.Params.SetChangeParam(ClothParams.ParamType.Algorithm);
                 if (EditorInspectorUtility.RadiusInspector(cparam))
                     scr.Params.SetChangeParam(ClothParams.ParamType.Radius);
                 if (EditorInspectorUtility.MassInspector(cparam))
@@ -67,13 +69,13 @@ namespace MagicaCloth
                     scr.Params.SetChangeParam(ClothParams.ParamType.ClampDistance);
                 if (EditorInspectorUtility.ClampPositionInspector(cparam, false, scr.HasChangedParam(ClothParams.ParamType.ClampPosition)))
                     scr.Params.SetChangeParam(ClothParams.ParamType.ClampPosition);
-                if (EditorInspectorUtility.ClampRotationInspector(cparam, scr.HasChangedParam(ClothParams.ParamType.ClampRotation)))
+                if (EditorInspectorUtility.ClampRotationInspector(cparam, scr.HasChangedParam(ClothParams.ParamType.ClampRotation), scr.ClothData))
                     scr.Params.SetChangeParam(ClothParams.ParamType.ClampRotation);
                 if (EditorInspectorUtility.RestoreDistanceInspector(cparam, scr.HasChangedParam(ClothParams.ParamType.RestoreDistance)))
                     scr.Params.SetChangeParam(ClothParams.ParamType.RestoreDistance);
-                if (EditorInspectorUtility.RestoreRotationInspector(cparam, scr.HasChangedParam(ClothParams.ParamType.RestoreRotation)))
+                if (EditorInspectorUtility.RestoreRotationInspector(cparam, scr.HasChangedParam(ClothParams.ParamType.RestoreRotation), scr.ClothData))
                     scr.Params.SetChangeParam(ClothParams.ParamType.RestoreRotation);
-                if (EditorInspectorUtility.TriangleBendInspector(cparam, scr.HasChangedParam(ClothParams.ParamType.TriangleBend)))
+                if (EditorInspectorUtility.TriangleBendInspector(cparam, scr.HasChangedParam(ClothParams.ParamType.TriangleBend), scr.ClothData))
                     scr.Params.SetChangeParam(ClothParams.ParamType.TriangleBend);
                 //if (EditorInspectorUtility.VolumeInspector(cparam))
                 //    scr.Params.SetChangeParam(ClothParams.ParamType.Volume);

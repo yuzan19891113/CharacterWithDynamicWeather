@@ -10,6 +10,7 @@ namespace MagicaCloth
 {
     /// <summary>
     /// 回転復元拘束
+    /// [Algorithm 1]
     /// 回転復元は容易に振動が発生するために使用には注意が必要です。
     /// パラメータ設定時のノウハウは次の通りです。
     /// ・末端の振動が激しい場合は空気抵抗を上げて調整してください。
@@ -35,7 +36,7 @@ namespace MagicaCloth
             public ushort targetVertexIndex;
 
             /// <summary>
-            /// 親から自身への本来のローカル方向（単位ベクトル）(v1.7.0)
+            /// 親から自身への本来のローカル方向（単位ベクトル）
             /// </summary>
             public float3 localPos;
 
@@ -91,7 +92,14 @@ namespace MagicaCloth
         }
 
         //=========================================================================================
-        public int AddGroup(int teamId, bool active, BezierParam power, float velocityInfluence, RotationData[] dataArray, ReferenceDataIndex[] refDataArray)
+        public int AddGroup(
+            int teamId,
+            bool active,
+            BezierParam power,
+            float velocityInfluence,
+            RotationData[] dataArray,
+            ReferenceDataIndex[] refDataArray
+            )
         {
             if (dataArray == null || dataArray.Length == 0 || refDataArray == null || refDataArray.Length == 0)
                 return -1;
@@ -172,7 +180,6 @@ namespace MagicaCloth
 
                 flagList = Manager.Particle.flagList.ToJobArray(),
                 depthList = Manager.Particle.depthList.ToJobArray(),
-                //basePosList = Manager.Particle.basePosList.ToJobArray(),
                 baseRotList = Manager.Particle.baseRotList.ToJobArray(),
                 nextPosList = Manager.Particle.InNextPosList.ToJobArray(),
                 frictionList = Manager.Particle.frictionList.ToJobArray(),
@@ -187,7 +194,7 @@ namespace MagicaCloth
         }
 
         /// <summary>
-        /// 回転拘束ジョブ
+        /// 回転拘束ジョブ[Algorithm 1]
         /// パーティクルごとに計算
         /// </summary>
         [BurstCompile]
@@ -213,8 +220,6 @@ namespace MagicaCloth
             public NativeArray<PhysicsManagerParticleData.ParticleFlag> flagList;
             [Unity.Collections.ReadOnly]
             public NativeArray<float> depthList;
-            //[Unity.Collections.ReadOnly]
-            //public NativeArray<float3> basePosList;
             [Unity.Collections.ReadOnly]
             public NativeArray<quaternion> baseRotList;
             [Unity.Collections.ReadOnly]

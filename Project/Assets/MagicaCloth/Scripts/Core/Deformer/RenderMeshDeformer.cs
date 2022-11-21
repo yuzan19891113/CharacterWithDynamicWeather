@@ -36,6 +36,23 @@ namespace MagicaCloth
         [SerializeField]
         private RecalculateMode normalAndTangentUpdateMode = RecalculateMode.UpdateNormalPerFrame;
 
+        /// <summary>
+        /// バウンディングボックス計算モード
+        /// </summary>
+        public enum BoundsMode
+        {
+            None = 0,
+
+            // 初期化時に拡張
+            ExpandedAtInitialization = 1,
+
+            // 毎フレーム再計算（重い）
+            //RecalculatedPerFrame = 2,
+        }
+        [SerializeField]
+        private BoundsMode boundsUpdateMode = BoundsMode.None;
+
+
         [SerializeField]
         private Mesh sharedMesh = null;
 
@@ -167,6 +184,24 @@ namespace MagicaCloth
                 Debug.Assert(meshFilter);
             }
             oldUse = false;
+
+            // バウンディングボックスの拡張(v1.11.1)
+            if (boundsUpdateMode == BoundsMode.ExpandedAtInitialization)
+            {
+                var bounds = skinMeshRenderer ? skinMeshRenderer.localBounds : sharedMesh.bounds;
+                //Debug.Log($"original bounds:{bounds}");
+
+                // XYZの最大サイズx2に拡張する
+                float maxSize = Mathf.Max(Mathf.Max(bounds.extents.x, bounds.extents.y), bounds.extents.z);
+                maxSize *= 2.0f;
+                bounds.extents = Vector3.one * maxSize;
+                //Debug.Log($"new bounds:{bounds}");
+
+                if (skinMeshRenderer)
+                    skinMeshRenderer.localBounds = bounds;
+                else
+                    mesh.bounds = bounds;
+            }
 
             // 共有メッシュのuid
             int uid = sharedMesh.GetInstanceID(); // 共有メッシュのIDを使う
@@ -638,10 +673,17 @@ namespace MagicaCloth
                 return Define.Error.MeshVertexCount65535Over;
 
 #if UNITY_EDITOR
-            // メッシュ最適化タイプが異なる場合は頂点順序が変更されているのでNG
-            // またモデルインポート設定を参照するので実行時は判定しない
-            if (!Application.isPlaying && meshOptimize != 0 && meshOptimize != EditUtility.GetOptimizeMesh(sharedMesh))
-                return Define.Error.MeshOptimizeMismatch;
+            if (Application.isPlaying == false)
+            {
+                // メッシュ最適化タイプが異なる場合は頂点順序が変更されているのでNG
+                // またモデルインポート設定を参照するので実行時は判定しない
+                if (meshOptimize != 0 && meshOptimize != EditUtility.GetOptimizeMesh(sharedMesh))
+                    return Define.Error.MeshOptimizeMismatch;
+
+                // KeepQuadsでは動作しない(v1.11.1)
+                if (EditUtility.IsKeepQuadsMesh(sharedMesh))
+                    return Define.Error.MeshKeepQuads;
+            }
 #endif
 
             return Define.Error.None;

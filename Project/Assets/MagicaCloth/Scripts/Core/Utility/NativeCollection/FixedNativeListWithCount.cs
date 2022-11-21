@@ -13,7 +13,7 @@ namespace MagicaCloth
     /// 一度確保したインデックスはズレない（ここ重要）
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public class FixedNativeListWithCount<T> : IDisposable where T : struct
+    public class FixedNativeListWithCount<T> : IDisposable where T : unmanaged
     {
         /// <summary>
         /// ネイティブリスト

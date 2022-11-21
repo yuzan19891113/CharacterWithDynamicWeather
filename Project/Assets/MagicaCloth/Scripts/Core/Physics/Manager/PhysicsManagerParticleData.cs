@@ -119,6 +119,15 @@ namespace MagicaCloth
             }
 
             /// <summary>
+            /// このパーティクルが移動できるか判定する
+            /// </summary>
+            /// <returns></returns>
+            public bool IsMove()
+            {
+                return (flag & (Flag_Kinematic | Flag_Hold)) == 0;
+            }
+
+            /// <summary>
             /// このパーティクルが物理無効化されているか判定する
             /// </summary>
             /// <returns></returns>
@@ -255,14 +264,37 @@ namespace MagicaCloth
         public FixedChunkNativeArray<float3> localPosList;
 
         /// <summary>
-        /// 本来のワールド位置リスト
+        /// 現在の基準位置リスト
         /// </summary>
         public FixedChunkNativeArray<float3> basePosList;
 
         /// <summary>
-        /// 本来のワールド回転リスト
+        /// 現在の基準回転リスト
         /// </summary>
         public FixedChunkNativeArray<quaternion> baseRotList;
+
+        /// <summary>
+        /// 本来の基準位置リスト
+        /// </summary>
+        public FixedChunkNativeArray<float3> snapBasePosList;
+
+        /// <summary>
+        /// 本来の基準回転リスト
+        /// </summary>
+        public FixedChunkNativeArray<quaternion> snapBaseRotList;
+
+        /// <summary>
+        /// １つ前の基準位置リスト
+        /// </summary>
+        public FixedChunkNativeArray<float3> oldBasePosList;
+
+        /// <summary>
+        /// １つ前の基準回転リスト
+        /// </summary>
+        public FixedChunkNativeArray<quaternion> oldBaseRotList;
+
+
+
 
         /// <summary>
         /// パーティクル深さリスト
@@ -363,6 +395,10 @@ namespace MagicaCloth
             localPosList = new FixedChunkNativeArray<float3>();
             basePosList = new FixedChunkNativeArray<float3>();
             baseRotList = new FixedChunkNativeArray<quaternion>();
+            snapBasePosList = new FixedChunkNativeArray<float3>();
+            snapBaseRotList = new FixedChunkNativeArray<quaternion>();
+            oldBasePosList = new FixedChunkNativeArray<float3>();
+            oldBaseRotList = new FixedChunkNativeArray<quaternion>();
             depthList = new FixedChunkNativeArray<float>();
             radiusList = new FixedChunkNativeArray<float3>();
             restoreTransformIndexList = new FixedChunkNativeArray<int>();
@@ -400,6 +436,10 @@ namespace MagicaCloth
             localPosList.Dispose();
             basePosList.Dispose();
             baseRotList.Dispose();
+            snapBasePosList.Dispose();
+            snapBaseRotList.Dispose();
+            oldBasePosList.Dispose();
+            oldBaseRotList.Dispose();
             depthList.Dispose();
             radiusList.Dispose();
             restoreTransformIndexList.Dispose();
@@ -451,6 +491,10 @@ namespace MagicaCloth
             localPosList.Add(targetLocalPos);
             basePosList.Add(wpos);
             baseRotList.Add(wrot);
+            snapBasePosList.Add(wpos);
+            snapBaseRotList.Add(wrot);
+            oldBasePosList.Add(wpos);
+            oldBaseRotList.Add(wrot);
             depthList.Add(depth);
             radiusList.Add(radius);
             frictionList.Add(0.0f);
@@ -516,6 +560,10 @@ namespace MagicaCloth
             localPosList.AddChunk(count);
             basePosList.AddChunk(count);
             baseRotList.AddChunk(count);
+            snapBasePosList.AddChunk(count);
+            snapBaseRotList.AddChunk(count);
+            oldBasePosList.AddChunk(count);
+            oldBaseRotList.AddChunk(count);
             depthList.AddChunk(count);
             radiusList.AddChunk(count);
             frictionList.AddChunk(count);
@@ -570,6 +618,10 @@ namespace MagicaCloth
                 localPosList[pindex] = tlpos;
                 basePosList[pindex] = wpos;
                 baseRotList[pindex] = wrot;
+                snapBasePosList[pindex] = wpos;
+                snapBaseRotList[pindex] = wrot;
+                oldBasePosList[pindex] = wpos;
+                oldBaseRotList[pindex] = wrot;
                 depthList[pindex] = depth;
                 radiusList[pindex] = radius;
                 restoreTransformIndexList[pindex] = restoreTransformIndex;
@@ -610,6 +662,10 @@ namespace MagicaCloth
             localPosList.RemoveChunk(c);
             basePosList.RemoveChunk(c);
             baseRotList.RemoveChunk(c);
+            snapBasePosList.RemoveChunk(c);
+            snapBaseRotList.RemoveChunk(c);
+            oldBasePosList.RemoveChunk(c);
+            oldBaseRotList.RemoveChunk(c);
             depthList.RemoveChunk(c);
             radiusList.RemoveChunk(c);
 
@@ -935,8 +991,12 @@ namespace MagicaCloth
 
                 rotList = rotList.ToJobArray(),
 
-                basePosList = basePosList.ToJobArray(),
-                baseRotList = baseRotList.ToJobArray(),
+                //basePosList = basePosList.ToJobArray(),
+                //baseRotList = baseRotList.ToJobArray(),
+                snapBasePosList = snapBasePosList.ToJobArray(),
+                snapBaseRotList = snapBaseRotList.ToJobArray(),
+                oldBasePosList = oldBasePosList.ToJobArray(),
+                oldBaseRotList = oldBaseRotList.ToJobArray(),
                 nextPosList = InNextPosList.ToJobArray(),
             };
             Compute.MasterJob = job.Schedule(Particle.Length, 64, Compute.MasterJob);
@@ -979,10 +1039,17 @@ namespace MagicaCloth
 
             [Unity.Collections.WriteOnly]
             public NativeArray<quaternion> rotList;
+            //[Unity.Collections.WriteOnly]
+            //public NativeArray<float3> basePosList;
+            //[Unity.Collections.WriteOnly]
+            //public NativeArray<quaternion> baseRotList;
             [Unity.Collections.WriteOnly]
-            public NativeArray<float3> basePosList;
+            public NativeArray<float3> snapBasePosList;
             [Unity.Collections.WriteOnly]
-            public NativeArray<quaternion> baseRotList;
+            public NativeArray<quaternion> snapBaseRotList;
+            public NativeArray<float3> oldBasePosList;
+            public NativeArray<quaternion> oldBaseRotList;
+
             [Unity.Collections.WriteOnly]
             public NativeArray<float3> nextPosList;
 
@@ -1038,6 +1105,12 @@ namespace MagicaCloth
                     var oldrot = oldRotList[index];
                     oldrot = math.mul(offrot, oldrot);
                     oldRotList[index] = oldrot;
+
+                    // 基準姿勢にも適用(v1.11.1)
+                    oldBasePosList[index] = oldBasePosList[index] + offset;
+                    var oldBaseRot = oldBaseRotList[index];
+                    oldBaseRot = math.mul(offrot, oldBaseRot);
+                    oldBaseRotList[index] = oldBaseRot;
                 }
 
                 oldPosList[index] = oldpos + offset;
@@ -1067,8 +1140,10 @@ namespace MagicaCloth
                 // 原点として書き込み
                 if (flag.IsFlag(Flag_Transform_Read_Base))
                 {
-                    basePosList[index] = bpos;
-                    baseRotList[index] = brot;
+                    //basePosList[index] = bpos;
+                    //baseRotList[index] = brot;
+                    snapBasePosList[index] = bpos;
+                    snapBaseRotList[index] = brot;
                 }
 
                 // 現在値として書き込み
@@ -1099,8 +1174,12 @@ namespace MagicaCloth
                 flagList = flagList.ToJobArray(),
                 teamIdList = teamIdList.ToJobArray(),
 
+                snapBasePosList = snapBasePosList.ToJobArray(),
+                snapBaseRotList = snapBaseRotList.ToJobArray(),
                 basePosList = basePosList.ToJobArray(),
                 baseRotList = baseRotList.ToJobArray(),
+                oldBasePosList = oldBasePosList.ToJobArray(),
+                oldBaseRotList = oldBaseRotList.ToJobArray(),
 
                 posList = posList.ToJobArray(),
                 rotList = rotList.ToJobArray(),
@@ -1131,9 +1210,17 @@ namespace MagicaCloth
             public NativeArray<int> teamIdList;
 
             [Unity.Collections.ReadOnly]
-            public NativeArray<float3> basePosList;
+            public NativeArray<float3> snapBasePosList;
             [Unity.Collections.ReadOnly]
+            public NativeArray<quaternion> snapBaseRotList;
+            [Unity.Collections.WriteOnly]
+            public NativeArray<float3> basePosList;
+            [Unity.Collections.WriteOnly]
             public NativeArray<quaternion> baseRotList;
+            [Unity.Collections.WriteOnly]
+            public NativeArray<float3> oldBasePosList;
+            [Unity.Collections.WriteOnly]
+            public NativeArray<quaternion> oldBaseRotList;
 
             [Unity.Collections.WriteOnly]
             public NativeArray<float3> posList;
@@ -1171,8 +1258,15 @@ namespace MagicaCloth
                 // 姿勢リセット
                 if (tdata.IsFlag(PhysicsManagerTeamData.Flag_Reset_Position) || flag.IsFlag(Flag_Reset_Position))
                 {
-                    var basePos = basePosList[index];
-                    var baseRot = baseRotList[index];
+                    //var basePos = basePosList[index];
+                    //var baseRot = baseRotList[index];
+                    var basePos = snapBasePosList[index];
+                    var baseRot = snapBaseRotList[index];
+
+                    basePosList[index] = basePos;
+                    baseRotList[index] = baseRot;
+                    oldBasePosList[index] = basePos;
+                    oldBaseRotList[index] = baseRot;
 
                     posList[index] = basePos;
                     rotList[index] = baseRot;

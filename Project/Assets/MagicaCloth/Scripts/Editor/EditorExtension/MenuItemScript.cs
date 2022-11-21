@@ -1,6 +1,7 @@
 ﻿// Magica Cloth.
 // Copyright (c) MagicaSoft, 2020-2021.
 // https://magicasoft.jp
+using System;
 using UnityEditor;
 using UnityEngine;
 
@@ -118,6 +119,34 @@ namespace MagicaCloth
                 obj.transform.localScale = Vector3.one;
 
             return obj;
+        }
+
+        //=========================================================================================
+        [MenuItem("Assets/Magica Cloth/Clean up sub-assets", priority = 200)]
+        static void CleanUpSubAssets()
+        {
+            try
+            {
+                Debug.Log("Clean up MagicaCloth sub-asssets.");
+
+                if (Selection.activeGameObject == null)
+                    throw new Exception("No Object");
+                var obj = Selection.activeGameObject;
+                //Debug.Log(obj.name);
+
+                // プレハブ判定
+                if (PrefabUtility.IsPartOfAnyPrefab(obj) == false || PrefabUtility.IsPartOfPrefabAsset(obj) == false)
+                    throw new Exception("No Prefab");
+
+                // クリーンアップ
+                ShareDataPrefabExtension.CleanUpSubAssets(obj);
+
+                Debug.Log("Complete.");
+            }
+            catch
+            {
+                Debug.LogWarning("Run it against the Prefab in the Project window.");
+            }
         }
     }
 }

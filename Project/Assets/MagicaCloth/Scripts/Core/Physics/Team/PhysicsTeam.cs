@@ -47,6 +47,12 @@ namespace MagicaCloth
         [SerializeField]
         private TeamCullingMode cullingMode = TeamCullingMode.Reset;
 
+        /// <summary>
+        /// アニメーションされた距離を使用するかどうか
+        /// </summary>
+        [SerializeField]
+        private bool useAnimatedDistance = false;
+
         //=========================================================================================
         /// <summary>
         /// この物理チームのID
@@ -146,6 +152,12 @@ namespace MagicaCloth
             {
                 cullingMode = value;
             }
+        }
+
+        internal bool UseAnimatedDistance
+        {
+            get => useAnimatedDistance;
+            set => useAnimatedDistance = value;
         }
 
         //=========================================================================================

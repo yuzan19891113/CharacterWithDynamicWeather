@@ -1378,6 +1378,68 @@ namespace MagicaCloth
         }
 
         /// <summary>
+        /// トライアングルの重心を返す
+        /// </summary>
+        /// <param name="p0"></param>
+        /// <param name="p1"></param>
+        /// <param name="p2"></param>
+        /// <returns></returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static float3 TriangleCenter(float3 p0, float3 p1, float3 p2)
+        {
+            return (p0 + p1 + p2) / 3.0f;
+        }
+
+        /// <summary>
+        /// トライアングルの法線を返す
+        /// </summary>
+        /// <param name="p0"></param>
+        /// <param name="p1"></param>
+        /// <param name="p2"></param>
+        /// <returns></returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static float3 TriangleNormal(float3 p0, float3 p1, float3 p2)
+        {
+            return math.normalize(math.cross(p1 - p0, p2 - p0));
+        }
+
+        /// <summary>
+        /// トライアングルの回転姿勢を返す
+        /// 法線と(重心-p0)の軸からなるクォータニオン
+        /// </summary>
+        /// <param name="p0"></param>
+        /// <param name="p1"></param>
+        /// <param name="p2"></param>
+        /// <returns></returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static quaternion TriangleRotation(float3 p0, float3 p1, float3 p2)
+        {
+            var n = TriangleNormal(p0, p1, p2);
+            var cen = TriangleCenter(p0, p1, p2);
+            var tan = math.normalize(p0 - cen);
+            return quaternion.LookRotation(tan, n);
+        }
+
+        /// <summary>
+        /// 隣接する２つのトライアングルの回転姿勢を返す
+        /// 法線の平均と共通エッジからなるクォータニオン
+        /// </summary>
+        /// <param name="p0"></param>
+        /// <param name="p1"></param>
+        /// <param name="p2"></param>
+        /// <param name="p3"></param>
+        /// <returns></returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static quaternion TriangleCenterRotation(float3 p0, float3 p1, float3 p2, float3 p3)
+        {
+            var n0 = TriangleNormal(p0, p2, p3);
+            var n1 = TriangleNormal(p1, p3, p2);
+            var n = (n0 + n1) * 0.5f;
+            var tan = math.normalize(p3 - p2);
+            return quaternion.LookRotation(tan, n);
+        }
+
+        /// <summary>
         /// トライアングル重心からの距離を返す
         /// </summary>
         /// <param name="p"></param>

@@ -43,8 +43,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8b926eb37fed1d748b80e3b4756bc569, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dataHash: 1904005750
-  dataVersion: 6
+  dataHash: 1340162628
+  dataVersion: 7
   teamData:
     colliderList: []
     penetrationIgnoreColliderList: []
@@ -52,7 +52,9 @@ MonoBehaviour:
   userBlendWeight: 1
   updateMode: 0
   cullingMode: 0
+  useAnimatedDistance: 0
   clothParams:
+    algorithm: 1
     radius:
       startValue: 0.015
       endValue: 0.02
@@ -136,6 +138,12 @@ MonoBehaviour:
       useEndValue: 1
       curveValue: 0
       useCurveValue: 0
+    clampRotationAngle2:
+      startValue: 0
+      endValue: 25
+      useEndValue: 1
+      curveValue: 0
+      useCurveValue: 0
     clampRotationVelocityLimit: 1
     clampRotationVelocityInfluence: 0.2
     restoreDistanceVelocityInfluence: 1
@@ -175,7 +183,14 @@ MonoBehaviour:
       useEndValue: 1
       curveValue: 0
       useCurveValue: 0
+    restoreRotation2:
+      startValue: 0.1
+      endValue: 0.004
+      useEndValue: 1
+      curveValue: 0
+      useCurveValue: 0
     restoreRotationVelocityInfluence: 0.2
+    restoreRotationVelocityInfluence2: 0.2
     useSpring: 0
     springPower: 0.017
     springRadius: 0.1
@@ -198,7 +213,14 @@ MonoBehaviour:
     adjustMode: 0
     adjustRotationPower: 0
     useTriangleBend: 0
+    useTriangleBendTwistCorrection: 1
     triangleBend:
+      startValue: 0.03
+      endValue: 0.03
+      useEndValue: 1
+      curveValue: 0
+      useCurveValue: 0
+    triangleBend2:
       startValue: 0.03
       endValue: 0.03
       useEndValue: 1
@@ -245,16 +267,16 @@ MonoBehaviour:
       useCurveValue: 0
     useLineAvarageRotation: 1
     useFixedNonRotation: 0
-  clothParamDataHashList: 000000000000000000000000000000000000000000000000f61b993700000000f61b993700000000f61b993700000000000000000000000000000000000000000000000000000000000000000000000000000000
-  clothData: {fileID: 114338371988152524}
-  clothDataHash: -289598611
+  clothParamDataHashList: 000000000000000000000000000000000000000000000000f61b993700000000ec37326f00000000ec37326f00000000000000000000000000000000000000000000000000000000000000000000000000000000f61b9937
+  clothData: {fileID: 114580224030573098}
+  clothDataHash: -853441733
   clothDataVersion: 5
   clothSelection: {fileID: 114377651252177238}
   clothSelectionHash: 1356708189
   clothSelectionVersion: 2
   cullRendererList:
   - {fileID: 6870526632420697597}
-  meshData: {fileID: 114114285302864048}
+  meshData: {fileID: 114629298274350048}
   meshDataHash: 600315608
   meshDataVersion: 2
   clothTarget:
@@ -381,8 +403,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8b926eb37fed1d748b80e3b4756bc569, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dataHash: -508130624
-  dataVersion: 6
+  dataHash: -1071973797
+  dataVersion: 7
   teamData:
     colliderList:
     - {fileID: 287129772}
@@ -393,7 +415,9 @@ MonoBehaviour:
   userBlendWeight: 1
   updateMode: 0
   cullingMode: 0
+  useAnimatedDistance: 0
   clothParams:
+    algorithm: 1
     radius:
       startValue: 0.035
       endValue: 0.035
@@ -477,6 +501,12 @@ MonoBehaviour:
       useEndValue: 1
       curveValue: -0.7
       useCurveValue: 1
+    clampRotationAngle2:
+      startValue: 40
+      endValue: 70
+      useEndValue: 1
+      curveValue: -0.7
+      useCurveValue: 1
     clampRotationVelocityLimit: 1
     clampRotationVelocityInfluence: 0.28
     restoreDistanceVelocityInfluence: 1
@@ -516,7 +546,14 @@ MonoBehaviour:
       useEndValue: 1
       curveValue: -0.012
       useCurveValue: 1
+    restoreRotation2:
+      startValue: 0.015
+      endValue: 0.002
+      useEndValue: 1
+      curveValue: -0.012
+      useCurveValue: 1
     restoreRotationVelocityInfluence: 0.5
+    restoreRotationVelocityInfluence2: 0.5
     useSpring: 0
     springPower: 0.017
     springRadius: 0.1
@@ -539,7 +576,14 @@ MonoBehaviour:
     adjustMode: 0
     adjustRotationPower: 0
     useTriangleBend: 0
+    useTriangleBendTwistCorrection: 1
     triangleBend:
+      startValue: 0.03
+      endValue: 0.03
+      useEndValue: 1
+      curveValue: 0
+      useCurveValue: 0
+    triangleBend2:
       startValue: 0.03
       endValue: 0.03
       useEndValue: 1
@@ -586,16 +630,16 @@ MonoBehaviour:
       useCurveValue: 0
     useLineAvarageRotation: 1
     useFixedNonRotation: 0
-  clothParamDataHashList: 000000000000000000000000000000000000000000000000f61b993700000000f61b9937ed37326ff61b99370000000000000000000000000000000000000000fefc79a100000000000000000000000000000000
-  clothData: {fileID: 114169894772656998}
-  clothDataHash: -289598262
+  clothParamDataHashList: 000000000000000000000000000000000000000000000000f61b993700000000ec37326fed37326fec37326f0000000000000000000000000000000000000000fefc79a100000000000000000000000000000000f61b9937
+  clothData: {fileID: 114474269313348990}
+  clothDataHash: -853441435
   clothDataVersion: 5
   clothSelection: {fileID: 114324316263491438}
   clothSelectionHash: 1389964224
   clothSelectionVersion: 2
   cullRendererList:
   - {fileID: 6870526632420697597}
-  meshData: {fileID: 114033944721133232}
+  meshData: {fileID: 114760505945311594}
   meshDataHash: 600315731
   meshDataVersion: 2
   clothTarget:
@@ -971,8 +1015,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8b926eb37fed1d748b80e3b4756bc569, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dataHash: -2147277067
-  dataVersion: 6
+  dataHash: 1583847104
+  dataVersion: 7
   teamData:
     colliderList: []
     penetrationIgnoreColliderList: []
@@ -980,7 +1024,9 @@ MonoBehaviour:
   userBlendWeight: 1
   updateMode: 0
   cullingMode: 0
+  useAnimatedDistance: 0
   clothParams:
+    algorithm: 1
     radius:
       startValue: 0.015
       endValue: 0.02
@@ -1064,6 +1110,12 @@ MonoBehaviour:
       useEndValue: 1
       curveValue: 0
       useCurveValue: 0
+    clampRotationAngle2:
+      startValue: 0
+      endValue: 25
+      useEndValue: 1
+      curveValue: 0
+      useCurveValue: 0
     clampRotationVelocityLimit: 1
     clampRotationVelocityInfluence: 0.2
     restoreDistanceVelocityInfluence: 1
@@ -1103,7 +1155,14 @@ MonoBehaviour:
       useEndValue: 1
       curveValue: 0
       useCurveValue: 0
+    restoreRotation2:
+      startValue: 0.1
+      endValue: 0.004
+      useEndValue: 1
+      curveValue: 0
+      useCurveValue: 0
     restoreRotationVelocityInfluence: 0.2
+    restoreRotationVelocityInfluence2: 0.2
     useSpring: 0
     springPower: 0.017
     springRadius: 0.1
@@ -1126,7 +1185,14 @@ MonoBehaviour:
     adjustMode: 0
     adjustRotationPower: 0
     useTriangleBend: 0
+    useTriangleBendTwistCorrection: 1
     triangleBend:
+      startValue: 0.03
+      endValue: 0.03
+      useEndValue: 1
+      curveValue: 0
+      useCurveValue: 0
+    triangleBend2:
       startValue: 0.03
       endValue: 0.03
       useEndValue: 1
@@ -1173,16 +1239,16 @@ MonoBehaviour:
       useCurveValue: 0
     useLineAvarageRotation: 1
     useFixedNonRotation: 0
-  clothParamDataHashList: 000000000000000000000000000000000000000000000000f61b993700000000f61b993700000000f61b993700000000000000000000000000000000000000000000000000000000000000000000000000000000
-  clothData: {fileID: 114625484768954118}
-  clothDataHash: -289598591
+  clothParamDataHashList: 000000000000000000000000000000000000000000000000f61b993700000000ec37326f00000000ec37326f00000000000000000000000000000000000000000000000000000000000000000000000000000000f61b9937
+  clothData: {fileID: 114221550875509514}
+  clothDataHash: -853441716
   clothDataVersion: 5
   clothSelection: {fileID: 114933991011296270}
   clothSelectionHash: -2089265924
   clothSelectionVersion: 2
   cullRendererList:
   - {fileID: 6870526632420697597}
-  meshData: {fileID: 114186153038276292}
+  meshData: {fileID: 114009725746375194}
   meshDataHash: 600315615
   meshDataVersion: 2
   clothTarget:
@@ -6190,7 +6256,7 @@ Transform:
   m_Father: {fileID: 6870526632426010073}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &114033944721133232
+--- !u!114 &114009725746375194
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -6200,18 +6266,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2b8ed8fdca875474bbc1b8d6dcfb79bc, type: 3}
-  m_Name: BoneClothMeshData_Magica Bone Cloth (Misaki_hair) back
+  m_Name: BoneClothMeshData_Magica Bone Cloth (Misaki_hair) ribbon
   m_EditorClassIdentifier: 
-  dataHash: 600315731
+  dataHash: 600315615
   dataVersion: 2
   isSkinning: 0
-  vertexCount: 36
-  vertexInfoList: 000000100100001002000010030000100400001005000010060000100700001008000010090000100a0000100b0000100c0000100d0000100e0000100f000010100000101100001012000010130000101400001015000010160000101700001018000010190000101a0000101b0000101c0000101d0000101e0000101f00001020000010210000102200001023000010
+  vertexCount: 8
+  vertexInfoList: 0000001001000010020000100300001004000010050000100600001007000010
   vertexWeightList: []
   vertexHashList: 
   uvList: []
-  lineCount: 24
-  lineList: 000000000100000001000000020000000300000004000000040000000500000006000000070000000700000008000000090000000a0000000a0000000b0000000c0000000d0000000d0000000e0000000f00000010000000100000001100000012000000130000001300000014000000150000001600000016000000170000001800000019000000190000001a0000001b0000001c0000001c0000001d0000001e0000001f0000001f0000002000000021000000220000002200000023000000
+  lineCount: 4
+  lineList: 0000000001000000020000000300000004000000050000000600000007000000
   triangleCount: 0
   triangleList: 
   boneCount: 0
@@ -6219,7 +6285,7 @@ MonoBehaviour:
   vertexToTriangleIndexList: 
   childDataList: []
   baseScale: {x: 0, y: 0, z: 0}
---- !u!114 &114114285302864048
+--- !u!114 &114221550875509514
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -6228,27 +6294,335 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2b8ed8fdca875474bbc1b8d6dcfb79bc, type: 3}
-  m_Name: BoneClothMeshData_Magica Bone Cloth (Misaki_hair) front
+  m_Script: {fileID: 11500000, guid: 0548f9dc46468d94c96cbbd1e5c05f74, type: 3}
+  m_Name: BoneClothData_Magica Bone Cloth (Misaki_hair) ribbon
   m_EditorClassIdentifier: 
-  dataHash: 600315608
+  dataHash: -853441716
+  dataVersion: 5
+  triangleBendAlgorithm: 1
+  restoreRotationAlgorithm: 1
+  clampRotationAlgorithm: 1
+  useVertexList: 0000000001000000020000000300000004000000050000000600000007000000
+  selectionData: 0200000001000000020000000100000002000000010000000200000001000000
+  maxLevel: 2
+  vertexFlagLevelList: 0100000002000100010000000200010001000000020001000100000002000100
+  vertexDepthList:
+  - 0
+  - 1
+  - 0
+  - 1
+  - 0
+  - 1
+  - 0
+  - 1
+  rootList: ffffffff00000000ffffffff02000000ffffffff04000000ffffffff06000000
+  parentList: ffffffff00000000ffffffff02000000ffffffff04000000ffffffff06000000
+  structDistanceDataList:
+  - vertexIndex: 0
+    targetVertexIndex: 1
+    length: 0.101000026
+  - vertexIndex: 1
+    targetVertexIndex: 0
+    length: 0.101000026
+  - vertexIndex: 2
+    targetVertexIndex: 3
+    length: 0.096000016
+  - vertexIndex: 3
+    targetVertexIndex: 2
+    length: 0.096000016
+  - vertexIndex: 4
+    targetVertexIndex: 5
+    length: 0.14658108
+  - vertexIndex: 5
+    targetVertexIndex: 4
+    length: 0.14658108
+  - vertexIndex: 6
+    targetVertexIndex: 7
+    length: 0.16285887
+  - vertexIndex: 7
+    targetVertexIndex: 6
+    length: 0.16285887
+  structDistanceReferenceList:
+  - startIndex: 0
+    count: 1
+  - startIndex: 1
+    count: 1
+  - startIndex: 2
+    count: 1
+  - startIndex: 3
+    count: 1
+  - startIndex: 4
+    count: 1
+  - startIndex: 5
+    count: 1
+  - startIndex: 6
+    count: 1
+  - startIndex: 7
+    count: 1
+  bendDistanceDataList: []
+  bendDistanceReferenceList: []
+  nearDistanceDataList: []
+  nearDistanceReferenceList: []
+  rootDistanceDataList:
+  - vertexIndex: 1
+    targetVertexIndex: 0
+    length: 0.101000026
+  - vertexIndex: 3
+    targetVertexIndex: 2
+    length: 0.096000016
+  - vertexIndex: 5
+    targetVertexIndex: 4
+    length: 0.14658108
+  - vertexIndex: 7
+    targetVertexIndex: 6
+    length: 0.16285887
+  rootDistanceReferenceList:
+  - startIndex: 0
+    count: 0
+  - startIndex: 0
+    count: 1
+  - startIndex: 1
+    count: 0
+  - startIndex: 1
+    count: 1
+  - startIndex: 2
+    count: 0
+  - startIndex: 2
+    count: 1
+  - startIndex: 3
+    count: 0
+  - startIndex: 3
+    count: 1
+  clampDistance2DataList: []
+  clampDistance2RootInfoList: []
+  restoreRotationDataList: []
+  restoreRotationReferenceList: []
+  clampRotationDataList: []
+  clampRotationRootInfoList: []
+  compositeRotationDataList:
+  - vertexIndex: 1
+    parentVertexIndex: 0
+    localPos:
+      x: -1
+      y: -0.000000008149071
+      z: 0
+    localRot:
+      value:
+        x: 0
+        y: 0
+        z: 0
+        w: 0.99999994
+  - vertexIndex: 3
+    parentVertexIndex: 2
+    localPos:
+      x: 1
+      y: 0.000000009778884
+      z: 0.000000014901158
+    localRot:
+      value:
+        x: 0
+        y: 0
+        z: 0
+        w: 0.99999994
+  - vertexIndex: 5
+    parentVertexIndex: 4
+    localPos:
+      x: -0.6617499
+      y: 0.19784269
+      z: -0.72314966
+    localRot:
+      value:
+        x: 0
+        y: 0
+        z: 0
+        w: 0.99999994
+  - vertexIndex: 7
+    parentVertexIndex: 6
+    localPos:
+      x: 0.6324495
+      y: 0.10438433
+      z: -0.767536
+    localRot:
+      value:
+        x: 0
+        y: 0
+        z: 0
+        w: 0.99999994
+  compositeRotationRootInfoList:
+  - startIndex: 0
+    dataLength: 1
+  - startIndex: 1
+    dataLength: 1
+  - startIndex: 2
+    dataLength: 1
+  - startIndex: 3
+    dataLength: 1
+  twistDataList: []
+  adjustRotationDataList: []
+  triangleBendDataList: []
+  triangleBendReferenceList: []
+  triangleBendWriteBufferCount: 0
+  volumeDataList: []
+  volumeReferenceList: []
+  volumeWriteBufferCount: 0
+  lineRotationDataList:
+  - vertexIndex: 0
+    childCount: 1
+    childStartDataIndex: 1
+    localPos:
+      x: 0
+      y: 0
+      z: 0
+    localRot:
+      value:
+        x: 0
+        y: 0
+        z: 0
+        w: 1
+  - vertexIndex: 1
+    childCount: 0
+    childStartDataIndex: 0
+    localPos:
+      x: -0.101000026
+      y: -8.2305635e-10
+      z: 0
+    localRot:
+      value:
+        x: 0
+        y: 0
+        z: 0
+        w: 0.99999994
+  - vertexIndex: 2
+    childCount: 1
+    childStartDataIndex: 3
+    localPos:
+      x: 0
+      y: 0
+      z: 0
+    localRot:
+      value:
+        x: 0
+        y: 0
+        z: 0
+        w: 1
+  - vertexIndex: 3
+    childCount: 0
+    childStartDataIndex: 0
+    localPos:
+      x: 0.096000016
+      y: 9.387731e-10
+      z: 0.0000000014305114
+    localRot:
+      value:
+        x: 0
+        y: 0
+        z: 0
+        w: 0.99999994
+  - vertexIndex: 4
+    childCount: 1
+    childStartDataIndex: 5
+    localPos:
+      x: 0
+      y: 0
+      z: 0
+    localRot:
+      value:
+        x: 0
+        y: 0
+        z: 0
+        w: 1
+  - vertexIndex: 5
+    childCount: 0
+    childStartDataIndex: 0
+    localPos:
+      x: -0.09700002
+      y: 0.028999994
+      z: -0.10600006
+    localRot:
+      value:
+        x: 0
+        y: 0
+        z: 0
+        w: 0.99999994
+  - vertexIndex: 6
+    childCount: 1
+    childStartDataIndex: 7
+    localPos:
+      x: 0
+      y: 0
+      z: 0
+    localRot:
+      value:
+        x: 0
+        y: 0
+        z: 0
+        w: 1
+  - vertexIndex: 7
+    childCount: 0
+    childStartDataIndex: 0
+    localPos:
+      x: 0.103000015
+      y: 0.016999915
+      z: -0.12500004
+    localRot:
+      value:
+        x: 0
+        y: 0
+        z: 0
+        w: 0.99999994
+  lineRotationRootInfoList:
+  - startIndex: 0
+    dataLength: 2
+  - startIndex: 2
+    dataLength: 2
+  - startIndex: 4
+    dataLength: 2
+  - startIndex: 6
+    dataLength: 2
+  triangleRotationDataList: []
+  triangleRotationIndexList: 
+  edgeCollisionDataList: []
+  edgeCollisionReferenceList: []
+  edgeCollisionWriteBufferCount: 0
+  penetrationDataList: []
+  penetrationReferenceList: []
+  penetrationMode: 0
+  initScale: {x: 1, y: 1, z: 1}
+--- !u!114 &114324316263491438
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5479bb56a42b7f94bbae5d75fe03f75d, type: 3}
+  m_Name: SelectionData_Magica Bone Cloth (Misaki_hair)
+  m_EditorClassIdentifier: 
+  dataHash: 1389964224
   dataVersion: 2
-  isSkinning: 0
-  vertexCount: 6
-  vertexInfoList: 000000100100001002000010030000100400001005000010
-  vertexWeightList: []
-  vertexHashList: 
-  uvList: []
-  lineCount: 3
-  lineList: 000000000100000002000000030000000400000005000000
-  triangleCount: 0
-  triangleList: 
-  boneCount: 0
-  vertexToTriangleInfoList: 
-  vertexToTriangleIndexList: 
-  childDataList: []
-  baseScale: {x: 0, y: 0, z: 0}
---- !u!114 &114169894772656998
+  selectionList:
+  - selectData: 020000000100000001000000020000000100000001000000020000000100000001000000020000000100000001000000020000000100000001000000020000000100000001000000020000000100000001000000020000000100000001000000020000000100000001000000020000000100000001000000020000000100000001000000020000000100000001000000
+    vertexHashList: 000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+--- !u!114 &114377651252177238
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5479bb56a42b7f94bbae5d75fe03f75d, type: 3}
+  m_Name: SelectionData_Magica Bone Cloth (Misaki_hair) front
+  m_EditorClassIdentifier: 
+  dataHash: 1356708189
+  dataVersion: 2
+  selectionList:
+  - selectData: 020000000100000002000000010000000200000001000000
+    vertexHashList: 000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+--- !u!114 &114474269313348990
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -6260,8 +6634,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0548f9dc46468d94c96cbbd1e5c05f74, type: 3}
   m_Name: BoneClothData_Magica Bone Cloth (Misaki_hair) back
   m_EditorClassIdentifier: 
-  dataHash: -289598262
+  dataHash: -853441435
   dataVersion: 5
+  triangleBendAlgorithm: 1
+  restoreRotationAlgorithm: 1
+  clampRotationAlgorithm: 1
   useVertexList: 000000000100000002000000030000000400000005000000060000000700000008000000090000000a0000000b0000000c0000000d0000000e0000000f000000100000001100000012000000130000001400000015000000160000001700000018000000190000001a0000001b0000001c0000001d0000001e0000001f00000020000000210000002200000023000000
   selectionData: 020000000100000001000000020000000100000001000000020000000100000001000000020000000100000001000000020000000100000001000000020000000100000001000000020000000100000001000000020000000100000001000000020000000100000001000000020000000100000001000000020000000100000001000000020000000100000001000000
   maxLevel: 3
@@ -6819,237 +7196,11 @@ MonoBehaviour:
     count: 1
   clampDistance2DataList: []
   clampDistance2RootInfoList: []
-  restoreRotationDataList:
-  - vertexIndex: 1
-    targetVertexIndex: 0
-    localPos:
-      x: -0.000000005393101
-      y: -0.00000005536484
-      z: -0.18096249
-  - vertexIndex: 2
-    targetVertexIndex: 1
-    localPos:
-      x: -0.000000006357788
-      y: 0.0000000059842886
-      z: -0.21333192
-  - vertexIndex: 4
-    targetVertexIndex: 3
-    localPos:
-      x: -0.000000027261141
-      y: -0.000000009678167
-      z: -0.18096252
-  - vertexIndex: 5
-    targetVertexIndex: 4
-    localPos:
-      x: 0.000000025928784
-      y: 0.000000059320822
-      z: -0.2115307
-  - vertexIndex: 7
-    targetVertexIndex: 6
-    localPos:
-      x: -0.000000018066615
-      y: -0.00000009951755
-      z: -0.1809631
-  - vertexIndex: 8
-    targetVertexIndex: 7
-    localPos:
-      x: 0.00000013019678
-      y: -0.0000002909456
-      z: -0.21153042
-  - vertexIndex: 10
-    targetVertexIndex: 9
-    localPos:
-      x: -0.000000043432003
-      y: -0.000000012832507
-      z: -0.18096244
-  - vertexIndex: 11
-    targetVertexIndex: 10
-    localPos:
-      x: 0.00000005505827
-      y: 0.000000038065686
-      z: -0.2094551
-  - vertexIndex: 13
-    targetVertexIndex: 12
-    localPos:
-      x: 0.00000003444328
-      y: -0.00000018888568
-      z: -0.18096311
-  - vertexIndex: 14
-    targetVertexIndex: 13
-    localPos:
-      x: -0.00000076536327
-      y: -0.00000038468374
-      z: -0.20945415
-  - vertexIndex: 16
-    targetVertexIndex: 15
-    localPos:
-      x: -0.000000067176
-      y: 0.000000064692124
-      z: -0.18096247
-  - vertexIndex: 17
-    targetVertexIndex: 16
-    localPos:
-      x: 0.000000014776331
-      y: 0.00000004424616
-      z: -0.20961285
-  - vertexIndex: 19
-    targetVertexIndex: 18
-    localPos:
-      x: -0.0000002454638
-      y: -0.00000045819255
-      z: -0.18096222
-  - vertexIndex: 20
-    targetVertexIndex: 19
-    localPos:
-      x: -0.00000046413783
-      y: -0.00000019718253
-      z: -0.20961347
-  - vertexIndex: 22
-    targetVertexIndex: 21
-    localPos:
-      x: -0.000000040345604
-      y: 0.000000096335334
-      z: -0.14463164
-  - vertexIndex: 23
-    targetVertexIndex: 22
-    localPos:
-      x: 0.0000000058686416
-      y: 0.00000006119575
-      z: -0.20102645
-  - vertexIndex: 25
-    targetVertexIndex: 24
-    localPos:
-      x: -0.0000003506486
-      y: -0.000000037159044
-      z: -0.1446318
-  - vertexIndex: 26
-    targetVertexIndex: 25
-    localPos:
-      x: 0.00000011553711
-      y: -0.000000070466385
-      z: -0.20102718
-  - vertexIndex: 28
-    targetVertexIndex: 27
-    localPos:
-      x: -0.00000002586413
-      y: -0.0000000034988143
-      z: -0.13762951
-  - vertexIndex: 29
-    targetVertexIndex: 28
-    localPos:
-      x: -0.000000007517002
-      y: 0.00000006546064
-      z: -0.17636667
-  - vertexIndex: 31
-    targetVertexIndex: 30
-    localPos:
-      x: 0.000000020687773
-      y: 0.00000014095977
-      z: -0.13762939
-  - vertexIndex: 32
-    targetVertexIndex: 31
-    localPos:
-      x: -0.000000037811297
-      y: -0.00000044364006
-      z: -0.17636712
-  - vertexIndex: 34
-    targetVertexIndex: 33
-    localPos:
-      x: -0.0000000030883045
-      y: 0.000000032552396
-      z: -0.1094175
-  - vertexIndex: 35
-    targetVertexIndex: 34
-    localPos:
-      x: -0.0000000045830424
-      y: 0.000000025421139
-      z: -0.17346026
-  restoreRotationReferenceList:
-  - startIndex: 0
-    count: 0
-  - startIndex: 0
-    count: 1
-  - startIndex: 1
-    count: 1
-  - startIndex: 2
-    count: 0
-  - startIndex: 2
-    count: 1
-  - startIndex: 3
-    count: 1
-  - startIndex: 4
-    count: 0
-  - startIndex: 4
-    count: 1
-  - startIndex: 5
-    count: 1
-  - startIndex: 6
-    count: 0
-  - startIndex: 6
-    count: 1
-  - startIndex: 7
-    count: 1
-  - startIndex: 8
-    count: 0
-  - startIndex: 8
-    count: 1
-  - startIndex: 9
-    count: 1
-  - startIndex: 10
-    count: 0
-  - startIndex: 10
-    count: 1
-  - startIndex: 11
-    count: 1
-  - startIndex: 12
-    count: 0
-  - startIndex: 12
-    count: 1
-  - startIndex: 13
-    count: 1
-  - startIndex: 14
-    count: 0
-  - startIndex: 14
-    count: 1
-  - startIndex: 15
-    count: 1
-  - startIndex: 16
-    count: 0
-  - startIndex: 16
-    count: 1
-  - startIndex: 17
-    count: 1
-  - startIndex: 18
-    count: 0
-  - startIndex: 18
-    count: 1
-  - startIndex: 19
-    count: 1
-  - startIndex: 20
-    count: 0
-  - startIndex: 20
-    count: 1
-  - startIndex: 21
-    count: 1
-  - startIndex: 22
-    count: 0
-  - startIndex: 22
-    count: 1
-  - startIndex: 23
-    count: 1
-  clampRotationDataList:
-  - vertexIndex: 0
-    parentVertexIndex: -1
-    localPos:
-      x: 0
-      y: 0
-      z: 0
-    localRot:
-      value:
-        x: 0
-        y: 0
-        z: 0
-        w: 0
+  restoreRotationDataList: []
+  restoreRotationReferenceList: []
+  clampRotationDataList: []
+  clampRotationRootInfoList: []
+  compositeRotationDataList:
   - vertexIndex: 1
     parentVertexIndex: 0
     localPos:
@@ -7074,18 +7225,6 @@ MonoBehaviour:
         y: 1.4790347e-16
         z: -1.0597593e-15
         w: 1
-  - vertexIndex: 3
-    parentVertexIndex: -1
-    localPos:
-      x: 0
-      y: 0
-      z: 0
-    localRot:
-      value:
-        x: 0
-        y: 0
-        z: 0
-        w: 0
   - vertexIndex: 4
     parentVertexIndex: 3
     localPos:
@@ -7110,18 +7249,6 @@ MonoBehaviour:
         y: 0
         z: 0
         w: 1.0000001
-  - vertexIndex: 6
-    parentVertexIndex: -1
-    localPos:
-      x: 0
-      y: 0
-      z: 0
-    localRot:
-      value:
-        x: 0
-        y: 0
-        z: 0
-        w: 0
   - vertexIndex: 7
     parentVertexIndex: 6
     localPos:
@@ -7146,18 +7273,6 @@ MonoBehaviour:
         y: -0.0000000012319763
         z: -0.000000020533879
         w: 1
-  - vertexIndex: 9
-    parentVertexIndex: -1
-    localPos:
-      x: 0
-      y: 0
-      z: 0
-    localRot:
-      value:
-        x: 0
-        y: 0
-        z: 0
-        w: 0
   - vertexIndex: 10
     parentVertexIndex: 9
     localPos:
@@ -7182,18 +7297,6 @@ MonoBehaviour:
         y: -0.000000020606947
         z: -0.00000001688205
         w: 1
-  - vertexIndex: 12
-    parentVertexIndex: -1
-    localPos:
-      x: 0
-      y: 0
-      z: 0
-    localRot:
-      value:
-        x: 0
-        y: 0
-        z: 0
-        w: 0
   - vertexIndex: 13
     parentVertexIndex: 12
     localPos:
@@ -7218,18 +7321,6 @@ MonoBehaviour:
         y: 0
         z: 0
         w: 1.0000001
-  - vertexIndex: 15
-    parentVertexIndex: -1
-    localPos:
-      x: 0
-      y: 0
-      z: 0
-    localRot:
-      value:
-        x: 0
-        y: 0
-        z: 0
-        w: 0
   - vertexIndex: 16
     parentVertexIndex: 15
     localPos:
@@ -7254,18 +7345,6 @@ MonoBehaviour:
         y: 0
         z: 0
         w: 1
-  - vertexIndex: 18
-    parentVertexIndex: -1
-    localPos:
-      x: 0
-      y: 0
-      z: 0
-    localRot:
-      value:
-        x: 0
-        y: 0
-        z: 0
-        w: 0
   - vertexIndex: 19
     parentVertexIndex: 18
     localPos:
@@ -7290,18 +7369,6 @@ MonoBehaviour:
         y: -0.000000022118828
         z: 0.000000025802567
         w: 1.0000001
-  - vertexIndex: 21
-    parentVertexIndex: -1
-    localPos:
-      x: 0
-      y: 0
-      z: 0
-    localRot:
-      value:
-        x: 0
-        y: 0
-        z: 0
-        w: 0
   - vertexIndex: 22
     parentVertexIndex: 21
     localPos:
@@ -7326,18 +7393,6 @@ MonoBehaviour:
         y: 0
         z: 0
         w: 1.0000001
-  - vertexIndex: 24
-    parentVertexIndex: -1
-    localPos:
-      x: 0
-      y: 0
-      z: 0
-    localRot:
-      value:
-        x: 0
-        y: 0
-        z: 0
-        w: 0
   - vertexIndex: 25
     parentVertexIndex: 24
     localPos:
@@ -7362,18 +7417,6 @@ MonoBehaviour:
         y: 0.0000000035042047
         z: -0.0000000024199776
         w: 1.0000001
-  - vertexIndex: 27
-    parentVertexIndex: -1
-    localPos:
-      x: 0
-      y: 0
-      z: 0
-    localRot:
-      value:
-        x: 0
-        y: 0
-        z: 0
-        w: 0
   - vertexIndex: 28
     parentVertexIndex: 27
     localPos:
@@ -7398,18 +7441,6 @@ MonoBehaviour:
         y: 0
         z: 0
         w: 1
-  - vertexIndex: 30
-    parentVertexIndex: -1
-    localPos:
-      x: 0
-      y: 0
-      z: 0
-    localRot:
-      value:
-        x: 0
-        y: 0
-        z: 0
-        w: 0
   - vertexIndex: 31
     parentVertexIndex: 30
     localPos:
@@ -7434,18 +7465,6 @@ MonoBehaviour:
         y: -0.000000052677777
         z: -0.0000000013843084
         w: 1.0000001
-  - vertexIndex: 33
-    parentVertexIndex: -1
-    localPos:
-      x: 0
-      y: 0
-      z: 0
-    localRot:
-      value:
-        x: 0
-        y: 0
-        z: 0
-        w: 0
   - vertexIndex: 34
     parentVertexIndex: 33
     localPos:
@@ -7470,31 +7489,32 @@ MonoBehaviour:
         y: 1.778508e-16
         z: 1.3293945e-16
         w: 1
-  clampRotationRootInfoList:
+  compositeRotationRootInfoList:
   - startIndex: 0
-    dataLength: 3
-  - startIndex: 3
-    dataLength: 3
+    dataLength: 2
+  - startIndex: 2
+    dataLength: 2
+  - startIndex: 4
+    dataLength: 2
   - startIndex: 6
-    dataLength: 3
-  - startIndex: 9
-    dataLength: 3
+    dataLength: 2
+  - startIndex: 8
+    dataLength: 2
+  - startIndex: 10
+    dataLength: 2
   - startIndex: 12
-    dataLength: 3
-  - startIndex: 15
-    dataLength: 3
+    dataLength: 2
+  - startIndex: 14
+    dataLength: 2
+  - startIndex: 16
+    dataLength: 2
   - startIndex: 18
-    dataLength: 3
-  - startIndex: 21
-    dataLength: 3
-  - startIndex: 24
-    dataLength: 3
-  - startIndex: 27
-    dataLength: 3
-  - startIndex: 30
-    dataLength: 3
-  - startIndex: 33
-    dataLength: 3
+    dataLength: 2
+  - startIndex: 20
+    dataLength: 2
+  - startIndex: 22
+    dataLength: 2
+  twistDataList: []
   adjustRotationDataList: []
   triangleBendDataList: []
   triangleBendReferenceList: []
@@ -8005,53 +8025,7 @@ MonoBehaviour:
   penetrationReferenceList: []
   penetrationMode: 0
   initScale: {x: 1, y: 1, z: 1}
---- !u!114 &114186153038276292
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2b8ed8fdca875474bbc1b8d6dcfb79bc, type: 3}
-  m_Name: BoneClothMeshData_Magica Bone Cloth (Misaki_hair) ribbon
-  m_EditorClassIdentifier: 
-  dataHash: 600315615
-  dataVersion: 2
-  isSkinning: 0
-  vertexCount: 8
-  vertexInfoList: 0000001001000010020000100300001004000010050000100600001007000010
-  vertexWeightList: []
-  vertexHashList: 
-  uvList: []
-  lineCount: 4
-  lineList: 0000000001000000020000000300000004000000050000000600000007000000
-  triangleCount: 0
-  triangleList: 
-  boneCount: 0
-  vertexToTriangleInfoList: 
-  vertexToTriangleIndexList: 
-  childDataList: []
-  baseScale: {x: 0, y: 0, z: 0}
---- !u!114 &114324316263491438
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5479bb56a42b7f94bbae5d75fe03f75d, type: 3}
-  m_Name: SelectionData_Magica Bone Cloth (Misaki_hair)
-  m_EditorClassIdentifier: 
-  dataHash: 1389964224
-  dataVersion: 2
-  selectionList:
-  - selectData: 020000000100000001000000020000000100000001000000020000000100000001000000020000000100000001000000020000000100000001000000020000000100000001000000020000000100000001000000020000000100000001000000020000000100000001000000020000000100000001000000020000000100000001000000020000000100000001000000
-    vertexHashList: 000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
---- !u!114 &114338371988152524
+--- !u!114 &114580224030573098
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8063,8 +8037,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0548f9dc46468d94c96cbbd1e5c05f74, type: 3}
   m_Name: BoneClothData_Magica Bone Cloth (Misaki_hair) front
   m_EditorClassIdentifier: 
-  dataHash: -289598611
+  dataHash: -853441733
   dataVersion: 5
+  triangleBendAlgorithm: 1
+  restoreRotationAlgorithm: 1
+  clampRotationAlgorithm: 1
   useVertexList: 000000000100000002000000030000000400000005000000
   selectionData: 020000000100000002000000010000000200000001000000
   maxLevel: 2
@@ -8139,51 +8116,11 @@ MonoBehaviour:
     count: 1
   clampDistance2DataList: []
   clampDistance2RootInfoList: []
-  restoreRotationDataList:
-  - vertexIndex: 1
-    targetVertexIndex: 0
-    localPos:
-      x: -0.000000005650276
-      y: 0.00000008220573
-      z: -0.18959169
-  - vertexIndex: 3
-    targetVertexIndex: 2
-    localPos:
-      x: -0.000000014901161
-      y: -0.00000003700355
-      z: -0.18959169
-  - vertexIndex: 5
-    targetVertexIndex: 4
-    localPos:
-      x: 0.0000000028251406
-      y: -0.000000037003513
-      z: -0.18959199
-  restoreRotationReferenceList:
-  - startIndex: 0
-    count: 0
-  - startIndex: 0
-    count: 1
-  - startIndex: 1
-    count: 0
-  - startIndex: 1
-    count: 1
-  - startIndex: 2
-    count: 0
-  - startIndex: 2
-    count: 1
-  clampRotationDataList:
-  - vertexIndex: 0
-    parentVertexIndex: -1
-    localPos:
-      x: 0
-      y: 0
-      z: 0
-    localRot:
-      value:
-        x: 0
-        y: 0
-        z: 0
-        w: 0
+  restoreRotationDataList: []
+  restoreRotationReferenceList: []
+  clampRotationDataList: []
+  clampRotationRootInfoList: []
+  compositeRotationDataList:
   - vertexIndex: 1
     parentVertexIndex: 0
     localPos:
@@ -8196,18 +8133,6 @@ MonoBehaviour:
         y: 0
         z: 0
         w: 0.99999994
-  - vertexIndex: 2
-    parentVertexIndex: -1
-    localPos:
-      x: 0
-      y: 0
-      z: 0
-    localRot:
-      value:
-        x: 0
-        y: 0
-        z: 0
-        w: 0
   - vertexIndex: 3
     parentVertexIndex: 2
     localPos:
@@ -8220,18 +8145,6 @@ MonoBehaviour:
         y: 0
         z: 0
         w: 0.99999994
-  - vertexIndex: 4
-    parentVertexIndex: -1
-    localPos:
-      x: 0
-      y: 0
-      z: 0
-    localRot:
-      value:
-        x: 0
-        y: 0
-        z: 0
-        w: 0
   - vertexIndex: 5
     parentVertexIndex: 4
     localPos:
@@ -8244,13 +8157,14 @@ MonoBehaviour:
         y: -3.9252306e-16
         z: -3.9252314e-16
         w: 0.99999994
-  clampRotationRootInfoList:
+  compositeRotationRootInfoList:
   - startIndex: 0
-    dataLength: 2
+    dataLength: 1
+  - startIndex: 1
+    dataLength: 1
   - startIndex: 2
-    dataLength: 2
-  - startIndex: 4
-    dataLength: 2
+    dataLength: 1
+  twistDataList: []
   adjustRotationDataList: []
   triangleBendDataList: []
   triangleBendReferenceList: []
@@ -8353,7 +8267,7 @@ MonoBehaviour:
   penetrationReferenceList: []
   penetrationMode: 0
   initScale: {x: 1, y: 1, z: 1}
---- !u!114 &114377651252177238
+--- !u!114 &114629298274350048
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8362,15 +8276,27 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5479bb56a42b7f94bbae5d75fe03f75d, type: 3}
-  m_Name: SelectionData_Magica Bone Cloth (Misaki_hair) front
+  m_Script: {fileID: 11500000, guid: 2b8ed8fdca875474bbc1b8d6dcfb79bc, type: 3}
+  m_Name: BoneClothMeshData_Magica Bone Cloth (Misaki_hair) front
   m_EditorClassIdentifier: 
-  dataHash: 1356708189
+  dataHash: 600315608
   dataVersion: 2
-  selectionList:
-  - selectData: 020000000100000002000000010000000200000001000000
-    vertexHashList: 000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
---- !u!114 &114625484768954118
+  isSkinning: 0
+  vertexCount: 6
+  vertexInfoList: 000000100100001002000010030000100400001005000010
+  vertexWeightList: []
+  vertexHashList: 
+  uvList: []
+  lineCount: 3
+  lineList: 000000000100000002000000030000000400000005000000
+  triangleCount: 0
+  triangleList: 
+  boneCount: 0
+  vertexToTriangleInfoList: 
+  vertexToTriangleIndexList: 
+  childDataList: []
+  baseScale: {x: 0, y: 0, z: 0}
+--- !u!114 &114760505945311594
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8379,382 +8305,26 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0548f9dc46468d94c96cbbd1e5c05f74, type: 3}
-  m_Name: BoneClothData_Magica Bone Cloth (Misaki_hair) ribbon
+  m_Script: {fileID: 11500000, guid: 2b8ed8fdca875474bbc1b8d6dcfb79bc, type: 3}
+  m_Name: BoneClothMeshData_Magica Bone Cloth (Misaki_hair) back
   m_EditorClassIdentifier: 
-  dataHash: -289598591
-  dataVersion: 5
-  useVertexList: 0000000001000000020000000300000004000000050000000600000007000000
-  selectionData: 0200000001000000020000000100000002000000010000000200000001000000
-  maxLevel: 2
-  vertexFlagLevelList: 0100000002000100010000000200010001000000020001000100000002000100
-  vertexDepthList:
-  - 0
-  - 1
-  - 0
-  - 1
-  - 0
-  - 1
-  - 0
-  - 1
-  rootList: ffffffff00000000ffffffff02000000ffffffff04000000ffffffff06000000
-  parentList: ffffffff00000000ffffffff02000000ffffffff04000000ffffffff06000000
-  structDistanceDataList:
-  - vertexIndex: 0
-    targetVertexIndex: 1
-    length: 0.101000026
-  - vertexIndex: 1
-    targetVertexIndex: 0
-    length: 0.101000026
-  - vertexIndex: 2
-    targetVertexIndex: 3
-    length: 0.096000016
-  - vertexIndex: 3
-    targetVertexIndex: 2
-    length: 0.096000016
-  - vertexIndex: 4
-    targetVertexIndex: 5
-    length: 0.14658108
-  - vertexIndex: 5
-    targetVertexIndex: 4
-    length: 0.14658108
-  - vertexIndex: 6
-    targetVertexIndex: 7
-    length: 0.16285887
-  - vertexIndex: 7
-    targetVertexIndex: 6
-    length: 0.16285887
-  structDistanceReferenceList:
-  - startIndex: 0
-    count: 1
-  - startIndex: 1
-    count: 1
-  - startIndex: 2
-    count: 1
-  - startIndex: 3
-    count: 1
-  - startIndex: 4
-    count: 1
-  - startIndex: 5
-    count: 1
-  - startIndex: 6
-    count: 1
-  - startIndex: 7
-    count: 1
-  bendDistanceDataList: []
-  bendDistanceReferenceList: []
-  nearDistanceDataList: []
-  nearDistanceReferenceList: []
-  rootDistanceDataList:
-  - vertexIndex: 1
-    targetVertexIndex: 0
-    length: 0.101000026
-  - vertexIndex: 3
-    targetVertexIndex: 2
-    length: 0.096000016
-  - vertexIndex: 5
-    targetVertexIndex: 4
-    length: 0.14658108
-  - vertexIndex: 7
-    targetVertexIndex: 6
-    length: 0.16285887
-  rootDistanceReferenceList:
-  - startIndex: 0
-    count: 0
-  - startIndex: 0
-    count: 1
-  - startIndex: 1
-    count: 0
-  - startIndex: 1
-    count: 1
-  - startIndex: 2
-    count: 0
-  - startIndex: 2
-    count: 1
-  - startIndex: 3
-    count: 0
-  - startIndex: 3
-    count: 1
-  clampDistance2DataList: []
-  clampDistance2RootInfoList: []
-  restoreRotationDataList:
-  - vertexIndex: 1
-    targetVertexIndex: 0
-    localPos:
-      x: -0.101000026
-      y: -8.2305635e-10
-      z: 0
-  - vertexIndex: 3
-    targetVertexIndex: 2
-    localPos:
-      x: 0.096000016
-      y: 9.387731e-10
-      z: 0.0000000014305114
-  - vertexIndex: 5
-    targetVertexIndex: 4
-    localPos:
-      x: -0.09700002
-      y: 0.028999994
-      z: -0.10600006
-  - vertexIndex: 7
-    targetVertexIndex: 6
-    localPos:
-      x: 0.103000015
-      y: 0.016999915
-      z: -0.12500004
-  restoreRotationReferenceList:
-  - startIndex: 0
-    count: 0
-  - startIndex: 0
-    count: 1
-  - startIndex: 1
-    count: 0
-  - startIndex: 1
-    count: 1
-  - startIndex: 2
-    count: 0
-  - startIndex: 2
-    count: 1
-  - startIndex: 3
-    count: 0
-  - startIndex: 3
-    count: 1
-  clampRotationDataList:
-  - vertexIndex: 0
-    parentVertexIndex: -1
-    localPos:
-      x: 0
-      y: 0
-      z: 0
-    localRot:
-      value:
-        x: 0
-        y: 0
-        z: 0
-        w: 0
-  - vertexIndex: 1
-    parentVertexIndex: 0
-    localPos:
-      x: -1
-      y: -0.000000008149071
-      z: 0
-    localRot:
-      value:
-        x: 0
-        y: 0
-        z: 0
-        w: 0.99999994
-  - vertexIndex: 2
-    parentVertexIndex: -1
-    localPos:
-      x: 0
-      y: 0
-      z: 0
-    localRot:
-      value:
-        x: 0
-        y: 0
-        z: 0
-        w: 0
-  - vertexIndex: 3
-    parentVertexIndex: 2
-    localPos:
-      x: 1
-      y: 0.000000009778884
-      z: 0.000000014901158
-    localRot:
-      value:
-        x: 0
-        y: 0
-        z: 0
-        w: 0.99999994
-  - vertexIndex: 4
-    parentVertexIndex: -1
-    localPos:
-      x: 0
-      y: 0
-      z: 0
-    localRot:
-      value:
-        x: 0
-        y: 0
-        z: 0
-        w: 0
-  - vertexIndex: 5
-    parentVertexIndex: 4
-    localPos:
-      x: -0.6617499
-      y: 0.19784269
-      z: -0.72314966
-    localRot:
-      value:
-        x: 0
-        y: 0
-        z: 0
-        w: 0.99999994
-  - vertexIndex: 6
-    parentVertexIndex: -1
-    localPos:
-      x: 0
-      y: 0
-      z: 0
-    localRot:
-      value:
-        x: 0
-        y: 0
-        z: 0
-        w: 0
-  - vertexIndex: 7
-    parentVertexIndex: 6
-    localPos:
-      x: 0.6324495
-      y: 0.10438433
-      z: -0.767536
-    localRot:
-      value:
-        x: 0
-        y: 0
-        z: 0
-        w: 0.99999994
-  clampRotationRootInfoList:
-  - startIndex: 0
-    dataLength: 2
-  - startIndex: 2
-    dataLength: 2
-  - startIndex: 4
-    dataLength: 2
-  - startIndex: 6
-    dataLength: 2
-  adjustRotationDataList: []
-  triangleBendDataList: []
-  triangleBendReferenceList: []
-  triangleBendWriteBufferCount: 0
-  volumeDataList: []
-  volumeReferenceList: []
-  volumeWriteBufferCount: 0
-  lineRotationDataList:
-  - vertexIndex: 0
-    childCount: 1
-    childStartDataIndex: 1
-    localPos:
-      x: 0
-      y: 0
-      z: 0
-    localRot:
-      value:
-        x: 0
-        y: 0
-        z: 0
-        w: 1
-  - vertexIndex: 1
-    childCount: 0
-    childStartDataIndex: 0
-    localPos:
-      x: -0.101000026
-      y: -8.2305635e-10
-      z: 0
-    localRot:
-      value:
-        x: 0
-        y: 0
-        z: 0
-        w: 0.99999994
-  - vertexIndex: 2
-    childCount: 1
-    childStartDataIndex: 3
-    localPos:
-      x: 0
-      y: 0
-      z: 0
-    localRot:
-      value:
-        x: 0
-        y: 0
-        z: 0
-        w: 1
-  - vertexIndex: 3
-    childCount: 0
-    childStartDataIndex: 0
-    localPos:
-      x: 0.096000016
-      y: 9.387731e-10
-      z: 0.0000000014305114
-    localRot:
-      value:
-        x: 0
-        y: 0
-        z: 0
-        w: 0.99999994
-  - vertexIndex: 4
-    childCount: 1
-    childStartDataIndex: 5
-    localPos:
-      x: 0
-      y: 0
-      z: 0
-    localRot:
-      value:
-        x: 0
-        y: 0
-        z: 0
-        w: 1
-  - vertexIndex: 5
-    childCount: 0
-    childStartDataIndex: 0
-    localPos:
-      x: -0.09700002
-      y: 0.028999994
-      z: -0.10600006
-    localRot:
-      value:
-        x: 0
-        y: 0
-        z: 0
-        w: 0.99999994
-  - vertexIndex: 6
-    childCount: 1
-    childStartDataIndex: 7
-    localPos:
-      x: 0
-      y: 0
-      z: 0
-    localRot:
-      value:
-        x: 0
-        y: 0
-        z: 0
-        w: 1
-  - vertexIndex: 7
-    childCount: 0
-    childStartDataIndex: 0
-    localPos:
-      x: 0.103000015
-      y: 0.016999915
-      z: -0.12500004
-    localRot:
-      value:
-        x: 0
-        y: 0
-        z: 0
-        w: 0.99999994
-  lineRotationRootInfoList:
-  - startIndex: 0
-    dataLength: 2
-  - startIndex: 2
-    dataLength: 2
-  - startIndex: 4
-    dataLength: 2
-  - startIndex: 6
-    dataLength: 2
-  triangleRotationDataList: []
-  triangleRotationIndexList: 
-  edgeCollisionDataList: []
-  edgeCollisionReferenceList: []
-  edgeCollisionWriteBufferCount: 0
-  penetrationDataList: []
-  penetrationReferenceList: []
-  penetrationMode: 0
-  initScale: {x: 1, y: 1, z: 1}
+  dataHash: 600315731
+  dataVersion: 2
+  isSkinning: 0
+  vertexCount: 36
+  vertexInfoList: 000000100100001002000010030000100400001005000010060000100700001008000010090000100a0000100b0000100c0000100d0000100e0000100f000010100000101100001012000010130000101400001015000010160000101700001018000010190000101a0000101b0000101c0000101d0000101e0000101f00001020000010210000102200001023000010
+  vertexWeightList: []
+  vertexHashList: 
+  uvList: []
+  lineCount: 24
+  lineList: 000000000100000001000000020000000300000004000000040000000500000006000000070000000700000008000000090000000a0000000a0000000b0000000c0000000d0000000d0000000e0000000f00000010000000100000001100000012000000130000001300000014000000150000001600000016000000170000001800000019000000190000001a0000001b0000001c0000001c0000001d0000001e0000001f0000001f0000002000000021000000220000002200000023000000
+  triangleCount: 0
+  triangleList: 
+  boneCount: 0
+  vertexToTriangleInfoList: 
+  vertexToTriangleIndexList: 
+  childDataList: []
+  baseScale: {x: 0, y: 0, z: 0}
 --- !u!114 &114933991011296270
 MonoBehaviour:
   m_ObjectHideFlags: 0

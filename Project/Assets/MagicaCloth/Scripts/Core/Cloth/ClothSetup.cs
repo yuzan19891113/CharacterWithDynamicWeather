@@ -65,8 +65,8 @@ namespace MagicaCloth
                 param.TeleportRotation,
                 param.ResetStabilizationTime,
                 param.TeleportResetMode,
-                param.GetClampRotationAngle(),
-                param.ClampRotationVelocityLimit
+                param.GetClampRotationAngle(clothData.clampRotationAlgorithm),
+                param.GetClampRotationVelocityLimit(clothData.clampRotationAlgorithm)
                 );
 
             int vcnt = clothData.VertexUseCount;
@@ -203,37 +203,80 @@ namespace MagicaCloth
                 manager.Team.teamDataList[team.TeamId] = teamData;
             }
 
-            // 回転復元拘束
-            if (param.UseRestoreRotation && clothData.RestoreRotationConstraintCount > 0)
+            // 回転復元拘束[Algorithm 1]
+            if (clothData.restoreRotationAlgorithm == ClothParams.Algorithm.Algorithm_1)
             {
-                // 拘束データ
-                int group = compute.RestoreRotation.AddGroup(
-                    team.TeamId,
-                    param.UseRestoreRotation,
-                    param.GetRotationPower(),
-                    param.RestoreRotationVelocityInfluence,
-                    clothData.restoreRotationDataList,
-                    clothData.restoreRotationReferenceList
-                    );
-                var teamData = manager.Team.teamDataList[team.TeamId];
-                teamData.restoreRotationGroupIndex = (short)group;
-                manager.Team.teamDataList[team.TeamId] = teamData;
+                if (param.UseRestoreRotation && clothData.RestoreRotationConstraintCount > 0)
+                {
+                    // 拘束データ
+                    int group = compute.RestoreRotation.AddGroup(
+                        team.TeamId,
+                        param.UseRestoreRotation,
+                        param.GetRestoreRotationPower(clothData.restoreRotationAlgorithm),
+                        param.GetRestoreRotationVelocityInfluence(clothData.restoreRotationAlgorithm),
+                        clothData.restoreRotationDataList,
+                        clothData.restoreRotationReferenceList
+                        );
+                    var teamData = manager.Team.teamDataList[team.TeamId];
+                    teamData.restoreRotationGroupIndex = (short)group;
+                    manager.Team.teamDataList[team.TeamId] = teamData;
+                }
             }
 
-            // 最大回転復元拘束
-            if (param.UseClampRotation && clothData.ClampRotationConstraintDataCount > 0)
+            // 最大回転復元拘束[Algorithm 1]
+            if (clothData.clampRotationAlgorithm == ClothParams.Algorithm.Algorithm_1)
+            {
+                if (param.UseClampRotation)
+                {
+                    // 拘束データ
+                    int group = compute.ClampRotation.AddGroup(
+                        team.TeamId,
+                        param.UseClampRotation,
+                        param.GetClampRotationAngle(clothData.clampRotationAlgorithm),
+                        param.ClampRotationVelocityInfluence,
+                        clothData.clampRotationDataList,
+                        clothData.clampRotationRootInfoList
+                        );
+                    var teamData = manager.Team.teamDataList[team.TeamId];
+                    teamData.clampRotationGroupIndex = (short)group;
+                    manager.Team.teamDataList[team.TeamId] = teamData;
+                }
+            }
+
+            // 複合回転拘束[Algorithm 2]
+            if (param.UseClampRotation || param.UseRestoreRotation)
+            {
+                if (clothData.CompositeRotationCount > 0)
+                {
+                    int group = compute.CompositeRotation.AddGroup(
+                        team.TeamId,
+                        param.UseClampRotation,
+                        param.GetClampRotationAngle(ClothParams.Algorithm.Algorithm_2),
+                        param.UseRestoreRotation,
+                        param.GetRestoreRotationPower(ClothParams.Algorithm.Algorithm_2),
+                        param.GetRestoreRotationVelocityInfluence(ClothParams.Algorithm.Algorithm_2),
+                        clothData.compositeRotationDataList,
+                        clothData.compositeRotationRootInfoList
+                        );
+                    var teamData = manager.Team.teamDataList[team.TeamId];
+                    teamData.compositeRotationGroupIndex = (short)group;
+                    manager.Team.teamDataList[team.TeamId] = teamData;
+                }
+            }
+
+            // ねじれ拘束
+            if (clothData.TwistConstraintCount > 0 && clothData.triangleBendAlgorithm == ClothParams.Algorithm.Algorithm_2)
             {
                 // 拘束データ
-                int group = compute.ClampRotation.AddGroup(
+                int group = compute.Twist.AddGroup(
                     team.TeamId,
-                    param.UseClampRotation,
-                    param.GetClampRotationAngle(),
-                    param.ClampRotationVelocityInfluence,
-                    clothData.clampRotationDataList,
-                    clothData.clampRotationRootInfoList
+                    param.UseTriangleBend && param.GetUseTwistCorrection(clothData.triangleBendAlgorithm),
+                    param.TwistRecoveryPower,
+                    clothData.twistDataList,
+                    clothData.twistReferenceList
                     );
                 var teamData = manager.Team.teamDataList[team.TeamId];
-                teamData.clampRotationGroupIndex = (short)group;
+                teamData.twistGroupIndex = (short)group;
                 manager.Team.teamDataList[team.TeamId] = teamData;
             }
 
@@ -243,7 +286,9 @@ namespace MagicaCloth
                 int group = compute.TriangleBend.AddGroup(
                     team.TeamId,
                     param.UseTriangleBend,
-                    param.GetTriangleBendStiffness(),
+                    clothData.triangleBendAlgorithm,
+                    param.GetTriangleBendStiffness(clothData.triangleBendAlgorithm),
+                    //param.UseTrianlgeBendIncludeFixed,
                     clothData.triangleBendDataList,
                     clothData.triangleBendReferenceList,
                     clothData.triangleBendWriteBufferCount
@@ -482,7 +527,7 @@ namespace MagicaCloth
         /// <summary>
         /// ランタイムデータ変更
         /// </summary>
-        public void ChangeData(PhysicsTeam team, ClothParams param)
+        public void ChangeData(PhysicsTeam team, ClothParams param, ClothData clothData)
         {
             if (Application.isPlaying == false)
                 return;
@@ -563,8 +608,8 @@ namespace MagicaCloth
                     param.TeleportRotation,
                     param.ResetStabilizationTime,
                     param.TeleportResetMode,
-                    param.GetClampRotationAngle(),
-                    param.ClampRotationVelocityLimit
+                    param.GetClampRotationAngle(clothData.clampRotationAlgorithm),
+                    param.GetClampRotationVelocityLimit(clothData.clampRotationAlgorithm)
                     );
             }
 
@@ -586,7 +631,18 @@ namespace MagicaCloth
             // トライアングルベンド拘束パラメータ再設定
             if (param.ChangedParam(ClothParams.ParamType.TriangleBend))
             {
-                compute.TriangleBend.ChangeParam(team.TeamId, param.UseTriangleBend, param.GetTriangleBendStiffness());
+                compute.TriangleBend.ChangeParam(
+                    team.TeamId,
+                    param.UseTriangleBend,
+                    param.GetTriangleBendStiffness(clothData.triangleBendAlgorithm)
+                    //param.UseTrianlgeBendIncludeFixed
+                    );
+
+                compute.Twist.ChangeParam(
+                    team.TeamId,
+                    param.UseTriangleBend && param.GetUseTwistCorrection(clothData.triangleBendAlgorithm),
+                    param.TwistRecoveryPower
+                    );
             }
 
             // ボリューム拘束パラメータ再設定
@@ -618,20 +674,64 @@ namespace MagicaCloth
             // 回転復元拘束パラメータ再設定
             if (param.ChangedParam(ClothParams.ParamType.RestoreRotation))
             {
-                compute.RestoreRotation.ChangeParam(team.TeamId, param.UseRestoreRotation, param.GetRotationPower(), param.RestoreRotationVelocityInfluence);
+                var algo = clothData.clampRotationAlgorithm;
+                if (algo == ClothParams.Algorithm.Algorithm_1)
+                {
+                    // [Algorithm 1]
+                    compute.RestoreRotation.ChangeParam(
+                    team.TeamId,
+                    param.UseRestoreRotation,
+                    param.GetRestoreRotationPower(clothData.restoreRotationAlgorithm),
+                    param.GetRestoreRotationVelocityInfluence(clothData.restoreRotationAlgorithm)
+                    );
+                }
+                else if (algo == ClothParams.Algorithm.Algorithm_2)
+                {
+                    // [Algorithm 2]
+                    compute.CompositeRotation.ChangeParam(
+                        team.TeamId,
+                        param.UseClampRotation,
+                        param.GetClampRotationAngle(algo),
+                        param.UseRestoreRotation,
+                        param.GetRestoreRotationPower(algo),
+                        param.GetRestoreRotationVelocityInfluence(algo)
+                        );
+                }
             }
 
             // 最大回転拘束パラメータ再設定
             if (param.ChangedParam(ClothParams.ParamType.ClampRotation))
             {
-                compute.ClampRotation.ChangeParam(
+                var algo = clothData.clampRotationAlgorithm;
+                if (algo == ClothParams.Algorithm.Algorithm_1)
+                {
+                    // [Algorithm 1]
+                    compute.ClampRotation.ChangeParam(
+                        team.TeamId,
+                        param.UseClampRotation,
+                        param.GetClampRotationAngle(algo),
+                        param.ClampRotationVelocityInfluence
+                        );
+                }
+                else if (algo == ClothParams.Algorithm.Algorithm_2)
+                {
+                    // [Algorithm 2]
+                    compute.CompositeRotation.ChangeParam(
+                        team.TeamId,
+                        param.UseClampRotation,
+                        param.GetClampRotationAngle(algo),
+                        param.UseRestoreRotation,
+                        param.GetRestoreRotationPower(algo),
+                        param.GetRestoreRotationVelocityInfluence(algo)
+                        );
+                }
+
+                // Algorithm共通
+                manager.Team.SetClampRotation(
                     team.TeamId,
-                    param.UseClampRotation,
-                    param.GetClampRotationAngle(),
-                    //param.GetClampRotationStiffness(),
-                    param.ClampRotationVelocityInfluence
+                    param.GetClampRotationAngle(algo),
+                    param.GetClampRotationVelocityLimit(algo)
                     );
-                manager.Team.SetClampRotation(team.TeamId, param.GetClampRotationAngle(), param.ClampRotationVelocityLimit);
             }
 
             // スプリング回転調整パラメータ再設定（これはワーカー）

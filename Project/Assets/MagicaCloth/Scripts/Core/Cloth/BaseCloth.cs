@@ -64,7 +64,7 @@ namespace MagicaCloth
         private float oldBlendRatio = -1.0f;
         private TeamUpdateMode oldUpdateMode = 0;
         private TeamCullingMode oldCullingMode = 0;
-
+        private bool oldUseAnimatedDistance = false;
 
         //=========================================================================================
         /// <summary>
@@ -152,7 +152,7 @@ namespace MagicaCloth
                 return;
 
             // クロスパラメータのラインタイム変更
-            setup.ChangeData(this, clothParams);
+            setup.ChangeData(this, clothParams, clothData);
         }
 
         //=========================================================================================
@@ -339,6 +339,7 @@ namespace MagicaCloth
             // 更新モード記録
             oldUpdateMode = UpdateMode;
             oldCullingMode = CullingMode;
+            oldUseAnimatedDistance = UseAnimatedDistance;
 
             // UnityPhysics更新モードによる各種設定
             if (UpdateMode == TeamUpdateMode.UnityPhysics)
@@ -382,6 +383,9 @@ namespace MagicaCloth
         protected virtual void ClothActive()
         {
             setup.ClothActive(this, clothParams, ClothData);
+
+            // アニメーションされた距離の使用設定
+            MagicaPhysicsManager.Instance.Team.SetFlag(TeamId, PhysicsManagerTeamData.Flag_AnimatedDistance, UseAnimatedDistance);
         }
 
         protected virtual void ClothInactive()
@@ -554,6 +558,15 @@ namespace MagicaCloth
 
                 oldUpdateMode = UpdateMode;
             }
+
+            // アニメーションされた距離の使用
+            if (UseAnimatedDistance != oldUseAnimatedDistance)
+            {
+                // チームデータへ反映
+                MagicaPhysicsManager.Instance.Team.SetFlag(TeamId, PhysicsManagerTeamData.Flag_AnimatedDistance, UseAnimatedDistance);
+
+                oldUseAnimatedDistance = UseAnimatedDistance;
+            }
         }
 
         //=========================================================================================
@@ -651,15 +664,36 @@ namespace MagicaCloth
         public bool HasChangedParam(ClothParams.ParamType ptype)
         {
             int index = (int)ptype;
+            if (clothParamDataHashList.Count == 0)
+                return false;
             if (index >= clothParamDataHashList.Count)
             {
-                return false;
+                return true;
             }
             int hash = clothParams.GetParamHash(this, ptype);
             if (hash == 0)
                 return false;
 
             return clothParamDataHashList[index] != hash;
+        }
+
+        /// <summary>
+        /// アルゴリズムバージョンチェック
+        /// </summary>
+        /// <returns></returns>
+        public Define.Error VerifyAlgorithmVersion()
+        {
+            if (clothData == null)
+                return Define.Error.None;
+
+            if (clothData.clampRotationAlgorithm != ClothParams.Algorithm.Algorithm_2)
+                return Define.Error.OldAlgorithm;
+            if (clothData.restoreRotationAlgorithm != ClothParams.Algorithm.Algorithm_2)
+                return Define.Error.OldAlgorithm;
+            if (clothData.triangleBendAlgorithm != ClothParams.Algorithm.Algorithm_2)
+                return Define.Error.OldAlgorithm;
+
+            return Define.Error.None;
         }
 
         //=========================================================================================

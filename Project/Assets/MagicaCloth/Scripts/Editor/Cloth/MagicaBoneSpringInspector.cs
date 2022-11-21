@@ -45,6 +45,8 @@ namespace MagicaCloth
             EditorPresetUtility.DrawPresetButton(scr, scr.Params);
             {
                 var cparam = serializedObject.FindProperty("clothParams");
+                if (EditorInspectorUtility.AlgorithmInspector(cparam, scr.HasChangedParam(ClothParams.ParamType.Algorithm), ConvertToLatestAlgorithmParameters))
+                    scr.Params.SetChangeParam(ClothParams.ParamType.Algorithm);
                 if (EditorInspectorUtility.RadiusInspector(cparam))
                     scr.Params.SetChangeParam(ClothParams.ParamType.Radius);
                 //if (EditorInspectorUtility.MassInspector(cparam))
@@ -297,12 +299,6 @@ namespace MagicaCloth
                 // １ウエイトで追加
                 uint vinfo = DataUtility.Pack4_28(1, i);
                 vertexInfoList.Add(vinfo);
-                var vw = new MeshData.VertexWeight();
-                vw.parentIndex = i;
-                vw.weight = 1.0f;
-                vw.localPos = lposList[i];
-                vw.localNor = lnorList[i];
-                vw.localTan = ltanList[i];
             }
             mdata.vertexInfoList = vertexInfoList.ToArray();
             mdata.vertexWeightList = vertexWeightList.ToArray();

@@ -1550,7 +1550,7 @@ namespace MagicaReductionMesh
             }
 
             // 不要なトライアングルを削除する(v1.8.0)
-            // 四辺形（トライアングルペア）を調べて、同じ頂点を使用しほぼ同じ平面ならば削除する
+            // 四辺形（トライアングルペア）を調べて、同じ頂点を使用しほぼ同じ平面ならば片方を削除する
             if (RemoveSameTrianglePair)
             {
                 var squareDict = GetSquareDict();
@@ -1576,6 +1576,12 @@ namespace MagicaReductionMesh
                             var s1 = slist[j];
                             if (removeSquareSet.Contains(s1))
                                 continue;
+
+                            // １つでもトライアングルが重複する場合は削除しない(v1.10.4)
+                            if (s0.triangleList.FindAll(s1.triangleList.Contains).Count > 0)
+                            {
+                                continue;
+                            }
 
                             var ang = math.abs(s0.angle - s1.angle);
 

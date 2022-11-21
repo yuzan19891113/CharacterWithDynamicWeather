@@ -201,6 +201,32 @@ namespace MagicaCloth
         }
 
         //=========================================================================================
+        // [Clamp Position] Parameters access.
+        //=========================================================================================
+        /// <summary>
+        /// 移動範囲距離の設定
+        /// Movement range distance setting.
+        /// </summary>
+        /// <param name="startVal">0.0 ~ 1.0</param>
+        /// <param name="endVal">0.0 ~ 1.0</param>
+        /// <param name="curveVal">-1.0 ~ +1.0</param>
+        public void ClampPosition_SetPositionLength(float startVal, float endVal, float curveVal = 0)
+        {
+            var b = clothParams.GetClampPositionLength().AutoSetup(Mathf.Max(startVal, 1.0f), Mathf.Max(endVal, 1.0f), curveVal);
+
+            if (IsValid())
+            {
+                MagicaPhysicsManager.Instance.Compute.ClampPosition.ChangeParam(
+                    TeamId,
+                    clothParams.UseClampPositionLength,
+                    clothParams.GetClampPositionLength(),
+                    clothParams.ClampPositionAxisRatio,
+                    clothParams.ClampPositionVelocityInfluence
+                    );
+            }
+        }
+
+        //=========================================================================================
         // [Gravity] Parameters access.
         //=========================================================================================
         /// <summary>

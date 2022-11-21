@@ -62,7 +62,7 @@ namespace MagicaCloth
         /// </summary>
         [SerializeField]
         [Range(1, 4)]
-        private int maxWeightCount = 3; // (4->3:v1.5.2)
+        private int maxWeightCount = 4;
 
         [SerializeField]
         [Range(1.0f, 5.0f)]

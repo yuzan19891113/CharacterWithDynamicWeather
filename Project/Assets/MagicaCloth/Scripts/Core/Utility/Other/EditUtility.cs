@@ -18,7 +18,7 @@ namespace MagicaCloth
         /// </summary>
         /// <param name="mesh"></param>
         /// <returns></returns>
-        public static int GetOptimizeMesh(Mesh mesh)
+        internal static int GetOptimizeMesh(Mesh mesh)
         {
             if (mesh == null)
                 return 0;
@@ -60,6 +60,29 @@ namespace MagicaCloth
             }
 
             return flag;
+        }
+
+        /// <summary>
+        /// メッシュがKeepQuadsでインポートされているか判定する
+        /// </summary>
+        /// <param name="mesh"></param>
+        /// <returns></returns>
+        internal static bool IsKeepQuadsMesh(Mesh mesh)
+        {
+            if (mesh == null)
+                return false;
+
+            // アセットパス
+            var path = AssetDatabase.GetAssetPath(mesh);
+            if (string.IsNullOrEmpty(path))
+                return false;
+
+            // モデルインポーターを取得
+            var importer = AssetImporter.GetAtPath(path) as ModelImporter;
+            if (importer)
+                return importer.keepQuads;
+            else
+                return false;
         }
     }
 }

@@ -1,4 +1,7 @@
-﻿using System.Collections.Generic;
+﻿// Magica Cloth.
+// Copyright (c) MagicaSoft, 2020-2021.
+// https://magicasoft.jp
+using System.Collections.Generic;
 using Unity.Mathematics;
 using UnityEngine;
 

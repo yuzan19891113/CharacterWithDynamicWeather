@@ -96,7 +96,7 @@ namespace MagicaCloth
                 instance = this as T;
                 InitInstance();
             }
-            else
+            else if(instance != this)
             {
                 // ２つ目のコンポーネントを発見
                 var s = instance as CreateSingleton<T>;

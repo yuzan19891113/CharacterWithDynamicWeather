@@ -23,7 +23,7 @@ namespace MagicaCloth
         public const uint Flag_Enable = 0x00000001; // 有効フラグ
         public const uint Flag_Interpolate = 0x00000002; // 補間処理適用
         public const uint Flag_FixedNonRotation = 0x00000004; // 固定パーティクルは回転させない
-        //public const uint Flag_DirectionalDamping = 0x00000008; // 重力方向減衰あり
+        public const uint Flag_AnimatedDistance = 0x00000008; // アニメーションされた距離を使用する
         public const uint Flag_IgnoreClampPositionVelocity = 0x00000010; // ClampPositionの最大移動速度制限を無視する(Spring系)
         public const uint Flag_Collision = 0x00000020;
         public const uint Flag_AfterCollision = 0x00000040;
@@ -98,16 +98,6 @@ namespace MagicaCloth
             public float scaleRatio;            // スケール倍率
             public float3 scaleDirection;       // スケール値方向(xyz)：(1/-1)のみ
             public float4 quaternionScale;      // 回転フリップ用スケール
-
-            /// <summary>
-            /// 重力の方向減衰ターゲットボーンインデックス
-            /// </summary>
-            //public int directionalDampingBoneIndex;
-
-            /// <summary>
-            /// 重力の方向減衰ターゲットボーンの基準上方向（ローカル）
-            /// </summary>
-            //public float3 directionalDampingLocalDir;
 
             /// <summary>
             /// チーム固有の現在時間
@@ -201,8 +191,8 @@ namespace MagicaCloth
             public short clampDistanceGroupIndex;
             public short clampDistance2GroupIndex;
             public short clampPositionGroupIndex;
-            public short clampRotationGroupIndex;
-            public short restoreRotationGroupIndex;
+            public short clampRotationGroupIndex;  // Algorithm 1
+            public short restoreRotationGroupIndex; // Algorithm 1
             public short adjustRotationGroupIndex;
             public short springGroupIndex;
             public short volumeGroupIndex;
@@ -213,6 +203,8 @@ namespace MagicaCloth
             public short edgeCollisionGroupIndex;
             public short penetrationGroupIndex;
             public short baseSkinningGroupIndex;
+            public short twistGroupIndex;
+            public short compositeRotationGroupIndex; // Algorithm 2
 
             /// <summary>
             /// データが有効か判定する
@@ -573,6 +565,8 @@ namespace MagicaCloth
             data.edgeCollisionGroupIndex = -1;
             data.penetrationGroupIndex = -1;
             data.baseSkinningGroupIndex = -1;
+            data.twistGroupIndex = -1;
+            data.compositeRotationGroupIndex = -1;
 
             int teamId = teamDataList.Add(data);
             teamMassList.Add(new CurveParam(1.0f));
@@ -735,16 +729,11 @@ namespace MagicaCloth
         public void SetGravityDirection(int teamId, float3 dir)
         {
             TeamData data = teamDataList[teamId];
-            //data.gravityDirection = math.normalize(dir);
+            if (math.lengthsq(dir) >= Define.Compute.Epsilon)
+                dir = math.normalize(dir);
             data.gravityDirection = dir;
             teamDataList[teamId] = data;
         }
-
-        //public void SetDirectionalDamping(int teamId, BezierParam directionalDamping)
-        //{
-        //    teamDirectionalDampingList[teamId] = new CurveParam(directionalDamping);
-        //}
-
         public void SetDrag(int teamId, BezierParam drag)
         {
             teamDragList[teamId] = new CurveParam(drag);
@@ -860,20 +849,6 @@ namespace MagicaCloth
             data.initScale = initScale;
             teamDataList[teamId] = data;
         }
-
-        /// <summary>
-        /// チームの重力方向影響ボーンインデックスを設定
-        /// </summary>
-        /// <param name="teamId"></param>
-        /// <param name="boneIndex"></param>
-        //public void SetDirectionalDampingBoneIndex(int teamId, bool sw, int boneIndex, float3 upDir)
-        //{
-        //    TeamData data = teamDataList[teamId];
-        //    data.directionalDampingBoneIndex = boneIndex;
-        //    data.directionalDampingLocalDir = upDir;
-        //    data.SetFlag(Flag_DirectionalDamping, sw);
-        //    teamDataList[teamId] = data;
-        //}
 
         /// <summary>
         /// チームにコライダーを追加
@@ -1257,8 +1232,7 @@ namespace MagicaCloth
 
                     float dist = Vector3.Distance(team.transform.position, refObject.position);
                     float disableDist = baseCloth.Params.DisableDistance;
-                    float fadeDist = Mathf.Max(disableDist - baseCloth.Params.DisableFadeDistance, 0.0f);
-
+                    float fadeDist = Mathf.Max(disableDist - (baseCloth.Params.DisableFadeDistance + Define.Compute.Epsilon/*FadeDistance=0の対処*/), 0.0f);
                     blend = Mathf.InverseLerp(disableDist, fadeDist, dist);
                 }
                 baseCloth.Setup.DistanceBlendRatio = blend;
@@ -1507,8 +1481,8 @@ namespace MagicaCloth
                         // 最大移動
                         float speed = moveLen / dtime;
                         float ratio = math.max(speed - maxMoveSpeed, 0.0f) / speed;
-                        wdata.moveOffset = moveVector;
                         wdata.moveIgnoreRatio = ratio;
+                        wdata.moveOffset = moveVector;
                     }
                     else
                     {

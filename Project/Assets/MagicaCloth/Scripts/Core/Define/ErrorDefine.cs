@@ -19,6 +19,7 @@ namespace MagicaCloth
             EmptyData = 100,
             InvalidDataHash = 101,
             TooOldDataVersion = 102,
+            HigherDataVersion = 103,
 
             MeshDataNull = 200,
             MeshDataHashMismatch = 201,
@@ -67,9 +68,13 @@ namespace MagicaCloth
 
             MeshOptimizeMismatch = 1500,
             MeshVertexCount65535Over = 1501,
+            MeshKeepQuads = 1502,
 
             BoneListZero = 1600,
             BoneListNull = 1601,
+
+            RendererNotFound = 1700,
+            MeshFilterNotFound = 1701,
 
             // ここからはランタイムエラー(10000～)
 
@@ -77,6 +82,7 @@ namespace MagicaCloth
             OverlappingTransform = 20000,
             AddOverlappingTransform = 20001,
             OldDataVersion = 20002,
+            OldAlgorithm = 20003,
         }
 
         /// <summary>
@@ -130,7 +136,7 @@ namespace MagicaCloth
             {
                 case Error.SharedMeshCannotRead:
                     sb.AppendLine();
-                    sb.Append("Please turn On the [Read/Write Enabled] flag of the mesh importer.");
+                    sb.Append("Please turn On the [Read/Write Enabled] flag of the model importer.");
                     break;
                 case Error.OldDataVersion:
                     sb.Clear();
@@ -143,6 +149,30 @@ namespace MagicaCloth
                 case Error.EmptyData:
                     sb.Clear();
                     sb.Append("No Data.");
+                    break;
+                case Error.OldAlgorithm:
+                    sb.Clear();
+                    sb.Append("Old algorithms.");
+                    sb.AppendLine();
+                    sb.Append("Old algorithms will be removed in the future.");
+                    sb.AppendLine();
+                    sb.Append("Please use a more stable and up-to-date algorithm.");
+                    sb.AppendLine();
+                    sb.Append("The settings can be made from the [Algorithm] panel.");
+                    break;
+                case Error.MeshKeepQuads:
+                    sb.AppendLine();
+                    sb.Append("Keep Quads configuration is not supported.");
+                    sb.AppendLine();
+                    sb.Append("Please turn Off the [Keep Quads] flag of the model importer.");
+                    break;
+                case Error.RendererNotFound:
+                    sb.AppendLine();
+                    sb.Append("Creation failed. Renderer not found.");
+                    break;
+                case Error.MeshFilterNotFound:
+                    sb.AppendLine();
+                    sb.Append("Creation failed. MeshFilter not found.");
                     break;
             }
 

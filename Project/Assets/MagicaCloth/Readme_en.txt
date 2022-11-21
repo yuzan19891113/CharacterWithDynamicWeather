@@ -32,6 +32,46 @@ Then read the [System Overview] and proceed with the [Setup Guide] for a better 
 
 
 ### Release Notes
+[v1.11.1]
+Added: An error message is displayed for meshes that are set to "Keep Quads" in the model importer.
+The "Keep Quads" mesh does not work properly.
+Added: Added API to set "Clamp Position".
+Added: RenderDeformer now has an option to extend the mesh's bounding box.
+This option can be used to solve the problem that the mesh is present but not drawn to the camera.
+Fix: Fixed vibration issue when update mode is "Unity Physics".
+
+[v1.11.0]
+Added: A new computational algorithm (Algorithm 2) has been added.
+In Algorithm2, the processing of Clamp Rotation / Restore Rotation / Triangle Bend has been redesigned to achieve more stable operation with significantly reduced vibration problems.
+When using Algorithm2, it can be set from the new [Algorithm] panel.
+It is also possible to convert parameters from the old algorithm to the new algorithm.
+The parameters hold both old and new data separately, so you can easily revert to the old algorithm.
+The old and new algorithms can coexist, but the old algorithm will be abolished in the future, so please move to Algorithm 2 as much as possible.
+Added: Added "Twist Correction" check to Triangle Bend to correct twist problems.
+If you turn this check on and create data, the problem of twisting will be greatly improved.
+Added: The data format has changed. A warning will be displayed for older data formats.
+Older data formats can be used for some time, but may be deprecated in the future.
+Fix: Fixed an issue where particle rotation values ​​would not be restored in MeshCloth where lines and triangles are compounded.
+Fix: Fixed an issue where Virtual Deformer's vertex reduction process caused incorrect vertices that were not concatenated anywhere.
+Improvement: All preset data has been updated with the implementation of Algorithm 2.
+Improvement: All sample scenes have been updated with the implementation of Algorithm 2.
+
+[v1.10.3]
+Added: Added "Mesh Sequential Loop" and "Mesh Sequential No Loop" to BoneCloth's Mesh connection method. Generate meshes according to the order of Transforms registered in RootList.
+This allows for more flexible support than traditional Mesh connections.
+Added: Added "Use Animated Distance" option to determine the restore distance from the current animated pose instead of the initial pose when performing Restore Distance and Clamp Distance.
+This can improve the problem that the cloth shrinks unintentionally when the cloth expands significantly from the initial posture due to animation.
+Fix: Addressed an error with the Collections 1.0.0 package.
+Improvement: Changed the initial value of the number of vertex weights of VirtualDeformer from 3 to 4.
+
+[v1.10.2]
+Added: Added a menu to remove unwanted sub-assets left in the prefab by right-clicking in ProjectView and selecting "Magica Cloth/Clean up sub-assets".
+Fix: Fixed an issue where turning the cloth component on and off using DistanceDisable would break the position of the bones in some situations.
+Fix: Fixed the problem that Blend rate is always 0 when FadeDistance of DistanceDisable is 0.
+Fix: Fixed an issue where the manager component would disappear if the manager was accessed before the PhysicsManager's Awake() was called.
+Improvement: Adjusted the skirt of the UnityChan sample.
+Improvement: Adjusted the initial value of VelocityInfluence of ClampDistance to about 0.2.
+
 [v1.10.1]
 Improvement: Cloth gizmos are now only shown when Calculation is ON
 Fix: When using the culling system together with DistanceDisable, the component was not enabled again.

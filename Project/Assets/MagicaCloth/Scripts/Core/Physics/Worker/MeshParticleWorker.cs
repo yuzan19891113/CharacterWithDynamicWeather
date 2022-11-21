@@ -119,8 +119,10 @@ namespace MagicaCloth
 
                 virtualVertexMeshIndexList = Manager.Mesh.virtualVertexMeshIndexList.ToJobArray(),
 
-                basePosList = Manager.Particle.basePosList.ToJobArray(),
-                baseRotList = Manager.Particle.baseRotList.ToJobArray(),
+                //basePosList = Manager.Particle.basePosList.ToJobArray(),
+                //baseRotList = Manager.Particle.baseRotList.ToJobArray(),
+                snapBasePosList = Manager.Particle.snapBasePosList.ToJobArray(),
+                snapBaseRotList = Manager.Particle.snapBaseRotList.ToJobArray(),
             };
             jobHandle = job.Schedule(vertexToParticleList.Length, 64, jobHandle);
 
@@ -148,10 +150,12 @@ namespace MagicaCloth
 
             [Unity.Collections.WriteOnly]
             [NativeDisableParallelForRestriction]
-            public NativeArray<float3> basePosList;
+            public NativeArray<float3> snapBasePosList;
+            //public NativeArray<float3> basePosList;
             [Unity.Collections.WriteOnly]
             [NativeDisableParallelForRestriction]
-            public NativeArray<quaternion> baseRotList;
+            public NativeArray<quaternion> snapBaseRotList;
+            //public NativeArray<quaternion> baseRotList;
 
             private NativeMultiHashMapIterator<int> iterator;
 
@@ -184,10 +188,12 @@ namespace MagicaCloth
                     do
                     {
                         // base pos
-                        basePosList[pindex] = pos;
+                        //basePosList[pindex] = pos;
+                        snapBasePosList[pindex] = pos;
 
                         // base rot
-                        baseRotList[pindex] = rot;
+                        //baseRotList[pindex] = rot;
+                        snapBaseRotList[pindex] = rot;
                     }
                     while (vertexToParticleMap.TryGetNextValue(out pindex, ref iterator));
                 }

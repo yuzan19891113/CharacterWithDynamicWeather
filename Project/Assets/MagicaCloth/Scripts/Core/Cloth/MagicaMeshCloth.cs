@@ -17,7 +17,7 @@ namespace MagicaCloth
         /// <summary>
         /// データバージョン
         /// </summary>
-        private const int DATA_VERSION = 6;
+        private const int DATA_VERSION = 7;
 
         /// <summary>
         /// エラーデータバージョン
@@ -297,12 +297,12 @@ namespace MagicaCloth
                 StaticStringBuilder.AppendLine("Vertex: ", cdata.VertexUseCount);
                 StaticStringBuilder.AppendLine("Clamp Distance: ", cdata.ClampDistanceConstraintCount);
                 StaticStringBuilder.AppendLine("Clamp Position: ", clothParams.UseClampPositionLength ? cdata.VertexUseCount : 0);
-                StaticStringBuilder.AppendLine("Clamp Rotation: ", cdata.ClampRotationConstraintRootCount, " - ", cdata.ClampRotationConstraintDataCount);
+                StaticStringBuilder.AppendLine("Clamp Rotation [", cdata.clampRotationAlgorithm, "] : ", cdata.GetClampRotationCount());
                 StaticStringBuilder.AppendLine("Struct Distance: ", cdata.StructDistanceConstraintCount / 2);
                 StaticStringBuilder.AppendLine("Bend Distance: ", cdata.BendDistanceConstraintCount / 2);
                 StaticStringBuilder.AppendLine("Near Distance: ", cdata.NearDistanceConstraintCount / 2);
-                StaticStringBuilder.AppendLine("Restore Rotation: ", cdata.RestoreRotationConstraintCount);
-                StaticStringBuilder.AppendLine("Triangle Bend: ", cdata.TriangleBendConstraintCount);
+                StaticStringBuilder.AppendLine("Restore Rotation [", cdata.restoreRotationAlgorithm, "] : ", cdata.GetRestoreRotationCount());
+                StaticStringBuilder.AppendLine("Triangle Bend [", cdata.triangleBendAlgorithm, "] : ", cdata.TriangleBendConstraintCount);
                 StaticStringBuilder.AppendLine("Collider: ", teamData.ColliderCount);
                 StaticStringBuilder.Append("Line Rotation: ", cdata.LineRotationWorkerCount);
             }
@@ -457,21 +457,23 @@ namespace MagicaCloth
         /// </summary>
         void ResetParams()
         {
+            UseAnimatedDistance = true;
+            clothParams.AlgorithmType = ClothParams.Algorithm.Algorithm_2;
             clothParams.SetRadius(0.02f, 0.02f);
             clothParams.SetMass(10.0f, 1.0f, true, -0.5f, true);
-            clothParams.SetGravity(true, -9.8f, -9.8f);
+            clothParams.SetGravity(true, -5.0f, -5.0f);
             clothParams.SetDrag(true, 0.01f, 0.01f);
             clothParams.SetMaxVelocity(true, 3.0f, 3.0f);
-            clothParams.SetWorldInfluence(10.0f, 0.5f, 1.0f);
+            clothParams.SetWorldInfluence(2.0f, 0.5f, 1.0f);
             clothParams.SetTeleport(false);
-            clothParams.SetClampDistanceRatio(true, 0.5f, 1.2f);
+            clothParams.SetClampDistanceRatio(true, 0.5f, 1.05f, 0.1f);
             clothParams.SetClampPositionLength(false, 0.0f, 0.4f);
-            clothParams.SetClampRotationAngle(false, 30.0f, 30.0f, 0.2f);
+            clothParams.SetClampRotationAngle(false, 0.0f, 180.0f, 0.2f);
             clothParams.SetRestoreDistance(1.0f);
-            clothParams.SetRestoreRotation(false, 0.01f, 0.0f, 0.5f);
+            clothParams.SetRestoreRotation(false, 0.03f, 0.005f, 0.3f);
             clothParams.SetSpring(false);
             clothParams.SetAdjustRotation();
-            clothParams.SetTriangleBend(true, 0.9f, 0.9f);
+            clothParams.SetTriangleBend(true, 1.0f, 1.0f);
             clothParams.SetVolume(false);
             clothParams.SetCollision(false, 0.1f, 0.03f);
             clothParams.SetExternalForce(0.3f, 1.0f, 0.7f);

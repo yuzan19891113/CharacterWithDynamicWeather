@@ -346,5 +346,88 @@ namespace MagicaCloth
                 }
             }
         }
+
+        //=========================================================================================
+        public static bool CleanUpSubAssets(GameObject savePrefab)
+        {
+            // 編集不可のプレハブならば保存できないため処理を行わない
+            if (PrefabUtility.IsPartOfImmutablePrefab(savePrefab))
+            {
+                return false;
+            }
+
+            string savePrefabPath = AssetDatabase.GetAssetPath(savePrefab);
+            //Debug.Log($"PrefabPath:{savePrefabPath}");
+            if (string.IsNullOrEmpty(savePrefabPath))
+                return false;
+
+            // 不要な共有データを削除するためのリスト
+            List<ShareDataObject> removeDatas = new List<ShareDataObject>();
+
+            // 現在アセットとして保存されているすべてのShareDataObjectサブアセットを削除対象としてリスト化する
+            List<Object> subassets = new List<Object>(AssetDatabase.LoadAllAssetRepresentationsAtPath(savePrefabPath));
+            if (subassets != null)
+            {
+                foreach (var obj in subassets)
+                {
+                    // ShareDataObjectのみ
+                    ShareDataObject sdata = obj as ShareDataObject;
+                    if (sdata && removeDatas.Contains(sdata) == false)
+                    {
+                        //Debug.Log("remove reserve sub asset:" + obj.name + " type:" + obj + " test:" + AssetDatabase.IsSubAsset(sdata));
+                        // 削除対象として一旦追加
+                        removeDatas.Add(sdata);
+                    }
+                }
+            }
+
+            // データコンポーネント収集
+            var coreList = savePrefab.GetComponentsInChildren<CoreComponent>(true);
+            if (coreList != null)
+            {
+                foreach (var core in coreList)
+                {
+                    // 共有データ収集
+                    var shareDataInterfaces = core.GetComponentsInChildren<IShareDataObject>(true);
+                    if (shareDataInterfaces != null)
+                    {
+                        foreach (var sdataInterface in shareDataInterfaces)
+                        {
+                            List<ShareDataObject> shareDatas = sdataInterface.GetAllShareDataObject();
+                            if (shareDatas != null)
+                            {
+                                foreach (var sdata in shareDatas)
+                                {
+                                    if (sdata)
+                                    {
+                                        //Debug.Log($"target shareData:{sdata.name}");
+                                        if (removeDatas.Contains(sdata))
+                                        {
+                                            //Debug.Log($"Ignore:{sdata.name}");
+                                            removeDatas.Remove(sdata);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            // 不要な共有データは削除する
+            if (removeDatas.Count > 0)
+            {
+                foreach (var sdata in removeDatas)
+                {
+                    //Debug.Log($"-Remove sub asset:{sdata.name} path:{AssetDatabase.GetAssetPath(sdata)}");
+                    Debug.Log($"Remove sub-asset : {sdata.name}");
+                    UnityEngine.Object.DestroyImmediate(sdata, true);
+                }
+                AssetDatabase.SaveAssets();
+            }
+            Debug.Log($"Remove Count : {removeDatas.Count}");
+
+            return true;
+        }
     }
 }

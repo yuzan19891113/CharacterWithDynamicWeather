@@ -12,6 +12,21 @@ namespace MagicaCloth
     [System.Serializable]
     public class ClothParams
     {
+        // アルゴリズム
+        public enum Algorithm
+        {
+#if UNITY_2019_1_OR_NEWER
+            [InspectorName("Algorithm 1 (Old Style)")]
+#endif
+            Algorithm_1 = 0,   // 従来
+#if UNITY_2019_1_OR_NEWER
+            [InspectorName("Algorithm 2")]
+#endif
+            Algorithm_2 = 1,   // v1.11.0より
+        }
+        [SerializeField]
+        private Algorithm algorithm = Algorithm.Algorithm_1;
+
         // パーティクルサイズ
         [SerializeField]
         private BezierParam radius = new BezierParam(0.02f, 0.02f, true, 0.0f, false);
@@ -50,7 +65,7 @@ namespace MagicaCloth
         [SerializeField]
         private Transform influenceTarget = null;
         [SerializeField]
-        private float maxMoveSpeed = 10.0f; // (m/s)
+        private float maxMoveSpeed = 3.0f; // (m/s)
         [SerializeField]
         private float maxRotationSpeed = 720.0f; // (deg/s)
         [SerializeField]
@@ -101,9 +116,9 @@ namespace MagicaCloth
         [SerializeField]
         private float clampDistanceMinRatio = 0.7f;
         [SerializeField]
-        private float clampDistanceMaxRatio = 1.1f;
+        private float clampDistanceMaxRatio = 1.05f;
         [SerializeField]
-        private float clampDistanceVelocityInfluence = 0.2f;
+        private float clampDistanceVelocityInfluence = 0.1f;
 
         // 原点からの移動範囲拘束
         [SerializeField]
@@ -123,13 +138,13 @@ namespace MagicaCloth
         [SerializeField]
         private bool useClampRotation = false;
         [SerializeField]
-        private BezierParam clampRotationAngle = new BezierParam(30.0f, 30.0f, true, 0.0f, false);
-        //[SerializeField]
-        //private BezierParam clampRotationStiffness = new BezierParam(0.1f, 0.1f, true, 0.0f, false);
+        private BezierParam clampRotationAngle = new BezierParam(0.0f, 45.0f, true, 0.0f, false); // [Algorithm 1]
         [SerializeField]
-        private float clampRotationVelocityLimit = 1.0f;
+        private BezierParam clampRotationAngle2 = new BezierParam(0.0f, 45.0f, true, 0.0f, false); // [Algorithm 2]
         [SerializeField]
-        private float clampRotationVelocityInfluence = 0.2f;
+        private float clampRotationVelocityLimit = 1.0f; // [Algorithm 1]
+        [SerializeField]
+        private float clampRotationVelocityInfluence = 0.2f; // [Algorithm 1]
 
         // 距離復元拘束
         [SerializeField]
@@ -157,9 +172,13 @@ namespace MagicaCloth
         [SerializeField]
         private bool useRestoreRotation = false;
         [SerializeField]
-        private BezierParam restoreRotation = new BezierParam(0.3f, 0.1f, true, 0.0f, false);
+        private BezierParam restoreRotation = new BezierParam(0.05f, 0.005f, true, 0.0f, false); // [Algorithm 1]
         [SerializeField]
-        private float restoreRotationVelocityInfluence = 0.2f;
+        private BezierParam restoreRotation2 = new BezierParam(0.05f, 0.005f, true, 0.0f, false); // [Algorithm 2]
+        [SerializeField]
+        private float restoreRotationVelocityInfluence = 0.2f; // [Algorithm 1]
+        [SerializeField]
+        private float restoreRotationVelocityInfluence2 = 0.2f; // [Algorithm 2]
 
         // スプリング拘束
         [SerializeField]
@@ -197,8 +216,18 @@ namespace MagicaCloth
         // トライアングル曲げ拘束
         [SerializeField]
         private bool useTriangleBend = false;
+        //[SerializeField]
+        //private bool useTriangleBendIncludeFixed = false;
         [SerializeField]
-        private BezierParam triangleBend = new BezierParam(0.5f, 0.5f, true, 0.0f, false);
+        private BezierParam triangleBend = new BezierParam(1.0f, 1.0f, true, 0.0f, false); // [Algorithm 1]
+        [SerializeField]
+        private BezierParam triangleBend2 = new BezierParam(1.0f, 1.0f, true, 0.0f, false); // [Algorithm 2]
+
+        // ねじれ補正
+        [SerializeField]
+        private bool useTwistCorrection = false;
+        [SerializeField]
+        private float twistRecoveryPower = 0.2f;
 
         // ボリューム拘束
         [SerializeField]
@@ -312,6 +341,7 @@ namespace MagicaCloth
             DistanceDisable = 18,
             ExternalForce = 19,
             Penetration = 20,
+            Algorithm = 21,
             //BaseSkinning,
             //DirectionMoveLimit,
             //SelfCollision,
@@ -349,6 +379,9 @@ namespace MagicaCloth
 
             switch (ptype)
             {
+                case ParamType.Algorithm:
+                    hash += algorithm.GetDataHash();
+                    break;
                 case ParamType.WorldInfluence:
                     hash += influenceTarget ? influenceTarget.GetDataHash() : 0;
                     break;
@@ -375,15 +408,25 @@ namespace MagicaCloth
                     break;
                 case ParamType.RestoreRotation:
                     if (useRestoreRotation)
+                    {
+                        hash += algorithm.GetDataHash(); // algorithm
                         hash += useRestoreRotation.GetDataHash();
+                    }
                     break;
                 case ParamType.ClampRotation:
                     if (useClampRotation)
+                    {
+                        hash += algorithm.GetDataHash(); // algorithm
                         hash += useClampRotation.GetDataHash();
+                    }
                     break;
                 case ParamType.TriangleBend:
                     if (useTriangleBend)
+                    {
+                        hash += algorithm.GetDataHash(); // algorithm
                         hash += useTriangleBend.GetDataHash();
+                        hash += useTwistCorrection.GetDataHash();
+                    }
                     break;
                 case ParamType.Penetration:
                     if (usePenetration)
@@ -429,6 +472,13 @@ namespace MagicaCloth
         }
 
         //=========================================================================================
+        // algorithm
+        public Algorithm AlgorithmType
+        {
+            get => algorithm;
+            set => algorithm = value;
+        }
+
         // radius
         public void SetRadius(float sval, float eval)
         {
@@ -883,10 +933,11 @@ namespace MagicaCloth
         }
 
         // clamp rotation
-        public void SetClampRotationAngle(bool sw, float sval = 30.0f, float eval = 30.0f, float influence = 0.2f)
+        public void SetClampRotationAngle(bool sw, float sval = 0.0f, float eval = 180.0f, float influence = 0.2f)
         {
             useClampRotation = sw;
             clampRotationAngle.SetParam(sval, eval);
+            clampRotationAngle2.SetParam(sval, eval);
             clampRotationVelocityInfluence = influence;
         }
 
@@ -898,15 +949,13 @@ namespace MagicaCloth
             }
         }
 
-        public BezierParam GetClampRotationAngle()
+        public BezierParam GetClampRotationAngle(Algorithm algo)
         {
-            return clampRotationAngle;
+            if (algo == Algorithm.Algorithm_2)
+                return clampRotationAngle2;
+            else
+                return clampRotationAngle;
         }
-
-        //public BezierParam GetClampRotationStiffness()
-        //{
-        //    return clampRotationStiffness;
-        //}
 
         public float ClampRotationVelocityInfluence
         {
@@ -916,12 +965,17 @@ namespace MagicaCloth
             }
         }
 
-        public float ClampRotationVelocityLimit
+        public float GetClampRotationVelocityLimit(Algorithm algo)
         {
-            get
+            if (useClampRotation)
             {
-                return useClampRotation ? clampRotationVelocityLimit : 0.0f;
+                if (algo == Algorithm.Algorithm_2)
+                    return 1.0f; // On
+                else
+                    return clampRotationVelocityLimit;
             }
+            else
+                return 0.0f;
         }
 
         // restore distance
@@ -1004,7 +1058,9 @@ namespace MagicaCloth
         {
             useRestoreRotation = sw;
             restoreRotation.SetParam(sval, eval);
+            restoreRotation2.SetParam(sval, eval);
             restoreRotationVelocityInfluence = influence;
+            restoreRotationVelocityInfluence2 = influence;
         }
 
         public bool UseRestoreRotation
@@ -1015,17 +1071,20 @@ namespace MagicaCloth
             }
         }
 
-        public BezierParam GetRotationPower()
+        public BezierParam GetRestoreRotationPower(Algorithm algo)
         {
-            return restoreRotation;
+            if (algo == Algorithm.Algorithm_2)
+                return restoreRotation2;
+            else
+                return restoreRotation;
         }
 
-        public float RestoreRotationVelocityInfluence
+        public float GetRestoreRotationVelocityInfluence(Algorithm algo)
         {
-            get
-            {
-                return useRestoreRotation ? restoreRotationVelocityInfluence : 1;
-            }
+            if (algo == Algorithm.Algorithm_2)
+                return restoreRotationVelocityInfluence2;
+            else
+                return restoreRotationVelocityInfluence;
         }
 
         // spring
@@ -1127,10 +1186,11 @@ namespace MagicaCloth
         }
 
         // triangle bend
-        public void SetTriangleBend(bool sw, float sval = 0.03f, float eval = 0.03f)
+        public void SetTriangleBend(bool sw, float sval = 1.0f, float eval = 1.0f)
         {
             useTriangleBend = sw;
             triangleBend.SetParam(sval, eval);
+            triangleBend2.SetParam(sval, eval);
         }
 
         public bool UseTriangleBend
@@ -1141,18 +1201,24 @@ namespace MagicaCloth
             }
         }
 
-        public float GetTriangleBendPower(float depth)
+        //public bool UseTrianlgeBendIncludeFixed => useTriangleBendIncludeFixed;
+        public BezierParam GetTriangleBendStiffness(Algorithm algo)
         {
-            if (useTriangleBend)
-                return triangleBend.Evaluate(depth);
+            if (algo == Algorithm.Algorithm_2)
+                return triangleBend2;
             else
-                return 0;
+                return triangleBend;
         }
 
-        public BezierParam GetTriangleBendStiffness()
+        // Twist
+        internal bool GetUseTwistCorrection(Algorithm algo)
         {
-            return triangleBend;
+            if (algo == Algorithm.Algorithm_2)
+                return useTwistCorrection;
+            else
+                return false;
         }
+        internal float TwistRecoveryPower => twistRecoveryPower;
 
         // volume
         public void SetVolume(bool sw, float maxLength = 0.05f, float stiffness = 0.5f, float shear = 0.5f)
@@ -1356,5 +1422,22 @@ namespace MagicaCloth
         //    else
         //        return -1; // 無効
         //}
+
+        //=========================================================================================
+        /// <summary>
+        /// 古いパラメータを最新アルゴリズム用にコンバートする
+        /// </summary>
+        public void ConvertToLatestAlgorithmParameter()
+        {
+            // ClampRotation
+            clampRotationAngle2 = clampRotationAngle.Clone();
+
+            // RestoreRotation
+            restoreRotation2 = restoreRotation.Clone();
+            restoreRotationVelocityInfluence2 = restoreRotationVelocityInfluence;
+
+            // Triangle Bend
+            triangleBend2 = triangleBend.Clone();
+        }
     }
 }

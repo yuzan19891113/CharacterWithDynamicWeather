@@ -28,7 +28,15 @@ namespace MagicaCloth
             /// p0 + | + p1
             ///     \|/
             ///   p3 +
-            /// </summary>
+            ///   
+            /// A(p0-p2-p3) B(p1-p3-p2)
+            /// 
+            /// ただしvindex3が-1の場合は次のように単純なトライアングルの固定位置復元となる
+            ///   v0 +
+            ///     / \
+            /// v1 +---+ v2
+            ///     
+            ///   v3 = -1 
             public int vindex0;
             public int vindex1;
             public int vindex2;
@@ -38,6 +46,11 @@ namespace MagicaCloth
             /// 復元角度(ラジアン)
             /// </summary>
             public float restAngle;
+
+            /// <summary>
+            /// 初期方向性 [Algorithm 2]
+            /// </summary>
+            public float direction;
 
             /// <summary>
             /// ベンド影響を取得するデプス値(0.0-1.0)
@@ -60,6 +73,24 @@ namespace MagicaCloth
             {
                 return vindex0 > 0 && vindex1 > 0;
             }
+
+            /// <summary>
+            /// データが固定位置復元かどうか
+            /// </summary>
+            /// <returns></returns>
+            public bool IsPositionBend()
+            {
+                return vindex3 < 0;
+            }
+
+            /// <summary>
+            /// データが厳密版か判定する
+            /// </summary>
+            /// <returns></returns>
+            //public bool IsStrict()
+            //{
+            //    return math.abs(direction) > 1e-06f;
+            //}
         }
         FixedChunkNativeArray<TriangleBendData> dataList;
 
@@ -86,6 +117,16 @@ namespace MagicaCloth
             public int teamId;
 
             public int active;
+
+            /// <summary>
+            /// アルゴリズム(ClothParams.Algorithmを参照)
+            /// </summary>
+            public int algorithm;
+
+            /// <summary>
+            /// 固定点を含むトライアングルの計算の有無
+            /// </summary>
+            //public int useIncludeFixed;
 
             /// <summary>
             /// 曲げの戻り効果量(0.0-1.0)
@@ -134,7 +175,12 @@ namespace MagicaCloth
         }
 
         //=========================================================================================
-        public int AddGroup(int teamId, bool active, BezierParam stiffness, TriangleBendData[] dataArray, ReferenceDataIndex[] refDataArray, int writeBufferCount)
+        public int AddGroup(
+            int teamId, bool active,
+            ClothParams.Algorithm algorithm,
+            BezierParam stiffness,
+            //bool useIncludeFixed,
+            TriangleBendData[] dataArray, ReferenceDataIndex[] refDataArray, int writeBufferCount)
         {
             if (dataArray == null || dataArray.Length == 0 || refDataArray == null || refDataArray.Length == 0 || writeBufferCount == 0)
                 return -1;
@@ -145,6 +191,8 @@ namespace MagicaCloth
             var gdata = new TriangleBendGroupData();
             gdata.teamId = teamId;
             gdata.active = active ? 1 : 0;
+            gdata.algorithm = (int)algorithm;
+            //gdata.useIncludeFixed = useIncludeFixed ? 1 : 0;
             gdata.stiffness.Setup(stiffness);
             gdata.dataChunk = dataList.AddChunk(dataArray.Length);
             gdata.groupIndexChunk = groupIndexList.AddChunk(dataArray.Length);
@@ -183,7 +231,7 @@ namespace MagicaCloth
             groupList.Remove(group);
         }
 
-        public void ChangeParam(int teamId, bool active, BezierParam stiffness)
+        public void ChangeParam(int teamId, bool active, BezierParam stiffness/*, bool useIncludeFixed*/)
         {
             var teamData = MagicaPhysicsManager.Instance.Team.teamDataList[teamId];
             int group = teamData.triangleBendGroupIndex;
@@ -192,21 +240,10 @@ namespace MagicaCloth
 
             var gdata = groupList[group];
             gdata.active = active ? 1 : 0;
+            //gdata.useIncludeFixed = useIncludeFixed ? 1 : 0;
             gdata.stiffness.Setup(stiffness);
             groupList[group] = gdata;
         }
-
-        //public int ActiveCount
-        //{
-        //    get
-        //    {
-        //        int cnt = 0;
-        //        for (int i = 0; i < groupList.Length; i++)
-        //            if (groupList[i].active == 1)
-        //                cnt++;
-        //        return cnt;
-        //    }
-        //}
 
         //=========================================================================================
         /// <summary>
@@ -232,8 +269,8 @@ namespace MagicaCloth
 
                 teamDataList = Manager.Team.teamDataList.ToJobArray(),
 
-                //flagList = Manager.Particle.flagList.ToJobArray(),
                 nextPosList = Manager.Particle.InNextPosList.ToJobArray(),
+                basePosList = Manager.Particle.basePosList.ToJobArray(),
 
                 writeBuffer = writeBuffer.ToJobArray(),
             };
@@ -254,6 +291,7 @@ namespace MagicaCloth
                 flagList = Manager.Particle.flagList.ToJobArray(),
 
                 inoutNextPosList = Manager.Particle.InNextPosList.ToJobArray(),
+                posList = Manager.Particle.posList.ToJobArray(),
             };
             jobHandle = job2.Schedule(Manager.Particle.Length, 64, jobHandle);
 
@@ -276,11 +314,10 @@ namespace MagicaCloth
             [Unity.Collections.ReadOnly]
             public NativeArray<PhysicsManagerTeamData.TeamData> teamDataList;
 
-            //[Unity.Collections.ReadOnly]
-            //public NativeArray<PhysicsManagerParticleData.ParticleFlag> flagList;
-
             [Unity.Collections.ReadOnly]
             public NativeArray<float3> nextPosList;
+            [Unity.Collections.ReadOnly]
+            public NativeArray<float3> basePosList;
 
             [Unity.Collections.WriteOnly]
             [NativeDisableParallelForRestriction]
@@ -315,68 +352,116 @@ namespace MagicaCloth
                 int pindex0 = data.vindex0 + pstart;
                 int pindex1 = data.vindex1 + pstart;
                 int pindex2 = data.vindex2 + pstart;
-                int pindex3 = data.vindex3 + pstart;
+                int pindex3 = data.IsPositionBend() ? -1 : (data.vindex3 + pstart);
 
                 float3 nextpos0 = nextPosList[pindex0];
                 float3 nextpos1 = nextPosList[pindex1];
                 float3 nextpos2 = nextPosList[pindex2];
-                float3 nextpos3 = nextPosList[pindex3];
+                float3 nextpos3 = data.IsPositionBend() ? 0 : nextPosList[pindex3];
+
+                // 厳密正
+                //bool isStrict = data.IsStrict();
+                bool isStrict = gdata.algorithm == 1;
 
                 // 復元率
-                float stiffness = (1.0f - math.pow(1.0f - gdata.stiffness.Evaluate(data.depth), updatePower));
+                float stiffness = gdata.stiffness.Evaluate(data.depth);
+                stiffness = (1.0f - math.pow(1.0f - stiffness, updatePower));
 
-                float3 e = nextpos3 - nextpos2;
-                float elen = math.length(e);
-                if (elen > 1e-6f)
+                // 復元方法判定
+                if (data.IsPositionBend() == false)
                 {
-                    float invElen = 1.0f / elen;
-
-                    float3 n1 = math.cross(nextpos2 - nextpos0, nextpos3 - nextpos0);
-                    n1 /= math.lengthsq(n1);
-                    float3 n2 = math.cross(nextpos3 - nextpos1, nextpos2 - nextpos1);
-                    n2 /= math.lengthsq(n2);
-
-                    float3 d0 = elen * n1;
-                    float3 d1 = elen * n2;
-                    float3 d2 = math.dot(nextpos0 - nextpos3, e) * invElen * n1 + math.dot(nextpos1 - nextpos3, e) * invElen * n2;
-                    float3 d3 = math.dot(nextpos2 - nextpos0, e) * invElen * n1 + math.dot(nextpos2 - nextpos1, e) * invElen * n2;
-
-                    n1 = math.normalize(n1);
-                    n2 = math.normalize(n2);
-                    float dot = math.dot(n1, n2);
-                    dot = math.clamp(dot, -1.0f, 1.0f);
-                    float phi = math.acos(dot);
-
-                    float lambda =
-                        math.lengthsq(d0) +
-                        math.lengthsq(d1) +
-                        math.lengthsq(d2) +
-                        math.lengthsq(d3);
-
-                    if (lambda != 0.0f)
+                    // トライアングルベンド
+                    float3 e = nextpos3 - nextpos2;
+                    float elen = math.length(e);
+                    if (elen > 1e-06f)
                     {
+                        float invElen = 1.0f / elen;
+
+                        float3 n1 = math.cross(nextpos2 - nextpos0, nextpos3 - nextpos0);
+                        n1 /= math.lengthsq(n1);
+                        float3 n2 = math.cross(nextpos3 - nextpos1, nextpos2 - nextpos1);
+                        n2 /= math.lengthsq(n2);
+
+                        float3 d0 = elen * n1;
+                        float3 d1 = elen * n2;
+                        float3 d2 = math.dot(nextpos0 - nextpos3, e) * invElen * n1 + math.dot(nextpos1 - nextpos3, e) * invElen * n2;
+                        float3 d3 = math.dot(nextpos2 - nextpos0, e) * invElen * n1 + math.dot(nextpos2 - nextpos1, e) * invElen * n2;
+
+                        n1 = math.normalize(n1);
+                        n2 = math.normalize(n2);
+                        float dot = math.dot(n1, n2);
+                        dot = math.clamp(dot, -1.0f, 1.0f);
+                        float phi = math.acos(dot);
+
+                        float lambda =
+                            math.lengthsq(d0) +
+                            math.lengthsq(d1) +
+                            math.lengthsq(d2) +
+                            math.lengthsq(d3);
+
+                        // 方向性
+                        float direction = math.dot(math.cross(n1, n2), e);
+
+                        // Strictでは方向を考慮した角度で計算
+                        phi = math.select(phi, phi * math.sign(direction), isStrict);
+
+                        // 安定性
+                        float rest = math.abs(phi - data.restAngle);
+
+                        //if (stiffness > 0.5f && rest > 1.5f)
+                        //    stiffness = 0.5f;
+
+                        // 角度による安定化
+                        if (isStrict)
+                        {
+                            // 復元角度が大きいほどstiffnessが強くなる
+                            float ratio = math.max(math.pow(math.saturate(rest / math.PI), 0.5f), 0.1f);
+                            stiffness *= ratio;
+                        }
+
                         lambda = (phi - data.restAngle) / lambda * stiffness;
 
-                        if (math.dot(math.cross(n1, n2), e) > 0.0f)
-                            lambda = -lambda;
+                        // 旧来処理
+                        lambda = math.select(lambda * math.sign(direction), lambda, isStrict);
 
-                        corr0 = -lambda * d0;
-                        corr1 = -lambda * d1;
-                        corr2 = -lambda * d2;
-                        corr3 = -lambda * d3;
+                        corr0 = lambda * d0;
+                        corr1 = lambda * d1;
+                        corr2 = lambda * d2;
+                        corr3 = lambda * d3;
                     }
                 }
+                // v1.11.0では一旦オミット
+                //else
+                //{
+                //    // 固定頂点を含む特殊復元
+                //    if (gdata.useIncludeFixed == 1)
+                //    {
+                //        // 単純にベース位置に復元させる
+                //        stiffness *= 0.2f; // 調整
+                //        float3 basepos0 = basePosList[pindex0];
+                //        float3 basepos1 = basePosList[pindex1];
+                //        float3 basepos2 = basePosList[pindex2];
+                //        corr0 = (basepos0 - nextpos0) * stiffness;
+                //        corr1 = (basepos1 - nextpos1) * stiffness;
+                //        corr2 = (basepos2 - nextpos2) * stiffness;
+
+                //        // todo:Interlockに切り替わった場合はここで処理を抜ける
+                //    }
+                //}
 
                 // 作業バッファへ格納
                 int wstart = gdata.writeDataChunk.startIndex;
                 int windex0 = data.writeIndex0 + wstart;
                 int windex1 = data.writeIndex1 + wstart;
                 int windex2 = data.writeIndex2 + wstart;
-                int windex3 = data.writeIndex3 + wstart;
                 writeBuffer[windex0] = corr0;
                 writeBuffer[windex1] = corr1;
                 writeBuffer[windex2] = corr2;
-                writeBuffer[windex3] = corr3;
+                if (data.IsPositionBend() == false)
+                {
+                    int windex3 = data.writeIndex3 + wstart;
+                    writeBuffer[windex3] = corr3;
+                }
             }
         }
 
@@ -402,6 +487,7 @@ namespace MagicaCloth
             public NativeArray<PhysicsManagerParticleData.ParticleFlag> flagList;
 
             public NativeArray<float3> inoutNextPosList;
+            public NativeArray<float3> posList;
 
             // パーティクルごと
             public void Execute(int pindex)
@@ -444,6 +530,10 @@ namespace MagicaCloth
 
                     // 加算
                     inoutNextPosList[pindex] = inoutNextPosList[pindex] + corr;
+
+                    // 速度影響(Strictに合わせる)
+                    var av = corr * (1.0f - Define.Compute.TriangleBendVelocityInfluence); // 実験結果より(0.5)
+                    posList[pindex] = posList[pindex] + av;
                 }
             }
         }

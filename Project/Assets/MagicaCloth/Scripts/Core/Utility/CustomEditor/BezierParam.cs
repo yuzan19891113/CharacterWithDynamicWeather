@@ -43,6 +43,8 @@ namespace MagicaCloth
         [SerializeField]
         private bool useCurveValue;
 
+        public BezierParam() { }
+
         public BezierParam(float val)
         {
             this.startValue = val;
@@ -152,6 +154,23 @@ namespace MagicaCloth
             hash += curveValue.GetDataHash();
             hash += useCurveValue.GetDataHash();
             return hash;
+        }
+
+        /// <summary>
+        /// クローンの作成
+        /// </summary>
+        /// <returns></returns>
+        public BezierParam Clone()
+        {
+            var bz = new BezierParam()
+            {
+                startValue = this.startValue,
+                endValue = this.endValue,
+                useEndValue = this.useEndValue,
+                curveValue = this.curveValue,
+                useCurveValue = this.useCurveValue,
+            };
+            return bz;
         }
     }
 }

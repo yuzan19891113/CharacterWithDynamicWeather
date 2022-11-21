@@ -20,7 +20,7 @@ namespace MagicaCloth
         /// <summary>
         /// データバージョン
         /// </summary>
-        private const int DATA_VERSION = 5;
+        private const int DATA_VERSION = 7;
 
         /// <summary>
         /// エラーデータバージョン
@@ -209,6 +209,9 @@ namespace MagicaCloth
             cdata.initScale = SpringData.initScale;
             cdata.SaveDataHash = 1;
             cdata.SaveDataVersion = cdata.GetVersion();
+            cdata.clampRotationAlgorithm = ClothParams.Algorithm.Algorithm_2;
+            cdata.restoreRotationAlgorithm = ClothParams.Algorithm.Algorithm_2;
+            cdata.triangleBendAlgorithm = ClothParams.Algorithm.Algorithm_2;
             ClothData = cdata;
 
             // エラーが出ないように
@@ -609,12 +612,14 @@ namespace MagicaCloth
         /// </summary>
         void ResetParams()
         {
-            clothParams.SetRadius(0.02f, 0.02f);
+            UseAnimatedDistance = true;
+            clothParams.AlgorithmType = ClothParams.Algorithm.Algorithm_2;
+            clothParams.SetRadius(0.05f, 0.05f);
             clothParams.SetMass(1.0f, 1.0f, false);
-            clothParams.SetGravity(false, -9.8f, -9.8f);
+            clothParams.SetGravity(false, -5.0f, -5.0f);
             clothParams.SetDrag(true, 0.01f, 0.01f);
             clothParams.SetMaxVelocity(true, 3.0f, 3.0f);
-            clothParams.SetWorldInfluence(10.0f, 0.5f, 1.0f);
+            clothParams.SetWorldInfluence(2.0f, 0.5f, 1.0f);
             clothParams.SetTeleport(false);
             clothParams.SetClampDistanceRatio(false);
             clothParams.SetClampPositionLength(true, 0.1f, 0.1f, 1.0f, 1.0f, 1.0f, 0.2f);

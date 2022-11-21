@@ -362,6 +362,7 @@ namespace MagicaCloth
 
         /// <summary>
         /// エラーとするデータバージョンを取得する
+        /// これ以下のバージョンのデータは利用することができない
         /// </summary>
         /// <returns></returns>
         public abstract int GetErrorVersion();
@@ -378,6 +379,8 @@ namespace MagicaCloth
                 return Define.Error.InvalidDataHash;
             if (dataVersion > 0 && GetErrorVersion() > 0 && dataVersion <= GetErrorVersion())
                 return Define.Error.TooOldDataVersion; // データバージョンが古すぎる（動かない）
+            if (dataVersion > GetVersion())
+                return Define.Error.HigherDataVersion; // データバージョンが新しすぎる（動かさない）
             //if (dataVersion != GetVersion())
             //    return Define.Error.DataVersionMismatch;
 
@@ -388,7 +391,7 @@ namespace MagicaCloth
         /// データバージョンチェック
         /// </summary>
         /// <returns></returns>
-        public Define.Error VerityDataVersion()
+        public Define.Error VerifyDataVersion()
         {
             if (dataVersion == 0)
                 return Define.Error.None;

@@ -189,6 +189,10 @@ namespace MagicaCloth
             EditorGUILayout.Space();
             EditorGUILayout.PropertyField(serializedObject.FindProperty("updateMode"));
             EditorGUILayout.Slider(serializedObject.FindProperty("userBlendWeight"), 0.0f, 1.0f, "Blend Weight");
+            if (scr is MagicaBoneCloth || scr is MagicaMeshCloth)
+            {
+                EditorGUILayout.PropertyField(serializedObject.FindProperty("useAnimatedDistance"));
+            }
         }
 
         protected void CullingInspector()
@@ -311,6 +315,22 @@ namespace MagicaCloth
                 true, true,
                 () => scr.gameObject.transform.root.GetComponentsInChildren<ColliderComponent>()
                 );
+        }
+
+        /// <summary>
+        /// 古いパラメータを最新アルゴリズム用にコンバートする
+        /// </summary>
+        protected void ConvertToLatestAlgorithmParameters()
+        {
+            BaseCloth cloth = target as BaseCloth;
+
+            Debug.Log($"[{cloth.name}] Convert Parameters.");
+
+            Undo.RecordObject(cloth, "Convert Parameters");
+            cloth.Params.ConvertToLatestAlgorithmParameter();
+
+            serializedObject.ApplyModifiedProperties();
+            EditorUtility.SetDirty(cloth);
         }
     }
 }

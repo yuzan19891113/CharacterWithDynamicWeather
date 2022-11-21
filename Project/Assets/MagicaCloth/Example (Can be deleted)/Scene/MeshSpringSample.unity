@@ -41572,7 +41572,54 @@ Canvas:
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
---- !u!114 &1873531619
+--- !u!1 &1891122828
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1891122830}
+  - component: {fileID: 1891122829}
+  m_Layer: 0
+  m_Name: SimpleInputManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1891122829
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1891122828}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3ac57481f8227274482f9cf229190646, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tapRadiusCm: 0.5
+  flickRangeCm: 0.01
+  flickCheckSpeed: 1
+  mouseWheelSpeed: 5
+--- !u!4 &1891122830
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1891122828}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1956731800
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -41769,53 +41816,6 @@ MonoBehaviour:
     - 0.32586297
     - 0.2685054
   initScale: {x: 1, y: 1, z: 1}
---- !u!1 &1891122828
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1891122830}
-  - component: {fileID: 1891122829}
-  m_Layer: 0
-  m_Name: SimpleInputManager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &1891122829
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1891122828}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3ac57481f8227274482f9cf229190646, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  tapRadiusCm: 0.5
-  flickRangeCm: 0.01
-  flickCheckSpeed: 1
-  mouseWheelSpeed: 5
---- !u!4 &1891122830
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1891122828}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 2
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1968911014
 GameObject:
   m_ObjectHideFlags: 0
@@ -41846,13 +41846,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   dataHash: -393301496
-  dataVersion: 5
+  dataVersion: 7
   teamData:
     colliderList: []
     penetrationIgnoreColliderList: []
     mergeAvatarCollider: 1
   userBlendWeight: 1
+  updateMode: 0
+  cullingMode: 0
+  useAnimatedDistance: 0
   clothParams:
+    algorithm: 1
     radius:
       startValue: 0.02
       endValue: 0.02
@@ -41872,6 +41876,7 @@ MonoBehaviour:
       useEndValue: 0
       curveValue: 0
       useCurveValue: 0
+    gravityDirection: {x: 0, y: 1, z: 0}
     useDrag: 1
     drag:
       startValue: 0.01
@@ -41888,6 +41893,7 @@ MonoBehaviour:
       useCurveValue: 0
     influenceTarget: {fileID: 0}
     maxMoveSpeed: 10
+    maxRotationSpeed: 720
     worldMoveInfluence:
       startValue: 0.5
       endValue: 0.5
@@ -41910,6 +41916,7 @@ MonoBehaviour:
     useResetTeleport: 0
     teleportDistance: 0.2
     teleportRotation: 45
+    teleportMode: 0
     resetStabilizationTime: 0.1
     useClampDistanceRatio: 1
     clampDistanceMinRatio: 0.9
@@ -41933,6 +41940,13 @@ MonoBehaviour:
       useEndValue: 1
       curveValue: 0
       useCurveValue: 0
+    clampRotationAngle2:
+      startValue: 30
+      endValue: 30
+      useEndValue: 1
+      curveValue: 0
+      useCurveValue: 0
+    clampRotationVelocityLimit: 1
     clampRotationVelocityInfluence: 0.3
     restoreDistanceVelocityInfluence: 1
     structDistanceStiffness:
@@ -41971,7 +41985,14 @@ MonoBehaviour:
       useEndValue: 1
       curveValue: 0
       useCurveValue: 0
+    restoreRotation2:
+      startValue: 0.03
+      endValue: 0.001
+      useEndValue: 1
+      curveValue: 0
+      useCurveValue: 0
     restoreRotationVelocityInfluence: 0.2
+    restoreRotationVelocityInfluence2: 0.2
     useSpring: 1
     springPower: 0.01
     springRadius: 0.158
@@ -41994,7 +42015,14 @@ MonoBehaviour:
     adjustMode: 1
     adjustRotationPower: 5
     useTriangleBend: 0
+    useTriangleBendTwistCorrection: 1
     triangleBend:
+      startValue: 0.03
+      endValue: 0.03
+      useEndValue: 1
+      curveValue: 0
+      useCurveValue: 0
+    triangleBend2:
       startValue: 0.03
       endValue: 0.03
       useEndValue: 1
@@ -42016,7 +42044,7 @@ MonoBehaviour:
       useCurveValue: 0
     useCollision: 0
     friction: 0.2
-    keepInitialShape: 0
+    staticFriction: 0.03
     usePenetration: 0
     penetrationMode: 0
     penetrationAxis: 5
@@ -42041,19 +42069,20 @@ MonoBehaviour:
       useCurveValue: 0
     useLineAvarageRotation: 1
     useFixedNonRotation: 0
-  clothParamDataHashList: 000000000000000000000000000000000000000000000000f61b9937f61b9937000000000000000000000000216197b2000000000000000000000000000000000000000000000000000000000000000000000000
+  clothParamDataHashList: 000000000000000000000000000000000000000000000000f61b9937f61b9937000000000000000000000000216197b2000000000000000000000000000000000000000000000000000000000000000000000000f61b9937
   clothData: {fileID: 0}
   clothDataHash: 0
   clothDataVersion: 0
   clothSelection: {fileID: 0}
   clothSelectionHash: 0
   clothSelectionVersion: 0
+  cullRendererList: []
   virtualDeformer: {fileID: 826866886}
   virtualDeformerHash: 921831101
   virtualDeformerVersion: 2
   centerTransform: {fileID: 1054456654}
   directionAxis: 2
-  springData: {fileID: 1873531619}
+  springData: {fileID: 1956731800}
   springDataHash: 1168279539
   springDataVersion: 2
 --- !u!4 &1968911016

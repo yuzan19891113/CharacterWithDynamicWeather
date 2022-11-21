@@ -423,6 +423,9 @@ namespace MagicaCloth
                 var refChunk = gdata.GetRefChunk(type);
                 var stiffnessData = gdata.GetStiffness(type);
 
+                // アニメーションされた距離の使用
+                bool useAnimatedDistance = team.IsFlag(PhysicsManagerTeamData.Flag_AnimatedDistance);
+
                 // 摩擦係数１に対する重量増加倍率
                 // この係数は重要！
                 // 10以下だと突き抜けが発生する、30だと突き抜けは防止でいるがジッタリングがひどくなる
@@ -461,8 +464,12 @@ namespace MagicaCloth
 
 
                         // 復元距離
-                        //float rlen = math.distance(bpos, basePosList[tindex]);
                         float rlen = data.length; // v1.7.0
+                        if (useAnimatedDistance)
+                        {
+                            // アニメーションされた距離を利用する
+                            rlen = math.distance(bpos, basePosList[tindex]);
+                        }
 
                         // チームスケール倍率
                         rlen *= team.scaleRatio;

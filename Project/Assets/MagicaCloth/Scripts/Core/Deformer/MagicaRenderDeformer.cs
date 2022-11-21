@@ -365,7 +365,8 @@ namespace MagicaCloth
             var ren = GetComponent<Renderer>();
             if (ren == null)
             {
-                Debug.LogError("Creation failed. Renderer not found.");
+                //Debug.LogError("Creation failed. Renderer not found.");
+                Debug.LogError(Define.GetErrorMessage(Define.Error.RendererNotFound));
                 return;
             }
 
@@ -382,7 +383,8 @@ namespace MagicaCloth
                 var meshFilter = ren.GetComponent<MeshFilter>();
                 if (meshFilter == null)
                 {
-                    Debug.LogError("Creation failed. MeshFilter not found.");
+                    //Debug.LogError("Creation failed. MeshFilter not found.");
+                    Debug.LogError(Define.GetErrorMessage(Define.Error.MeshFilterNotFound));
                     return;
                 }
                 sharedMesh = meshFilter.sharedMesh;

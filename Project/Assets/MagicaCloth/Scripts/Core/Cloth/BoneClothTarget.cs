@@ -24,7 +24,9 @@ namespace MagicaCloth
         public enum ConnectionMode
         {
             Line = 0,
-            Mesh = 1,
+            MeshAutomatic = 1,
+            MeshSequentialLoop = 2,
+            MeshSequentialNoLoop = 3,
         }
         [SerializeField]
         private ConnectionMode connection = ConnectionMode.Line;
@@ -207,6 +209,14 @@ namespace MagicaCloth
             get
             {
                 return sameSurfaceAngle;
+            }
+        }
+
+        public bool IsMeshConnection
+        {
+            get
+            {
+                return connection == ConnectionMode.MeshAutomatic || connection == ConnectionMode.MeshSequentialLoop || connection == ConnectionMode.MeshSequentialNoLoop;
             }
         }
     }

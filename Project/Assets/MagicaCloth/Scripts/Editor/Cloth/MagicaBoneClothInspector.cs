@@ -48,6 +48,8 @@ namespace MagicaCloth
             EditorPresetUtility.DrawPresetButton(scr, scr.Params);
             {
                 var cparam = serializedObject.FindProperty("clothParams");
+                if (EditorInspectorUtility.AlgorithmInspector(cparam, scr.HasChangedParam(ClothParams.ParamType.Algorithm), ConvertToLatestAlgorithmParameters))
+                    scr.Params.SetChangeParam(ClothParams.ParamType.Algorithm);
                 if (EditorInspectorUtility.RadiusInspector(cparam))
                     scr.Params.SetChangeParam(ClothParams.ParamType.Radius);
                 if (EditorInspectorUtility.MassInspector(cparam))
@@ -69,16 +71,16 @@ namespace MagicaCloth
                     scr.Params.SetChangeParam(ClothParams.ParamType.ClampDistance);
                 if (EditorInspectorUtility.ClampPositionInspector(cparam, true, scr.HasChangedParam(ClothParams.ParamType.ClampPosition)))
                     scr.Params.SetChangeParam(ClothParams.ParamType.ClampPosition);
-                if (EditorInspectorUtility.ClampRotationInspector(cparam, scr.HasChangedParam(ClothParams.ParamType.ClampRotation)))
+                if (EditorInspectorUtility.ClampRotationInspector(cparam, scr.HasChangedParam(ClothParams.ParamType.ClampRotation), scr.ClothData))
                     scr.Params.SetChangeParam(ClothParams.ParamType.ClampRotation);
 
                 if (EditorInspectorUtility.RestoreDistanceInspector(cparam, scr.HasChangedParam(ClothParams.ParamType.RestoreDistance)))
                     scr.Params.SetChangeParam(ClothParams.ParamType.RestoreDistance);
-                if (EditorInspectorUtility.RestoreRotationInspector(cparam, scr.HasChangedParam(ClothParams.ParamType.RestoreRotation)))
+                if (EditorInspectorUtility.RestoreRotationInspector(cparam, scr.HasChangedParam(ClothParams.ParamType.RestoreRotation), scr.ClothData))
                     scr.Params.SetChangeParam(ClothParams.ParamType.RestoreRotation);
-                if (scr.ClothTarget.Connection == BoneClothTarget.ConnectionMode.Mesh)
+                if (scr.ClothTarget.IsMeshConnection)
                 {
-                    if (EditorInspectorUtility.TriangleBendInspector(cparam, scr.HasChangedParam(ClothParams.ParamType.TriangleBend)))
+                    if (EditorInspectorUtility.TriangleBendInspector(cparam, scr.HasChangedParam(ClothParams.ParamType.TriangleBend), scr.ClothData))
                         scr.Params.SetChangeParam(ClothParams.ParamType.TriangleBend);
                 }
                 if (EditorInspectorUtility.CollisionInspector(cparam, scr.HasChangedParam(ClothParams.ParamType.ColliderCollision)))
@@ -167,8 +169,13 @@ namespace MagicaCloth
 
             // 接続モード
             EditorGUILayout.PropertyField(serializedObject.FindProperty("clothTarget.connection"), new GUIContent("Connection Mode"));
-            if (scr.ClothTarget.Connection == BoneClothTarget.ConnectionMode.Mesh)
+            if (scr.ClothTarget.IsMeshConnection)
                 EditorGUILayout.PropertyField(serializedObject.FindProperty("clothTarget.sameSurfaceAngle"), new GUIContent("Same Surface Angle"));
+            if (scr.ClothTarget.Connection == BoneClothTarget.ConnectionMode.MeshSequentialLoop || scr.ClothTarget.Connection == BoneClothTarget.ConnectionMode.MeshSequentialNoLoop)
+            {
+                // 警告
+                EditorGUILayout.HelpBox("RootList must be registered in the order of connection for sequential connection.", MessageType.Info);
+            }
 
             // チーム項目
             TeamBasicInspector();
@@ -335,12 +342,6 @@ namespace MagicaCloth
                 // １ウエイトで追加
                 uint vinfo = DataUtility.Pack4_28(1, i);
                 vertexInfoList.Add(vinfo);
-                var vw = new MeshData.VertexWeight();
-                vw.parentIndex = i;
-                vw.weight = 1.0f;
-                vw.localPos = lposList[i];
-                vw.localNor = lnorList[i];
-                vw.localTan = ltanList[i];
             }
             mdata.vertexInfoList = vertexInfoList.ToArray();
             mdata.vertexWeightList = vertexWeightList.ToArray();
@@ -369,7 +370,7 @@ namespace MagicaCloth
             }
 
 
-            // 構造ライン
+            // トランスフォームの構造ライン（通常は縦）をつなぐ
             HashSet<uint> lineSet = new HashSet<uint>();
             for (int i = 0; i < transformList.Count; i++)
             {
@@ -384,18 +385,15 @@ namespace MagicaCloth
                 }
             }
 
-            // グリッドによるトライアングル
+            // 同じ深さの横ラインをつなぐ
             List<int> triangleList = new List<int>();
-            if (scr.ClothTarget.Connection == BoneClothTarget.ConnectionMode.Mesh)
+            HashSet<uint> triangleLineSet = new HashSet<uint>(lineSet);
+            if (scr.ClothTarget.Connection == BoneClothTarget.ConnectionMode.MeshAutomatic)
             {
-                HashSet<uint> triangleLineSet = new HashSet<uint>(lineSet);
-
+                // 最寄り頂点を接続する方法（従来）
                 // 周りのボーンを調べ一定範囲内のボーンを接続する
                 for (int i = 0; i < transformList.Count; i++)
                 {
-                    //if (sel[i] != SelectionData.Move)
-                    //    continue;
-
                     var t = transformList[i];
                     int depth = depthList[i];
                     float mindist = 10000.0f;
@@ -403,6 +401,7 @@ namespace MagicaCloth
                     List<int> linkList = new List<int>();
                     List<float> distList = new List<float>();
 
+                    // 同じ深さ（横）を仮接続する
                     for (int j = 0; j < transformList.Count; j++)
                     {
                         if (i == j || depthList[j] != depth)
@@ -423,8 +422,7 @@ namespace MagicaCloth
                             removeSet.Add(j);
                     }
 
-#if true
-                    // 方向が一定以内ならば最も近い接続以外を削除する
+                    // 角度が一定以内ならば最も近い接続以外を削除する
                     for (int j = 0; j < linkList.Count - 1; j++)
                     {
                         for (int k = j + 1; k < linkList.Count; k++)
@@ -444,7 +442,7 @@ namespace MagicaCloth
                             }
                         }
                     }
-#endif
+
                     // 登録
                     for (int j = 0; j < linkList.Count; j++)
                     {
@@ -456,68 +454,170 @@ namespace MagicaCloth
                     }
                 }
 
-                // 一旦各頂点の接続頂点リストを取得
-                var vlink = MeshUtility.GetVertexLinkList(mdata.vertexCount, triangleLineSet);
-
-                // トライアングル情報作成
-                HashSet<ulong> registTriangleSet = new HashSet<ulong>();
-                for (int i = 0; i < vlink.Count; i++)
+                // トライアングル生成
+                if (triangleLineSet.Count > 0)
                 {
-                    var linkset = vlink[i];
-                    var t = transformList[i];
-                    var move = sel[i] == SelectionData.Move;
+                    // 一旦各頂点の接続頂点リストを取得
+                    List<HashSet<int>> vlink = MeshUtility.GetVertexLinkList(mdata.vertexCount, triangleLineSet);
 
-                    foreach (var j in linkset)
+                    // トライアングル情報作成
+                    HashSet<ulong> registTriangleSet = new HashSet<ulong>();
+                    for (int i = 0; i < vlink.Count; i++)
                     {
-                        var t2 = transformList[j];
-                        var v = (t2.position - t.position).normalized;
-                        var move2 = sel[j] == SelectionData.Move;
+                        HashSet<int> linkset = vlink[i];
+                        var t = transformList[i];
+                        var move = sel[i] == SelectionData.Move;
 
-                        foreach (var k in linkset)
+                        foreach (var j in linkset)
                         {
-                            if (j == k)
-                                continue;
+                            var t2 = transformList[j];
+                            var v = (t2.position - t.position).normalized;
+                            var move2 = sel[j] == SelectionData.Move;
 
-                            // j-kのエッジがtriangleLineSetに含まれていない場合は無効
-                            //if (triangleLineSet.Contains(DataUtility.PackPair(j, k)) == false)
-                            //    continue;
-
-                            var t3 = transformList[k];
-                            var v2 = (t3.position - t.position).normalized;
-                            var move3 = sel[k] == SelectionData.Move;
-
-                            // すべて固定頂点なら無効
-                            if (move == false && move2 == false && move3 == false)
-                                continue;
-
-                            // 面積が０のトライアングルは除外する
-                            var n = Vector3.Cross(t2.position - t.position, t3.position - t.position);
-                            var clen = n.magnitude;
-                            if (clen < 1e-06f)
+                            foreach (var k in linkset)
                             {
-                                //Debug.Log($"clen == 0 ({i},{j},{k})");
-                                continue;
-                            }
+                                if (j == k)
+                                    continue;
 
-                            var ang = Vector3.Angle(v, v2); // deg
-                            if (ang <= 100)
-                            {
-                                // i - j - k をトライアングルとして登録する
-                                var thash = DataUtility.PackTriple(i, j, k);
-                                if (registTriangleSet.Contains(thash) == false)
+                                // j-kのエッジがtriangleLineSetに含まれていない場合は無効
+                                //if (triangleLineSet.Contains(DataUtility.PackPair(j, k)) == false)
+                                //    continue;
+
+                                var t3 = transformList[k];
+                                var v2 = (t3.position - t.position).normalized;
+                                var move3 = sel[k] == SelectionData.Move;
+
+                                // すべて固定頂点なら無効
+                                if (move == false && move2 == false && move3 == false)
+                                    continue;
+
+                                // 面積が０のトライアングルは除外する
+                                var n = Vector3.Cross(t2.position - t.position, t3.position - t.position);
+                                var clen = n.magnitude;
+                                if (clen < 1e-06f)
                                 {
-                                    triangleList.Add(i);
-                                    triangleList.Add(j);
-                                    triangleList.Add(k);
-                                    registTriangleSet.Add(thash);
+                                    //Debug.Log($"clen == 0 ({i},{j},{k})");
+                                    continue;
                                 }
+
+                                var ang = Vector3.Angle(v, v2); // deg
+                                if (ang <= 100)
+                                {
+                                    // i - j - k をトライアングルとして登録する
+                                    var thash = DataUtility.PackTriple(i, j, k);
+                                    if (registTriangleSet.Contains(thash) == false)
+                                    {
+                                        triangleList.Add(i);
+                                        triangleList.Add(j);
+                                        triangleList.Add(k);
+                                        registTriangleSet.Add(thash);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
+            }
+            else if (scr.ClothTarget.Connection == BoneClothTarget.ConnectionMode.MeshSequentialLoop || scr.ClothTarget.Connection == BoneClothTarget.ConnectionMode.MeshSequentialNoLoop)
+            {
+                // 登録ライン順に接続する方法
+                bool loop = scr.ClothTarget.Connection == BoneClothTarget.ConnectionMode.MeshSequentialLoop;
+                int maxLevel;
+                List<List<List<Transform>>> grid = scr.GetTransformGrid(out maxLevel);
+                if (maxLevel > 0)
+                {
+                    HashSet<ulong> registTriangleSet = new HashSet<ulong>();
+
+                    for (int x = 0; x < grid.Count; x++)
+                    {
+                        // このラインの左右ラインインデックス
+                        int leftx = loop ? (x + grid.Count - 1) % grid.Count : x - 1;
+                        int rightx = loop ? (x + 1) % grid.Count : x + 1;
+
+                        for (int lv = 0; lv < grid[x].Count; lv++)
+                        {
+                            for (int k = 0; k < grid[x][lv].Count; k++)
+                            {
+                                var t = grid[x][lv][k];
+                                int index = transformList.IndexOf(t);
+
+                                // 自身の左側
+                                Transform leftt = null;
+                                if (k == 0)
+                                {
+                                    if (leftx >= 0 && leftx != x)
+                                    {
+                                        if (lv < grid[leftx].Count)
+                                        {
+                                            int l = grid[leftx][lv].Count;
+                                            leftt = grid[leftx][lv][l - 1];
+                                        }
+                                    }
+                                }
+                                else
+                                {
+                                    leftt = grid[x][lv][k - 1];
+                                }
+                                int leftIndex = transformList.IndexOf(leftt);
+
+                                // 自身の右側
+                                Transform rightt = null;
+                                if (k == grid[x][lv].Count - 1)
+                                {
+                                    if (rightx < grid.Count && rightx != x)
+                                    {
+                                        if (lv < grid[rightx].Count)
+                                        {
+                                            rightt = grid[rightx][lv][0];
+                                        }
+                                    }
+                                }
+                                else
+                                {
+                                    rightt = grid[x][lv][k + 1];
+                                }
+                                int rightIndex = transformList.IndexOf(rightt);
+
+                                // 親
+                                Transform pt = t.parent;
+                                int parentIndex = transformList.IndexOf(pt);
+
+                                // トライアングル形成
+                                // (1)自身-親-左
+                                if (parentIndex >= 0 && leftIndex >= 0)
+                                {
+                                    var thash = DataUtility.PackTriple(index, parentIndex, leftIndex);
+                                    if (registTriangleSet.Contains(thash) == false)
+                                    {
+                                        triangleList.Add(index);
+                                        triangleList.Add(parentIndex);
+                                        triangleList.Add(leftIndex);
+                                        registTriangleSet.Add(thash);
+                                    }
+                                }
+
+                                // (2)自身-親-右
+                                if (parentIndex >= 0 && rightIndex >= 0)
+                                {
+                                    var thash = DataUtility.PackTriple(index, parentIndex, rightIndex);
+                                    if (registTriangleSet.Contains(thash) == false)
+                                    {
+                                        triangleList.Add(index);
+                                        triangleList.Add(parentIndex);
+                                        triangleList.Add(rightIndex);
+                                        registTriangleSet.Add(thash);
+                                    }
+                                }
+
+                                //Debug.Log($"[{t.name}] x:{x} lv:{lv} k:{k}");
                             }
                         }
                     }
                 }
             }
 
-            // トライアングルの法線を揃える
+            // トライアングルの法線を揃える、また不要なトライアングルを除去する
             HashSet<ulong> triangleSet = new HashSet<ulong>();
             if (triangleList.Count > 0)
             {

@@ -48,6 +48,8 @@ namespace MagicaCloth
             EditorPresetUtility.DrawPresetButton(scr, scr.Params);
             {
                 var cparam = serializedObject.FindProperty("clothParams");
+                if (EditorInspectorUtility.AlgorithmInspector(cparam, scr.HasChangedParam(ClothParams.ParamType.Algorithm), ConvertToLatestAlgorithmParameters))
+                    scr.Params.SetChangeParam(ClothParams.ParamType.Algorithm);
                 if (EditorInspectorUtility.GravityInspector(cparam))
                     scr.Params.SetChangeParam(ClothParams.ParamType.Gravity);
                 if (EditorInspectorUtility.ExternalForceInspector(cparam))
