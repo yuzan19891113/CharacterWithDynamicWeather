@@ -1139,8 +1139,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Wetness: 0
-  Darkness: 20
-  SmoothInc: 0.1
+  Darkness: 30
+  SmoothInc: 0.5
 --- !u!4 &230552185 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -4352138042153119685, guid: 57f589d8395a43c41bdeb2959b14961c,

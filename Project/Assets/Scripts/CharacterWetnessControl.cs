@@ -25,7 +25,7 @@ public class CharacterWetnessControl : MonoBehaviour
         {
             if (m.GetFloat("_Wetness") == 1)
             {
-                minSmooth[myMatNum] = m.GetFloat("_GlossStrength");
+                minSmooth[myMatNum] = m.GetFloat("_Glossiness");
                 maxColor[myMatNum] = m.GetColor("_Color");
                 myMats[myMatNum++] = m;
             }
@@ -44,7 +44,7 @@ public class CharacterWetnessControl : MonoBehaviour
                 ColorValue.g = Clamp(((1 - Wetness) * Darkness + maxColor[i].g * 255 - Darkness) / 255, 0, 1);
                 ColorValue.b = Clamp(((1 - Wetness) * Darkness + maxColor[i].b * 255 - Darkness) / 255, 0, 1);
                 myMats[i].SetColor("_Color",  ColorValue);
-                myMats[i].SetFloat("_GlossStrength", Clamp(Wetness*SmoothInc + minSmooth[i], 0, 1));
+                myMats[i].SetFloat("_Glossiness", Clamp(Wetness*SmoothInc + minSmooth[i], 0, 1));
             }
         }
     }
