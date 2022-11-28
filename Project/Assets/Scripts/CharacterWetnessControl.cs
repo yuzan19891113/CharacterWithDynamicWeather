@@ -4,6 +4,11 @@ using UnityEngine;
 
 public class CharacterWetnessControl : MonoBehaviour
 {
+    enum WetMaterial{
+        hair = 1,
+        cloth = 2,
+        metal = 3
+    };
     [Range(0,1)]
     public float Wetness = 0;
     [Range(20, 200)]
@@ -23,7 +28,7 @@ public class CharacterWetnessControl : MonoBehaviour
         Material[] allMats = gameObject.GetComponentInChildren<SkinnedMeshRenderer>().materials;
         foreach(Material m in allMats)
         {
-            if (m.GetFloat("_Wetness") == 1)
+            if (m.GetFloat("_Wettable") == 2 || m.GetFloat("_Wettable") == 1)
             {
                 minSmooth[myMatNum] = m.GetFloat("_Glossiness");
                 maxColor[myMatNum] = m.GetColor("_Color");

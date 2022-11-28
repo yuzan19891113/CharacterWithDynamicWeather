@@ -2,7 +2,7 @@
 {
     Properties
     {
-        _Wetness("CanGetWet", float) = 1
+        [Enum(off,0,hair,1,cloth,2,metal,3)]_Wettable("CanGetWet", float) = 0
         _Color("Color", Color) = (1,1,1,1)
         _MainTex("Albedo", 2D) = "white" {}
 
@@ -89,7 +89,7 @@
 
             #pragma vertex vertBase
             #pragma fragment fragBase
-            #include "UnityStandardCoreForward.cginc"
+            #include "../CGIncludes/UnityStandardCoreForward.cginc"
 
             ENDCG
         }
@@ -125,7 +125,7 @@
 
             #pragma vertex vertAdd
             #pragma fragment fragAdd
-            #include "UnityStandardCoreForward.cginc"
+            #include "../CGIncludes/UnityStandardCoreForward.cginc"
 
             ENDCG
         }
@@ -155,7 +155,7 @@
             #pragma vertex vertShadowCaster
             #pragma fragment fragShadowCaster
 
-            #include "UnityStandardShadow.cginc"
+            #include "../CGIncludes/UnityStandardShadow.cginc"
 
             ENDCG
         }
@@ -190,7 +190,7 @@
             #pragma vertex vertDeferred
             #pragma fragment fragDeferred
 
-            #include "UnityStandardCore.cginc"
+            #include "../CGIncludes/UnityStandardCore.cginc"
 
             ENDCG
         }
@@ -215,7 +215,7 @@
                 #pragma shader_feature_local _DETAIL_MULX2
                 #pragma shader_feature EDITOR_VISUALIZATION
 
-                #include "UnityStandardMeta.cginc"
+                #include "../CGIncludes/UnityStandardMeta.cginc"
                 ENDCG
             }
         }
@@ -255,7 +255,7 @@
 
             #pragma vertex vertBase
             #pragma fragment fragBase
-            #include "UnityStandardCoreForward.cginc"
+            #include "../CGIncludes/UnityStandardCoreForward.cginc"
 
             ENDCG
         }
@@ -287,7 +287,7 @@
 
             #pragma vertex vertAdd
             #pragma fragment fragAdd
-            #include "UnityStandardCoreForward.cginc"
+            #include "../CGIncludes/UnityStandardCoreForward.cginc"
 
             ENDCG
         }
@@ -311,7 +311,7 @@
                 #pragma vertex vertShadowCaster
                 #pragma fragment fragShadowCaster
 
-                #include "UnityStandardShadow.cginc"
+                #include "../CGIncludes/UnityStandardShadow.cginc"
 
                 ENDCG
             }
@@ -336,12 +336,12 @@
                 #pragma shader_feature_local _DETAIL_MULX2
                 #pragma shader_feature EDITOR_VISUALIZATION
 
-                #include "UnityStandardMeta.cginc"
+                #include "../CGIncludes/UnityStandardMeta.cginc"
                 ENDCG
             }
         }
 
 
             FallBack "VertexLit"
-            CustomEditor "StandardShaderGUI"
+            CustomEditor "myStandardShaderGUI"
 }
