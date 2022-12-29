@@ -4,11 +4,8 @@ Shader "Custom/RainSkybox"
 
     Properties
     {
-        _TimeMapping("Time Mapping", Range(-1, 1)) = 0//这个参数是脚本传参过来的，控制全部的变化过程，
-        //-1 到 0 表示 00:00 到 06:00，0 到 1 表示 06:00 到 12:00
-        //1 到 0 表示 12:00 到 18：00，0 到 -1 表示 18:00 到 24:00
-        //0 前后的微小区间表示昼夜更替的过度部分
-        //-1 和 1附近的微小区间分别表示 午夜 和 正午 的过度部分
+        _TimeMapping("Time Mapping", Range(-1, 1)) = 0
+       
 
         [Header(Sky Settings)]
         _NoiseTexture("Star Noise Texture", 2D) = "black"{}
@@ -27,16 +24,16 @@ Shader "Custom/RainSkybox"
         
          //雨天
          _DayHorizonColor("Day Horizon Color", Color) = (0.06, 0.09, 0.12, 1)//0F151F
-         _SunsetHorizonColor("Sunset Horizon Color", Color) = (0.56, 0.65, 0.61, 1)//8FA69C
+         _SunsetHorizonColor("Sunset Horizon Color", Color) = (0.56, 0.65, 0.64, 1)//8FA6A3
 
          _NightHorizonColor("Night Horizon Color", Color) = (0.04, 0.02, 0.1, 1)
-         _GroundLineColor("Ground Line Color", Color) = (1, 1, 1, 1)
+         _GroundLineColor("Ground Line Color", Color) = (0,0,0,0)//000000
 
          [Header(Sun and Moon Settings)]
          //雨天
-         _SunColor("Sun Color", Color) = (0.76, 0.71, 0.71)//C2B5B5
+         _SunColor("Sun Color", Color) = (0.66, 0.58, 0.58)//A89595
          _SunRadius("Sun Radius", Range(0, 10)) = 0.5
-         _SunIntensity("Sun Intensity", Range(0, 10)) = 1
+         _SunIntensity("Sun Intensity", Range(0, 10)) = 0.63
          _MoonColor("Moon Color", Color) = (0.06, 0.09, 0.12, 1)//0F171F
          _MoonRadius("Moon Radius", Range(1, 10)) = 1
          _MoonIntensity("Moon Intensity", Range(0, 10)) = 0.1

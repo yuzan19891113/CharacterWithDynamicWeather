@@ -55,16 +55,16 @@ Material:
     - _SunRadius: 3
     - _SunsetHorizonColorRamp: 1
     - _ThinCloudBrightness: 30
-    - _TimeMapping: 0.98161966
+    - _TimeMapping: -0.53225327
     - _Transparent: 1
     - _UVScale: 0.005
     m_Colors:
-    - _DayHorizonColor: {r: 0.5, g: 0.8, b: 1, a: 1}
-    - _DaySkyColor: {r: 0.25, g: 0.75, b: 0.9, a: 1}
+    - _DayHorizonColor: {r: 0.5019608, g: 0.8, b: 1, a: 0}
+    - _DaySkyColor: {r: 0.2509804, g: 0.7529412, b: 0.9019608, a: 1}
     - _GroundLineColor: {r: 1, g: 1, b: 1, a: 1}
     - _MoonColor: {r: 0.5019608, g: 0.5019608, b: 0.5019608, a: 0}
     - _NightHorizonColor: {r: 0.04, g: 0.02, b: 0.09999997, a: 1}
-    - _NightSkyColor: {r: 0.06, g: 0.09, b: 0.12, a: 1}
+    - _NightSkyColor: {r: 0.05882353, g: 0.09019608, b: 0.12156863, a: 1}
     - _SunColor: {r: 1, g: 0.6, b: 0, a: 0}
     - _SunsetHorizonColor: {r: 1, g: 0.6, b: 0.29803923, a: 0}
     - _ThickCloudColor: {r: 0.34999996, g: 0.34999996, b: 0.34999996, a: 1}
