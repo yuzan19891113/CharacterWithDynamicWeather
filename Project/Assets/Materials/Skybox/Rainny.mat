@@ -68,8 +68,8 @@ Material:
     - _Glossiness: 0.5
     - _GlossyReflections: 1
     - _HorizonBias: 0
-    - _HorizonContract: 50
-    - _HorizonStrength: 200
+    - _HorizonContract: 100
+    - _HorizonStrength: 100
     - _Metallic: 0
     - _Mode: 0
     - _MoonIntensity: 0.1
@@ -87,9 +87,9 @@ Material:
     - _StarsHeight: 0.2
     - _StarsScale: 2.5
     - _SunIntensity: 0.63
-    - _SunRadius: 0.5
+    - _SunRadius: 1
     - _SunsetHorizonColorRamp: 1
-    - _TimeMapping: 0.45
+    - _TimeMapping: 0.95
     - _UVSec: 0
     - _ZWrite: 1
     m_Colors:
@@ -101,5 +101,5 @@ Material:
     - _MoonColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
     - _NightHorizonColor: {r: 0.04, g: 0.02, b: 0.09999997, a: 1}
     - _NightSkyColor: {r: 0.059999965, g: 0.089999996, b: 0.11999995, a: 1}
-    - _SunColor: {r: 0.65882355, g: 0.58431375, b: 0.58431375, a: 1}
-    - _SunsetHorizonColor: {r: 0.56078434, g: 0.6509804, b: 0.6396877, a: 1}
+    - _SunColor: {r: 0.9339623, g: 0.7979715, b: 0.6255785, a: 1}
+    - _SunsetHorizonColor: {r: 0.94509804, g: 0.7529412, b: 0.5882353, a: 1}

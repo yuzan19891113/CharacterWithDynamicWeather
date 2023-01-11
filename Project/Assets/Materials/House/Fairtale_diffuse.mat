@@ -1,0 +1,115 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 6
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Fairtale_diffuse
+  m_Shader: {fileID: 4800000, guid: 98ebf02602b1e6e42beac806495b8448, type: 3}
+  m_ShaderKeywords: 
+  m_LightmapFlags: 5
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _Bump:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _BumpMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _DetailAlbedoMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _DetailMask:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _DetailNormalMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _EmissionMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _MainTex:
+        m_Texture: {fileID: 2800000, guid: e352e09de61b6da41a698190389e077d, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _MetallicGlossMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _NoiseTexture:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _NormalMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _OcclusionMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _ParallaxMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Floats:
+    - _BumpScale: 0
+    - _Cutoff: 0.5
+    - _DetailNormalMapScale: 1
+    - _DstBlend: 0
+    - _Glossiness: 0.5
+    - _HorizonBias: 0
+    - _HorizonContract: 50
+    - _HorizonStrength: 200
+    - _Metallic: 0
+    - _Mode: 0
+    - _MoonIntensity: 0.1
+    - _MoonMask: 0.15
+    - _MoonRadius: 1
+    - _OcclusionStrength: 1
+    - _Parallax: 0.02
+    - _ShiftHorizonColorRampBias: -0.2
+    - _ShiftHorizonIntensityRamp: 0.8
+    - _ShiftSunAndMoonColorRamp: 0.75
+    - _Snow: 0
+    - _SnowStrength: 0
+    - _SnowThick: 0
+    - _SrcBlend: 1
+    - _StarsBrightness: 100
+    - _StarsHeight: 0.2
+    - _StarsScale: 2.5
+    - _SunIntensity: 0.63
+    - _SunRadius: 0.5
+    - _SunsetHorizonColorRamp: 1
+    - _TimeMapping: 0
+    - _UVSec: 0
+    - _ZWrite: 1
+    m_Colors:
+    - _Color: {r: 0.5882353, g: 0.5882353, b: 0.5882353, a: 1}
+    - _DayHorizonColor: {r: 0.059999965, g: 0.089999996, b: 0.11999995, a: 1}
+    - _DaySkyColor: {r: 0.12999997, g: 0.50999993, b: 0.6, a: 1}
+    - _Diffuse: {r: 1, g: 1, b: 1, a: 1}
+    - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
+    - _GroundLineColor: {r: 0, g: 0, b: 0, a: 0}
+    - _MoonColor: {r: 0.059999965, g: 0.089999996, b: 0.11999995, a: 1}
+    - _NightHorizonColor: {r: 0.04, g: 0.02, b: 0.09999997, a: 1}
+    - _NightSkyColor: {r: 0.059999965, g: 0.089999996, b: 0.11999995, a: 1}
+    - _SnowColor: {r: 1, g: 1, b: 1, a: 1}
+    - _SnowDir: {r: 0, g: 1, b: 0, a: 1}
+    - _SunColor: {r: 0.65999997, g: 0.58, b: 0.58, a: 1}
+    - _SunsetHorizonColor: {r: 0.56, g: 0.65, b: 0.6399999, a: 1}

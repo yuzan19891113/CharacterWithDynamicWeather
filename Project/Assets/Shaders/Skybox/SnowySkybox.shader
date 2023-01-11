@@ -22,14 +22,14 @@ Shader "Custom/SnowSkybox"
 
         //雪天
          _DayHorizonColor("Day Horizon Color", Color) = (0.97, 0.97, 0.97, 1)//F8F8F8
-         _SunsetHorizonColor("Sunset Horizon Color", Color) = (1, 0.6, 0.3, 1)//FF994C
+         _SunsetHorizonColor("Sunset Horizon Color", Color) = (0.95, 0.75, 0.59, 1)//F1C096
          
          _NightHorizonColor("Night Horizon Color", Color) = (0.04, 0.02, 0.1, 1)
          _GroundLineColor("Ground Line Color", Color) = (1, 1, 1, 1)
 
          [Header(Sun and Moon Settings)]
          //雪天
-         _SunColor("Sun Color", Color) = (0.90, 0.75, 0.91, 1)//E6BEE7
+         _SunColor("Sun Color", Color) = (0.97, 0.81, 0.51, 1)//F8CE81
          _SunRadius("Sun Radius", Range(1, 10)) = 1
          _SunIntensity("Sun Intensity", Range(1, 10)) = 3.9
          _MoonColor("Moon Color", Color) = (0.5, 0.5, 0.5, 1)//808080

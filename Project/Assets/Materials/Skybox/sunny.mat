@@ -39,7 +39,7 @@ Material:
     - _Height: 50
     - _HorizonBias: 0
     - _HorizonContract: 50
-    - _HorizonStrength: 200
+    - _HorizonStrength: 124
     - _MoonIntensity: 2
     - _MoonMask: 0.15
     - _MoonRadius: 1.5
@@ -55,7 +55,7 @@ Material:
     - _SunRadius: 3
     - _SunsetHorizonColorRamp: 1
     - _ThinCloudBrightness: 30
-    - _TimeMapping: -0.53225327
+    - _TimeMapping: 0.62061006
     - _Transparent: 1
     - _UVScale: 0.005
     m_Colors:

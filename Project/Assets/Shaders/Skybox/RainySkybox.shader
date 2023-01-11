@@ -24,14 +24,14 @@ Shader "Custom/RainSkybox"
         
          //雨天
          _DayHorizonColor("Day Horizon Color", Color) = (0.06, 0.09, 0.12, 1)//0F151F
-         _SunsetHorizonColor("Sunset Horizon Color", Color) = (0.56, 0.65, 0.64, 1)//8FA6A3
+         _SunsetHorizonColor("Sunset Horizon Color", Color) = (0.95, 0.75, 0.59, 1)//F1C096
 
          _NightHorizonColor("Night Horizon Color", Color) = (0.04, 0.02, 0.1, 1)
          _GroundLineColor("Ground Line Color", Color) = (0,0,0,0)//000000
 
          [Header(Sun and Moon Settings)]
          //雨天
-         _SunColor("Sun Color", Color) = (0.66, 0.58, 0.58)//A89595
+         _SunColor("Sun Color", Color) = (0.92, 0.80, 0.63)//EECBA0
          _SunRadius("Sun Radius", Range(0, 10)) = 0.5
          _SunIntensity("Sun Intensity", Range(0, 10)) = 0.63
          _MoonColor("Moon Color", Color) = (0.06, 0.09, 0.12, 1)//0F171F

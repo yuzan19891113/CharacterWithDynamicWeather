@@ -83,7 +83,7 @@ Material:
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
     - _SrcBlend: 1
-    - _StarsBrightness: 100
+    - _StarsBrightness: 172
     - _StarsHeight: 0.2
     - _StarsScale: 2.5
     - _SunIntensity: 3.9
@@ -101,5 +101,5 @@ Material:
     - _MoonColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
     - _NightHorizonColor: {r: 0.04, g: 0.02, b: 0.09999997, a: 1}
     - _NightSkyColor: {r: 0.059999943, g: 0.08999997, b: 0.11999992, a: 0}
-    - _SunColor: {r: 0.9015902, g: 0.74332505, b: 0.9056604, a: 1}
-    - _SunsetHorizonColor: {r: 0.9056604, g: 0.7859158, b: 0.102527566, a: 1}
+    - _SunColor: {r: 0.972549, g: 0.8065698, b: 0.5058824, a: 1}
+    - _SunsetHorizonColor: {r: 0.9433962, g: 0.7517472, b: 0.58739763, a: 1}
