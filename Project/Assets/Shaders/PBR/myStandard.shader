@@ -3,6 +3,13 @@
     Properties
     {
         [Enum(off,0,hair,1,cloth,2,metal,3)]_Wettable("CanGetWet", float) = 0
+        _Absorbent("Absorbent", Range(0, 200)) = 0
+        _SmoothIncrement("SmoothIncrement", Range(0, 0.8)) = 0.5
+        [ToggleOff]_HaveAo("HaveAo", float) = 0
+        _AoReduction("AoReduction", Range(0, 1)) = 0.5
+        [ToggleOff]_HaveNorm("HaveNorm", float) = 0
+        _NormReduction("NormReduction", Range(0, 1)) = 0.5
+
         _Color("Color", Color) = (1,1,1,1)
         _MainTex("Albedo", 2D) = "white" {}
 
@@ -89,7 +96,7 @@
 
             #pragma vertex vertBase
             #pragma fragment fragBase
-            #include "../CGIncludes/UnityStandardCoreForward.cginc"
+            #include "UnityStandardCoreForward.cginc"
 
             ENDCG
         }
@@ -125,7 +132,7 @@
 
             #pragma vertex vertAdd
             #pragma fragment fragAdd
-            #include "../CGIncludes/UnityStandardCoreForward.cginc"
+            #include "UnityStandardCoreForward.cginc"
 
             ENDCG
         }
@@ -190,7 +197,7 @@
             #pragma vertex vertDeferred
             #pragma fragment fragDeferred
 
-            #include "../CGIncludes/UnityStandardCore.cginc"
+            #include "UnityStandardCore.cginc"
 
             ENDCG
         }
@@ -255,7 +262,7 @@
 
             #pragma vertex vertBase
             #pragma fragment fragBase
-            #include "../CGIncludes/UnityStandardCoreForward.cginc"
+            #include "UnityStandardCoreForward.cginc"
 
             ENDCG
         }
@@ -287,7 +294,7 @@
 
             #pragma vertex vertAdd
             #pragma fragment fragAdd
-            #include "../CGIncludes/UnityStandardCoreForward.cginc"
+            #include "UnityStandardCoreForward.cginc"
 
             ENDCG
         }
@@ -311,7 +318,7 @@
                 #pragma vertex vertShadowCaster
                 #pragma fragment fragShadowCaster
 
-                #include "../CGIncludes/UnityStandardShadow.cginc"
+                #include "UnityStandardShadow.cginc"
 
                 ENDCG
             }

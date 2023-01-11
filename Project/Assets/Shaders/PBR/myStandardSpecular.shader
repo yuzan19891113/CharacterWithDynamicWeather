@@ -5,6 +5,23 @@ Shader "Custom/myStandard (Specular setup)"
     Properties
     {
         [Enum(off,0,hair,1,cloth,2,metal,3)] _Wettable("CanGetWet", float) = 0
+        _Absorbent("Absorbent", float) = 0
+        _SmoothIncrement("SmoothIncrement", float) = 0.5
+        [ToggleOff]_HaveAo("HaveAo", float) = 0
+        _AoReduction("AoReduction", Range(0, 1)) = 0.5
+        [ToggleOff]_HaveNorm("HaveNorm", float) = 0
+        _NormReduction("NormReduction", Range(0, 1)) = 0.5
+        _WetnessMap("”Íµ„‘Î…˘ÕºœÒ", 2D) = "white" {}
+
+        //wetness control custom
+        _Wetness("Wetness", Range(0,1)) = 0
+        _NoiseMap("Noise Image", 2D) = "white"{}
+        _DarkCoeff("Wet Coefficient", Range(0,1)) = 0.5
+        _DryRoughness("Dry Roughness", Range(0,1)) = 1
+        _WetRoughness("Wet Roughness", Range(0,1)) = 0.5
+        _DrySpecular("Dry Specular", Range(0,1)) = 0.3
+        _WetSpecular("Wet Specular", Range(0,1)) = 0.8
+
         _Color("Color", Color) = (1,1,1,1)
         _MainTex("Albedo", 2D) = "white" {}
 
@@ -90,7 +107,7 @@ Shader "Custom/myStandard (Specular setup)"
 
             #pragma vertex vertBase
             #pragma fragment fragBase
-            #include "../CGIncludes/UnityStandardCoreForward.cginc"
+            #include "../CGIncludes/myUnityStandardCoreForward.cginc"
 
             ENDCG
         }
@@ -125,7 +142,7 @@ Shader "Custom/myStandard (Specular setup)"
 
             #pragma vertex vertAdd
             #pragma fragment fragAdd
-            #include "../CGIncludes/UnityStandardCoreForward.cginc"
+            #include "../CGIncludes/myUnityStandardCoreForward.cginc"
 
             ENDCG
         }
@@ -190,7 +207,7 @@ Shader "Custom/myStandard (Specular setup)"
             #pragma vertex vertDeferred
             #pragma fragment fragDeferred
 
-            #include "../CGIncludes/UnityStandardCore.cginc"
+            #include "../CGIncludes/myUnityStandardCore.cginc"
 
             ENDCG
         }
@@ -255,7 +272,7 @@ Shader "Custom/myStandard (Specular setup)"
 
             #pragma vertex vertBase
             #pragma fragment fragBase
-            #include "../CGIncludes/UnityStandardCoreForward.cginc"
+            #include "../CGIncludes/myUnityStandardCoreForward.cginc"
 
             ENDCG
         }
@@ -287,7 +304,7 @@ Shader "Custom/myStandard (Specular setup)"
 
             #pragma vertex vertAdd
             #pragma fragment fragAdd
-            #include "../CGIncludes/UnityStandardCoreForward.cginc"
+            #include "../CGIncludes/myUnityStandardCoreForward.cginc"
 
             ENDCG
         }
@@ -341,5 +358,5 @@ Shader "Custom/myStandard (Specular setup)"
     }
 
     FallBack "VertexLit"
-    CustomEditor "myStandardShaderGUI"
+    //CustomEditor "myStandardShaderGUI"
 }

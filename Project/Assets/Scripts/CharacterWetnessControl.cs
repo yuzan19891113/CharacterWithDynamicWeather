@@ -4,60 +4,56 @@ using UnityEngine;
 
 public class CharacterWetnessControl : MonoBehaviour
 {
-    enum WetMaterial{
-        hair = 1,
-        cloth = 2,
-        metal = 3
-    };
+    //public bool useShow = false;
+    //public WetnessShow WetSrc;
     [Range(0,1)]
-    public float Wetness = 0;
-    [Range(20, 200)]
-    public float Darkness = 50;
-    [Range(0,(float)0.8)]
-    public float SmoothInc = (float)0.5;
-    float lastWetness = 0;
-    int myMatNum = 0;
-    Color ColorValue = new Color(255, 255, 255, 255);
-    float[] minSmooth = new float[10];  //初始的光滑值
-    Color[] maxColor = new Color[10];  //初始的albedo color
+    public float Wetness = 0;  //材质的湿度
+    float lastWetness = 0;  //材质之前的湿度
+    int myMatNum = 0;  //所需要处理的材质数量
     Material[] myMats = new Material[10];
+    float[] current_Wetness = new float[10];  //材质的吸水性（用于调整反光率
+
     
+    SkinnedMeshRenderer[] allChild;
+    int allMatsNum = 0;
+    Material[] allMats = new Material[10];
+
     // Start is called before the first frame update
     void Start()
     {
-        Material[] allMats = gameObject.GetComponentInChildren<SkinnedMeshRenderer>().materials;
-        foreach(Material m in allMats)
+        
+        allChild = GetComponentsInChildren<SkinnedMeshRenderer>();
+        foreach(SkinnedMeshRenderer child in allChild)
         {
-            if (m.GetFloat("_Wettable") == 2 || m.GetFloat("_Wettable") == 1)
+            foreach(Material mat in child.materials)
             {
-                minSmooth[myMatNum] = m.GetFloat("_Glossiness");
-                maxColor[myMatNum] = m.GetColor("_Color");
-                myMats[myMatNum++] = m;
+                allMats[allMatsNum++] = mat;
             }
+        }
+
+        for(int i=0; i < allMatsNum; ++i)
+        {
+            Material m = allMats[i];
+            current_Wetness[i] = m.GetFloat("_Wetness");
+            myMats[myMatNum++] = m;
         }
     }
 
     // Update is called once per frame
     void Update()
     {
+        //if(useShow) Wetness = WetSrc.Wetness;
         if (myMatNum > 0 && lastWetness != Wetness)
         {
             for (int i = 0; i < myMatNum; ++i)
             {
                 lastWetness = Wetness;
-                ColorValue.r = Clamp(((1 - Wetness) * Darkness + maxColor[i].r * 255 - Darkness) / 255, 0, 1);
-                ColorValue.g = Clamp(((1 - Wetness) * Darkness + maxColor[i].g * 255 - Darkness) / 255, 0, 1);
-                ColorValue.b = Clamp(((1 - Wetness) * Darkness + maxColor[i].b * 255 - Darkness) / 255, 0, 1);
-                myMats[i].SetColor("_Color",  ColorValue);
-                myMats[i].SetFloat("_Glossiness", Clamp(Wetness*SmoothInc + minSmooth[i], 0, 1));
+                Material m = myMats[i];
+
+                //set the diffuse
+                m.SetFloat("_Wetness", Wetness);
             }
         }
     }
 
-    float Clamp(float num, float min, float max)
-    {
-        if (num < min) return min;
-        if (num > max) return max;
-        return num;
-    }
 }

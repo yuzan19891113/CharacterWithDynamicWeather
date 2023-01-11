@@ -56,6 +56,8 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Floats:
+    - _Absorbent: 40
+    - _AoReduction: 0.5
     - _BumpScale: 1
     - _Cutoff: 0.5
     - _DetailNormalMapScale: 1
@@ -64,11 +66,15 @@ Material:
     - _GlossStrength: 0
     - _Glossiness: 0
     - _GlossyReflections: 1
+    - _HaveAo: 0
+    - _HaveNorm: 0
     - _Metallic: 0
     - _MetallicStrength: 0
     - _Mode: 0
+    - _NormReduction: 0.5
     - _OcclusionStrength: 1
     - _Parallax: 0.02
+    - _SmoothIncrement: 0.5
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
     - _SrcBlend: 1

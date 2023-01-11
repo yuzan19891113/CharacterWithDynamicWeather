@@ -6,6 +6,10 @@ Shader "Custom/MyPBR"
 {
 	Properties
 	{
+		_Wetness("Wetness", Range(0,1)) = 0 //湿度
+		_Porosity("Porosity", Range(0.2,1)) = 0.5 //孔隙度
+
+
 		_Color("Color",color) = (1,1,1,1)	//颜色
 		_MainTex("Albedo",2D) = "white"{}	//反照率
 		_MetallicGlossMap("Metallic",2D) = "white"{} //金属图，r通道存储金属度，a通道存储光滑度
@@ -16,13 +20,17 @@ Shader "Custom/MyPBR"
 		_BumpScale("Normal Scale",float) = 1 //法线影响大小
 		_EmissionColor("Color",color) = (0,0,0) //自发光颜色
 		_EmissionMap("Emission Map",2D) = "white"{}//自发光贴图
-		_Wetness("CanGetWet", float) = 0 //能不能被打湿
 	}
 	CGINCLUDE
 		//引入一些需要用到的.cginc文件
 		#include "UnityCG.cginc"
 		#include "Lighting.cginc"
 		#include "AutoLight.cginc"
+
+		float ClampRange(float input, float minimum, float maximum)
+		{
+			return saturate((input-minimum)/(maximum-minimum));
+		}
 
 		//计算环境光照或光照贴图uv坐标
 		inline half4 VertexGI(float2 uv1,float2 uv2,float3 worldPos,float3 worldNormal)
@@ -195,6 +203,9 @@ Shader "Custom/MyPBR"
 
 
 			//声明之前定义的一些变量
+			float _Wetness;
+			float _Porosity;
+
 			half4 _Color;
 			sampler2D _MainTex;
 			float4 _MainTex_ST;
@@ -266,6 +277,13 @@ Shader "Custom/MyPBR"
 				half metallic = metallicGloss.x * _MetallicStrength;//金属度
 				half roughness = 1 - metallicGloss.y * _GlossStrength;//粗糙度
 				half occlusion = tex2D(_OcclusionMap,i.uv).g;//环境光遮挡
+
+				//wetness  control
+				float3 albedoSqr = albedo*albedo;
+				albedo = lerp(albedo, albedoSqr, ClampRange(_Wetness, 0.0, 0.35) * _Porosity);
+				roughness = lerp(roughness, 0.1, ClampRange(_Wetness, 0.2, 1.0));
+				metallic = lerp(metallic, 0.25, ClampRange(_Wetness, 0.25, 0.5));
+				occlusion = lerp(occlusion, 1.0,  ClampRange(_Wetness, 0.45, 0.95));
 
 				//计算世界空间中的法线
 				half3 normalTangent = UnpackNormal(tex2D(_BumpMap,i.uv));

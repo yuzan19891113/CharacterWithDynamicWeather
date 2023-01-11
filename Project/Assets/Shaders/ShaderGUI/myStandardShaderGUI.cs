@@ -50,7 +50,16 @@ namespace UnityEditor
             public static GUIContent detailMaskText = EditorGUIUtility.TrTextContent("Detail Mask", "Mask for Secondary Maps (A)");
             public static GUIContent detailAlbedoText = EditorGUIUtility.TrTextContent("Detail Albedo x2", "Albedo (RGB) multiplied by 2");
             public static GUIContent detailNormalMapText = EditorGUIUtility.TrTextContent("Normal Map", "Normal Map");
+
             public static GUIContent WettableText = new GUIContent("Wettable", "define the material that can be wet in the rain and snow");
+            public static GUIContent AbsorbentText = new GUIContent("Absorbent", "Water absorption strength of the material");
+            public static GUIContent SmoothIncrementText = new GUIContent("SmoothIncrement", "the max smooth increment value of the material when it's wet");
+            public static GUIContent HaveAoText = new GUIContent("HaveAo", "does this material have Occlusion map");
+            public static GUIContent AoReductionText = new GUIContent("AoReduction", "the max OcclusionStrength reduction value of the material when it's wet");
+            public static GUIContent HaveNormText = new GUIContent("HaveNorm", "does this material have Normal map");
+            public static GUIContent NormReductionText = new GUIContent("NormReduction", "the max Normal Scale reduction value of the material when it's wet");
+            public static GUIContent WetnessMapText = new GUIContent("雨点噪声图像", "用来作为动态显示雨点的mask");
+            public static string wetControlText = "Wetness Control";
 
             public static string primaryMapsText = "Main Maps";
             public static string secondaryMapsText = "Secondary Maps";
@@ -86,7 +95,15 @@ namespace UnityEditor
         MaterialProperty detailNormalMapScale = null;
         MaterialProperty detailNormalMap = null;
         MaterialProperty uvSetSecondary = null;
+
         MaterialProperty Wettable = null;
+        MaterialProperty Absorbent = null;
+        MaterialProperty SmoothIncrement = null;
+        MaterialProperty HaveAo = null;
+        MaterialProperty AoReduction = null;
+        MaterialProperty HaveNorm = null;
+        MaterialProperty NormReduction = null;
+        MaterialProperty WetnessMap = null;
 
         MaterialEditor m_MaterialEditor;
         WorkflowMode m_WorkflowMode = WorkflowMode.Specular;
@@ -96,6 +113,14 @@ namespace UnityEditor
         public void FindProperties(MaterialProperty[] props)
         {
             Wettable = FindProperty("_Wettable", props);
+            Absorbent = FindProperty("_Absorbent", props);
+            SmoothIncrement = FindProperty("_SmoothIncrement", props);
+            HaveAo = FindProperty("_HaveAo", props);
+            AoReduction = FindProperty("_AoReduction", props);
+            HaveNorm = FindProperty("_HaveNorm", props);
+            NormReduction = FindProperty("_NormReduction", props);
+            WetnessMap = FindProperty("_WetnessMap", props);
+
             blendMode = FindProperty("_Mode", props);
             albedoMap = FindProperty("_MainTex", props);
             albedoColor = FindProperty("_Color", props);
@@ -160,9 +185,21 @@ namespace UnityEditor
             {
                 blendModeChanged = BlendModePopup();
 
-                // Primary properties
-                GUILayout.Label(Styles.primaryMapsText, EditorStyles.boldLabel);
+                //Wet Controll properties
+                GUILayout.Space(20f);
+                GUILayout.Label(Styles.wetControlText, EditorStyles.boldLabel);
                 m_MaterialEditor.ShaderProperty(Wettable, Styles.WettableText);
+                m_MaterialEditor.ShaderProperty(Absorbent, Styles.AbsorbentText);
+                m_MaterialEditor.ShaderProperty(SmoothIncrement, Styles.SmoothIncrementText);
+                m_MaterialEditor.ShaderProperty(HaveAo, Styles.HaveAoText);
+                m_MaterialEditor.ShaderProperty(AoReduction, Styles.AoReductionText);
+                m_MaterialEditor.ShaderProperty(HaveNorm, Styles.HaveNormText);
+                m_MaterialEditor.ShaderProperty(NormReduction, Styles.NormReductionText);
+                m_MaterialEditor.ShaderProperty(WetnessMap, Styles.WetnessMapText);
+
+                // Primary properties
+                GUILayout.Space(20f);
+                GUILayout.Label(Styles.primaryMapsText, EditorStyles.boldLabel);
                 DoAlbedoArea(material);
                 DoSpecularMetallicArea();
                 DoNormalArea();
