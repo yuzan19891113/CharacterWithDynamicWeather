@@ -35,7 +35,6 @@ public class CharacterWetnessControl : MonoBehaviour
                 }
             }
         }
-        Debug.Log(matCount);
 
     }
 

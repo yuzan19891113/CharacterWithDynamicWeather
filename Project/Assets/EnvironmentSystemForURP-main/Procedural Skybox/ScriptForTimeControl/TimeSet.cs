@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class TimeSet : MonoBehaviour
 {
+    public bool IsPause = false;
     public Material SkyboxMaterial;
     public GameObject DirectionalLight;
     public GameObject Sun;
@@ -30,9 +31,12 @@ public class TimeSet : MonoBehaviour
 
     void Update()
     {
-        doRotation();
-        doLightSwitch();
-        setTime();
+        if (!IsPause)
+        {
+            doRotation();
+            doLightSwitch();
+            setTime();
+        }
     }
 
     
@@ -63,6 +67,24 @@ public class TimeSet : MonoBehaviour
         {
             SkyboxMaterial.SetFloat("_TimeMapping", (18.0f - Time) / 6.0f);
         }
+    }
+
+    public float getTimeValue()
+    {
+        return Time;
+    }
+
+    public void setTimeValue(float time)
+    {
+        Time = time;
+        doRotation();
+        doLightSwitch();
+        setTime();
+    }
+
+    public void setPause(bool pause)
+    {
+        IsPause = pause;
     }
 
     //中心物体绕向量旋转，太阳与月亮平行光始终看向中心物体且分别位于中心物体前后两侧

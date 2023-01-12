@@ -87,7 +87,7 @@ Material:
     - _ShiftHorizonIntensityRamp: 0.8
     - _ShiftSunAndMoonColorRamp: 0.75
     - _Snow: 0
-    - _SnowStrength: 1
+    - _SnowStrength: 0
     - _SnowThick: 0
     - _SrcBlend: 1
     - _StarsBrightness: 100
