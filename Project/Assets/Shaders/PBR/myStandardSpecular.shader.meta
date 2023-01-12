@@ -1,0 +1,19 @@
+fileFormatVersion: 2
+guid: 33fd801bc22a1e34c95599902ed8ad0a
+ShaderImporter:
+  externalObjects: {}
+  defaultTextures:
+  - _WetnessMap: {fileID: 2800000, guid: f7e78329c1213ce44bf188c7cce0ae29, type: 3}
+  - _MainTex: {instanceID: 0}
+  - _SpecGlossMap: {instanceID: 0}
+  - _BumpMap: {instanceID: 0}
+  - _ParallaxMap: {instanceID: 0}
+  - _OcclusionMap: {instanceID: 0}
+  - _EmissionMap: {instanceID: 0}
+  - _DetailMask: {instanceID: 0}
+  - _DetailAlbedoMap: {instanceID: 0}
+  - _DetailNormalMap: {instanceID: 0}
+  nonModifiableTextures: []
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

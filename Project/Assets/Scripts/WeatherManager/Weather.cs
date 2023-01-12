@@ -6,6 +6,10 @@ using UnityEngine;
 public class Weather : MonoBehaviour 
 {
     public Material skyMaterial;
+    public Material FloorMaterial;
+    public Material HouseMaterial;
+    public GameObject WetnessControllerObject;
+
 
     public Color daySkyColor;
     public Color nightSkyColor;
@@ -27,7 +31,9 @@ public class Weather : MonoBehaviour
     [Range(-1f,1f)]
     public float moonMask;
     //Other Parameters
-    //public Light directionalLight;
+    [Range(0f, 1f)]
+    public float charactorWetness;
+    protected float fogEndDistance = 300;
 
     void Start()
     {
@@ -39,20 +45,21 @@ public class Weather : MonoBehaviour
 
     }
 
-    public virtual void Onchange()
-    {
-        ChangeSkyBox();
-    }
-
-    public virtual void UpdateParameters()
+    public virtual void OnEnter()
     {
 
     }
 
-    public void ChangeSkyBox()
+    public virtual void OnExit()
+    {
+
+    }
+
+    public virtual void SetWeather()
     {
         RenderSettings.skybox = skyMaterial;
-
+        WetnessControllerObject.GetComponent<CharacterWetnessControl>().SetWetness(charactorWetness);
+        OnEnter();
         try
         {
             skyMaterial.SetColor("_DaySkyColor", daySkyColor);
@@ -71,14 +78,43 @@ public class Weather : MonoBehaviour
 
             skyMaterial.SetFloat("_MoonMask", moonMask);
         }
-        catch(Exception e)
+        catch (Exception e)
         {
             Debug.LogException(e);
         }
-            
+    }
+
+    public virtual void UpdateParameters()
+    {
 
     }
 
+    public virtual void InterpolateParameters(WeatherType lastWeather, float rate)
+    {
+        try
+        {
+            Weather left = WeatherData.weatherInstance.weatherList[(int)lastWeather];
+            skyMaterial.SetColor("_DaySkyColor", left.daySkyColor * (1 - rate) + daySkyColor * rate);
+            skyMaterial.SetColor("_NightSkyColor", left.nightSkyColor * (1 - rate) + nightSkyColor * rate);
 
-    
+            skyMaterial.SetColor("_DayHorizonColor", left.dayHorizonColor * (1 - rate) + dayHorizonColor * rate);
+            skyMaterial.SetColor("_SunsetHorizonColor", left.sunsetHorizonColor * (1 - rate) + sunsetHorizonColor * rate);
+
+            skyMaterial.SetColor("_SunColor", left.sunColor * (1 - rate) + sunColor * rate);
+            skyMaterial.SetColor("_MoonColor", left.moonColor * (1 - rate) + moonColor * rate);
+
+            skyMaterial.SetFloat("_SunRadius", left.sunRadius * (1 - rate) + sunRadius * rate);
+            skyMaterial.SetFloat("_SunIntensity", left.sunIntensity * (1 - rate) + sunIntensity * rate);
+            skyMaterial.SetFloat("_MoonRadius", left.moonRadius * (1 - rate) + moonRadius * rate);
+            skyMaterial.SetFloat("_MoonIntensity", left.moonIntensity * (1 - rate) + moonIntensity * rate);
+
+            skyMaterial.SetFloat("_MoonMask", left.moonMask * (1 - rate) + moonMask * rate);
+            WetnessControllerObject.GetComponent<CharacterWetnessControl>().SetWetness(left.charactorWetness * (1 - rate) + charactorWetness * rate);
+        }
+        catch (Exception e)
+        {
+            Debug.LogException(e);
+        }
+    }
+  
 }

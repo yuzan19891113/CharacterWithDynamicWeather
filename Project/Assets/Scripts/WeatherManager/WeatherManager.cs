@@ -11,26 +11,35 @@ public enum WeatherType
     Snowy,
 }
 
-[ExecuteInEditMode]
+//[ExecuteInEditMode]
 public class WeatherManager : MonoBehaviour
 {
 
     [SerializeField, SetProperty("currentWeather")]
     private WeatherType _currentWeather;
+
+    private WeatherType _lastWeather;
+    private WeatherType _weatherBuffer;
     public WeatherType currentWeather
     {
         get { return _currentWeather; }
-        private set { _currentWeather = value;
+        private set {
+            _currentWeather = value;
             OnWeatherChanged();
         }
     }
 
     public GameObject weatherDataObject;
-    private List<Weather> weatherList;
+    public float changeRate = 0.1f;
+    public float changeTime = 10f;
+    private int interpolateTime = 0;
+
 
     // Start is called before the first frame update
     void Start()
     {
+        RenderSettings.fogMode = FogMode.Linear;
+
         foreach (WeatherType weather in Enum.GetValues(typeof(WeatherType)))
         {
             Type componentType = Type.GetType(weather.ToString());
@@ -39,9 +48,9 @@ public class WeatherManager : MonoBehaviour
             {
                 WeatherData.weatherInstance.weatherList.Add(weatherComponet);
             }
-           // Debug.Log("Add "+ weather.ToString());
         }
-
+        WeatherData.weatherInstance.weatherList[(int)currentWeather].SetWeather();
+        _weatherBuffer = currentWeather;
     }
 
     // Update is called once per frame
@@ -50,12 +59,33 @@ public class WeatherManager : MonoBehaviour
         //WeatherData.weatherInstance.weatherList[(int)currentWeather].UpdateParameters();
     }
 
+    void InterpolateWeather()
+    {
+        interpolateTime += 1;
+        WeatherData.weatherInstance.weatherList[(int)currentWeather].InterpolateParameters(_lastWeather, interpolateTime * changeRate / changeTime);
+
+        if (interpolateTime >= changeTime/changeRate)
+        {
+            interpolateTime = 0;
+            WeatherData.weatherInstance.weatherList[(int)_lastWeather].OnExit();
+            CancelInvoke("InterpolateWeather");
+        }
+    }
+
     private void OnWeatherChanged()
     {
         if (WeatherData.weatherInstance.weatherList.Count > 0)
         {
             //Debug.Log(WeatherData.weatherInstance.weatherList.Count);
-            WeatherData.weatherInstance.weatherList[(int)currentWeather].Onchange();
+            _lastWeather = _weatherBuffer;
+            _weatherBuffer = _currentWeather;
+            WeatherData.weatherInstance.weatherList[(int)currentWeather].OnEnter();
+            InvokeRepeating("InterpolateWeather", 0f, changeRate);
         }
+    }
+
+    public void SetWeather(WeatherType weather)
+    {
+        currentWeather = weather;
     }
 }
