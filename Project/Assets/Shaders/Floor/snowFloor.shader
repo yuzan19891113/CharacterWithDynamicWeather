@@ -5,14 +5,18 @@ Properties {
 }
 
 SubShader {
-	Tags { "RenderType"="Opaque" }
+	Tags { "RenderType"="Opaque"  }
 	LOD 100
 	
 	Pass {  
-		CGPROGRAM
+			tags{	"LightMode" = "ShadowCaster"}
+			CGPROGRAM
 			#pragma vertex vert
 			#pragma fragment frag
+			#pragma multi_compile_fog
+			#pragma multi_compile_shadowcaster
 			
+
 			#include "UnityCG.cginc"
 
 			struct appdata_t {
@@ -22,9 +26,11 @@ SubShader {
 			};
 
 			struct v2f {
+
 				float4 vertex : SV_POSITION;
 				half2 texcoord : TEXCOORD0;
 				fixed3 normal : NORMAL;
+				UNITY_FOG_COORDS(1)
 			};
 			//纹理
 			sampler2D _MainTex;
@@ -40,7 +46,11 @@ SubShader {
 				o.texcoord = TRANSFORM_TEX(v.texcoord, _MainTex);
 				//法线
 				o.normal = v.normal;
+				TRANSFER_SHADOW_CASTER_NORMALOFFSET(o);
+				UNITY_TRANSFER_FOG(o, o.vertex);
+				
 				return o;
+				
 			}
 			
 			fixed4 frag (v2f i) : SV_Target
@@ -57,6 +67,9 @@ SubShader {
 				//使用lerp做差值运算 ==> sc*(1-flag)+col*flag
 				col = lerp(sc,col,flag);
 				UNITY_OPAQUE_ALPHA(col.a);
+				SHADOW_CASTER_FRAGMENT(o);
+				UNITY_APPLY_FOG_COLOR(i.fogCoord, col, fixed4(1,1,1,1));
+				
 				return col;
 			}
 		ENDCG
