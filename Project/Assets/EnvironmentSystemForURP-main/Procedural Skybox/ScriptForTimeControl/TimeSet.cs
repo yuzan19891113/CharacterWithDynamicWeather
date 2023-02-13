@@ -106,7 +106,7 @@ public class TimeSet : MonoBehaviour
         //始终看向中心点的空物体
         Sun.transform.LookAt(CenterPoint.transform);
         Moon.transform.LookAt(CenterPoint.transform);
-        
+
     }
     void doLightSwitch()//控制太阳与月亮平行光的参数变化
     {
@@ -114,6 +114,7 @@ public class TimeSet : MonoBehaviour
         {
             Sun.SetActive(true);
             Moon.SetActive(false);
+            //RenderSettings.sun = Sun.GetComponent<Light>();
 
             Sun.transform.GetComponent<Light>().intensity = 0.01f + SunLightIntensity * smoothstep(0.0f, 0.4f, System.Math.Max(Vector3.Dot(Vector3.Normalize(Sun.transform.forward), new Vector3(0.0f, -1.0f, 0.0f)), 0.0f));
             Sun.transform.GetComponent<Light>().color = Color.Lerp(new Color(1.0f, 0.75f, 0.5f), new Color(1.0f, 0.95f, 0.9f), smoothstep(0.0f, 0.6f, (float)System.Math.Pow(Vector3.Dot(Vector3.Normalize(Sun.transform.forward), new Vector3(0.0f, -1.0f, 0.0f)), 1.5f)));
@@ -124,6 +125,7 @@ public class TimeSet : MonoBehaviour
         {           
             Moon.SetActive(true);
             Sun.SetActive(false);
+            //RenderSettings.sun = Moon.GetComponent<Light>();
 
             Moon.transform.GetComponent<Light>().intensity = 0.01f + MoonLightIntensity * smoothstep(0.0f, 0.3f, System.Math.Max(Vector3.Dot(Vector3.Normalize(Moon.transform.forward), new Vector3(0.0f, -1.0f, 0.0f)), 0.0f));
             Moon.transform.GetComponent<Light>().color = Color.Lerp(new Color(0.5f, 0.5f, 0.5f), new Color(0.6f, 0.8f, 1.0f), smoothstep(0.0f, 0.6f, System.Math.Max(Vector3.Dot(Vector3.Normalize(Moon.transform.forward), new Vector3(0.0f, -1.0f, 0.0f)), 0.0f)));

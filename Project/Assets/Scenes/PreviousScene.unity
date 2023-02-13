@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 1891612059}
-  m_IndirectSpecularColor: {r: 0.019859992, g: 0.01003034, b: 0.0075078793, a: 1}
+  m_IndirectSpecularColor: {r: 0.004452775, g: 0.006186442, b: 0.00910113, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -398,6 +398,7 @@ MonoBehaviour:
   skyMaterial: {fileID: 2100000, guid: 5e24fed9d6497f2469ba4c2cc4eb576e, type: 2}
   FloorMaterial: {fileID: 2100000, guid: 5fe36a1dc9c2cd94b9f4ca7c9423ecc3, type: 2}
   HouseMaterial: {fileID: 2100000, guid: eecabf9139dc34b4bbb7f81459008ff2, type: 2}
+  WetnessControllerObject: {fileID: 0}
   daySkyColor: {r: 0.25, g: 0.75, b: 0.9, a: 1}
   nightSkyColor: {r: 0.06, g: 0.09, b: 0.12, a: 1}
   dayHorizonColor: {r: 0.5, g: 0.8, b: 1, a: 1}
@@ -409,6 +410,7 @@ MonoBehaviour:
   moonRadius: 1.5
   moonIntensity: 2
   moonMask: 0.15
+  charactorWetness: 0
 --- !u!114 &261371958
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -424,6 +426,7 @@ MonoBehaviour:
   skyMaterial: {fileID: 2100000, guid: 5e24fed9d6497f2469ba4c2cc4eb576e, type: 2}
   FloorMaterial: {fileID: 2100000, guid: 5fe36a1dc9c2cd94b9f4ca7c9423ecc3, type: 2}
   HouseMaterial: {fileID: 2100000, guid: eecabf9139dc34b4bbb7f81459008ff2, type: 2}
+  WetnessControllerObject: {fileID: 0}
   daySkyColor: {r: 0.2509804, g: 0.7490196, b: 0.90196085, a: 0}
   nightSkyColor: {r: 0.058823533, g: 0.09019608, b: 0.121568635, a: 0}
   dayHorizonColor: {r: 0.5019608, g: 0.8000001, b: 1, a: 0}
@@ -435,6 +438,7 @@ MonoBehaviour:
   moonRadius: 1
   moonIntensity: 1
   moonMask: 0.15
+  charactorWetness: 0
   SnowEffect: {fileID: 586293992}
 --- !u!114 &261371959
 MonoBehaviour:
@@ -451,6 +455,7 @@ MonoBehaviour:
   skyMaterial: {fileID: 2100000, guid: 5e24fed9d6497f2469ba4c2cc4eb576e, type: 2}
   FloorMaterial: {fileID: 2100000, guid: 5fe36a1dc9c2cd94b9f4ca7c9423ecc3, type: 2}
   HouseMaterial: {fileID: 2100000, guid: eecabf9139dc34b4bbb7f81459008ff2, type: 2}
+  WetnessControllerObject: {fileID: 0}
   daySkyColor: {r: 0.12941177, g: 0.50980395, b: 0.6, a: 0}
   nightSkyColor: {r: 0.06, g: 0.09, b: 0.12, a: 1}
   dayHorizonColor: {r: 0.05882353, g: 0.08235294, b: 0.12156863, a: 0}
@@ -462,6 +467,7 @@ MonoBehaviour:
   moonRadius: 1
   moonIntensity: 0.1
   moonMask: 0.15
+  charactorWetness: 0
   RainEffect: {fileID: 1131741072}
 --- !u!4 &261371960
 Transform:
@@ -509,8 +515,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 74f76acbb4c799e409d4fa11eb3cbccb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  weatherDropdown: {fileID: 410443942}
   weatherManager: {fileID: 2086060307}
+  weatherDropdown: {fileID: 410443942}
+  wetnessSlider: {fileID: 0}
+  timeSlider: {fileID: 0}
+  timeToggle: {fileID: 0}
 --- !u!114 &394783172
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1187,6 +1196,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1bfa97553c1e7ab47b4fc9b74d2afe67, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  IsPause: 0
   SkyboxMaterial: {fileID: 2100000, guid: 5e24fed9d6497f2469ba4c2cc4eb576e, type: 2}
   DirectionalLight: {fileID: 0}
   Sun: {fileID: 1891612058}
