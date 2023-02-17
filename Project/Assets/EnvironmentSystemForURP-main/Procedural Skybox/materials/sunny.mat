@@ -55,7 +55,7 @@ Material:
     - _SunRadius: 0.5
     - _SunsetHorizonColorRamp: 1
     - _ThinCloudBrightness: 30
-    - _TimeMapping: -0.40916762
+    - _TimeMapping: 0.39075914
     - _Transparent: 1
     - _UVScale: 0.005
     m_Colors:

@@ -17,6 +17,8 @@ public class Rainy : Weather
     public override void SetWeather()
     {
         base.SetWeather();
+        RenderSettings.fogEndDistance = fogEndDistanceRainy;
+        RenderSettings.fogStartDistance = 0;
         FloorMaterial.SetFloat("_WaterRange", 1f);
         HouseMaterial.SetFloat("_SnowStrength", 0f);
 
@@ -40,6 +42,8 @@ public class Rainy : Weather
     public override void InterpolateParameters(WeatherType lastWeather, float rate)
     {
         base.InterpolateParameters(lastWeather, rate);
+        float fogEndDistance = (1 - rate) * fogEndDistanceSunny + rate * fogEndDistanceRainy;
+        RenderSettings.fogEndDistance = fogEndDistance;
         RenderSettings.fogStartDistance = (1 - rate) * fogEndDistance;
         FloorMaterial.SetFloat ("_WaterRange", rate);
         if(lastWeather == WeatherType.Snowy)

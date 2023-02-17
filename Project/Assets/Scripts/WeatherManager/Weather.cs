@@ -33,7 +33,9 @@ public class Weather : MonoBehaviour
     //Other Parameters
     [Range(0f, 1f)]
     public float charactorWetness;
-    protected float fogEndDistance = 300;
+    protected float fogEndDistanceRainy = 50;
+    protected float fogEndDistanceSunny = 400;
+    
 
     void Start()
     {

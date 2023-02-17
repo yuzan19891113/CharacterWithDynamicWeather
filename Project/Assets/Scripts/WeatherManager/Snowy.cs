@@ -20,7 +20,8 @@ public class Snowy : Weather
     public override void SetWeather()
     {
         base.SetWeather();
-        RenderSettings.fog = false;
+        RenderSettings.fogEndDistance = fogEndDistanceSunny;
+        RenderSettings.fogStartDistance = fogEndDistanceSunny - 1;
         FloorMaterial.SetFloat("_WaterRange", 0f);
         HouseMaterial.SetFloat("_SnowStrength", 1f);
 
@@ -29,7 +30,6 @@ public class Snowy : Weather
     public override void OnEnter()
     {
         SnowEffect.SetActive(true);
-
         Debug.Log("Enter Snowy!");
     }
 
@@ -45,7 +45,9 @@ public class Snowy : Weather
         base.InterpolateParameters(lastWeather, rate);
         if (lastWeather == WeatherType.Rainy)
         {
-            RenderSettings.fogStartDistance = rate * fogEndDistance;
+            float fogEndDistance = rate * fogEndDistanceSunny + (1 - rate) * fogEndDistanceRainy;
+            RenderSettings.fogEndDistance = fogEndDistance;
+            RenderSettings.fogStartDistance = (1 - rate) * fogEndDistance;
             FloorMaterial.SetFloat("_WaterRange", 1 - rate);
         }
          HouseMaterial.SetFloat("_SnowStrength", rate);
