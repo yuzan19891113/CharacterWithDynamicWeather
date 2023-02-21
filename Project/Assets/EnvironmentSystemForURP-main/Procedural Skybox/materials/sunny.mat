@@ -40,9 +40,9 @@ Material:
     - _HorizonBias: 0
     - _HorizonContract: 50
     - _HorizonStrength: 200
-    - _MoonIntensity: 0.1
+    - _MoonIntensity: 2
     - _MoonMask: 0.15
-    - _MoonRadius: 1
+    - _MoonRadius: 1.5
     - _ShiftHorizonColorRampBias: -0.2
     - _ShiftHorizonIntensityRamp: 0.8
     - _ShiftSunAndMoonColorRamp: 0.75
@@ -51,20 +51,20 @@ Material:
     - _StarsBrightness: 100
     - _StarsHeight: 0.2
     - _StarsScale: 2.5
-    - _SunIntensity: 1
-    - _SunRadius: 0.5
+    - _SunIntensity: 4
+    - _SunRadius: 3
     - _SunsetHorizonColorRamp: 1
     - _ThinCloudBrightness: 30
-    - _TimeMapping: 0.39075914
+    - _TimeMapping: -0.46555963
     - _Transparent: 1
     - _UVScale: 0.005
     m_Colors:
-    - _DayHorizonColor: {r: 0.05882353, g: 0.08235294, b: 0.12156863, a: 0}
-    - _DaySkyColor: {r: 0.12941177, g: 0.50980395, b: 0.6, a: 0}
+    - _DayHorizonColor: {r: 0.5, g: 0.8, b: 1, a: 1}
+    - _DaySkyColor: {r: 0.25, g: 0.75, b: 0.9, a: 1}
     - _GroundLineColor: {r: 1, g: 1, b: 1, a: 1}
-    - _MoonColor: {r: 0.05882353, g: 0.09019608, b: 0.12156863, a: 0}
+    - _MoonColor: {r: 0.5019608, g: 0.5019608, b: 0.5019608, a: 0}
     - _NightHorizonColor: {r: 0.04, g: 0.02, b: 0.09999997, a: 1}
     - _NightSkyColor: {r: 0.06, g: 0.09, b: 0.12, a: 1}
-    - _SunColor: {r: 0.7607843, g: 0.70980394, b: 0.70980394, a: 0}
-    - _SunsetHorizonColor: {r: 0.56078434, g: 0.6509804, b: 0.6117647, a: 0}
+    - _SunColor: {r: 1, g: 0.6, b: 0, a: 0}
+    - _SunsetHorizonColor: {r: 1, g: 0.6, b: 0.29803923, a: 0}
     - _ThickCloudColor: {r: 0.34999996, g: 0.34999996, b: 0.34999996, a: 1}
