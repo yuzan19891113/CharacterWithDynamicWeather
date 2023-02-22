@@ -6,8 +6,13 @@ Shader "Custom/MyPBR"
 {
 	Properties
 	{
-		_Wetness("Wetness", Range(0,1)) = 0 //湿度
+		//_Wetness("Wetness", Range(0,1)) = 0 //湿度
 		_Porosity("Porosity", Range(0.2,1)) = 0.5 //孔隙度
+
+		//_SnowStrength("Snow Strength", Range(0,1))=0 //雪的强度
+		_SnowTex("Snow Tex", 2D) = "white"{} //雪的区域贴图
+		_SnowArea("Snow Area", Range(0,1)) = 0.5
+		_SnowEdge("Snow Edge", Range(0.4,1)) = 0.5
 
 
 		_Color("Color",color) = (1,1,1,1)	//颜色
@@ -217,6 +222,10 @@ Shader "Custom/MyPBR"
 			float _BumpScale;
 			half4 _EmissionColor;
 			sampler2D _EmissionMap;
+			float _SnowStrength;
+			sampler2D _SnowTex;
+			float _SnowArea;
+			float _SnowEdge;
 
 			struct a2v
 			{
@@ -231,6 +240,7 @@ Shader "Custom/MyPBR"
 			{
 				float4 pos : SV_POSITION;
 				float2 uv : TEXCOORD0;
+				fixed3 normal : NORMAL;
 				half4 ambientOrLightmapUV : TEXCOORD1;//存储环境光或光照贴图的UV坐标
 				float4 TtoW0 : TEXCOORD2;
 				float4 TtoW1 : TEXCOORD3;
@@ -246,11 +256,14 @@ Shader "Custom/MyPBR"
 
 				o.pos = UnityObjectToClipPos(v.vertex);//将模型空间转换到裁剪空间，定义在UnityShaderUtilities.cginc
 				o.uv = TRANSFORM_TEX(v.texcoord,_MainTex);//计算偏移后的uv坐标,定义在UnityCG.cginc
+				
 
 				float3 worldPos = mul(unity_ObjectToWorld,v.vertex);
 				half3 worldNormal = UnityObjectToWorldNormal(v.normal);
 				half3 worldTangent = UnityObjectToWorldDir(v.tangent);
 				half3 worldBinormal = cross(worldNormal,worldTangent) * v.tangent.w;
+
+				o.normal=worldNormal;
 
 				//计算环境光照或光照贴图uv坐标
 				o.ambientOrLightmapUV = VertexGI(v.texcoord1,v.texcoord2,worldPos,worldNormal);
@@ -285,9 +298,21 @@ Shader "Custom/MyPBR"
 				metallic = lerp(metallic, 0.25, ClampRange(_Wetness, 0.25, 0.5));
 				occlusion = lerp(occlusion, 1.0,  ClampRange(_Wetness, 0.45, 0.95));
 
+				//snow control
+				float cosVal = saturate(dot(float3(0.0,1.0,0.0),i.normal));
+				float snowArea = (1-_SnowArea)*0.5+0.4; //范围为0.4-0.9
+				float snowEdge = (1-snowArea)*0.8*_SnowEdge; //范围为（1-snowArea）*（0~0.5）
+				cosVal = cosVal * (_SnowStrength/2+0.5) * tex2D(_SnowTex, i.uv).r;
+				//cosVal = saturate((ClampRange(cosVal, 0.5, 0.86)-0.5)/0.36);
+				cosVal = saturate((ClampRange(cosVal, snowArea, snowArea + snowEdge)-snowArea)/snowEdge);
+				fixed4 sc = fixed4(1.0,0.98,0.98,1.0);
+				albedo = lerp(albedo, sc, cosVal);
+				//metallic = lerp(metallic, 0.25, ClampRange(_SnowStrength, 0.25, 0.5));
+				occlusion = lerp(occlusion, 1.0,  ClampRange(_SnowStrength, 0.45, 0.95));
+
 				//计算世界空间中的法线
 				half3 normalTangent = UnpackNormal(tex2D(_BumpMap,i.uv));
-				normalTangent.xy *= _BumpScale;
+				normalTangent.xy = normalTangent.xy * _BumpScale  * (1-cosVal);
 				normalTangent.z = sqrt(1.0 - saturate(dot(normalTangent.xy,normalTangent.xy)));
 				half3 worldNormal = normalize(half3(dot(i.TtoW0.xyz,normalTangent),
 									dot(i.TtoW1.xyz,normalTangent),dot(i.TtoW2.xyz,normalTangent)));

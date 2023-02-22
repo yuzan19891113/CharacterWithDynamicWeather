@@ -38,7 +38,7 @@ public class WeatherManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        RenderSettings.fogMode = FogMode.Linear;
+        RenderSettings.fogMode = FogMode.ExponentialSquared;
 
         foreach (WeatherType weather in Enum.GetValues(typeof(WeatherType)))
         {
@@ -57,6 +57,7 @@ public class WeatherManager : MonoBehaviour
     void Update()
     {
         //WeatherData.weatherInstance.weatherList[(int)currentWeather].UpdateParameters();
+        //WeatherData.weatherInstance.weatherList[(int)currentWeather].SetWeather();
     }
 
     void InterpolateWeather()

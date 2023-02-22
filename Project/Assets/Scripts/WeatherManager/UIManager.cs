@@ -8,21 +8,23 @@ public class UIManager : MonoBehaviour
 
     public Dropdown weatherDropdown;
     public Slider wetnessSlider;
+    public Slider snowSlider;
     public Slider timeSlider;
     public Toggle timeToggle;
 
 
     private WeatherManager _weatherManager;
-    private CharacterWetnessControl _wetnessManager;
+    private DynamicMaterialControl _materialManager;
     private TimeSet _timeSet;
 
     private void Start()
     {
         _weatherManager = weatherManager.GetComponent<WeatherManager>();
-        _wetnessManager = weatherManager.GetComponent<CharacterWetnessControl>();
+        _materialManager = weatherManager.GetComponent<DynamicMaterialControl>();
         _timeSet = weatherManager.GetComponent<TimeSet>();
         InitWeatherDropdown();
         InitWetnessSlider();
+        InitSnowSlider();
         InitTimeSlider();
         InitTimeToggle();
     }
@@ -58,6 +60,14 @@ public class UIManager : MonoBehaviour
         wetnessSlider.onValueChanged.AddListener((float index) => WetnessChanged());
     }
 
+    private void InitSnowSlider()
+    {
+        snowSlider.minValue = 0f;
+        snowSlider.maxValue = 1f;
+        snowSlider.value = 0f;
+        snowSlider.onValueChanged.AddListener((float index) => SnowChanged());
+    }
+
     private void InitTimeSlider()
     {
         timeSlider.minValue = 0f;
@@ -73,7 +83,12 @@ public class UIManager : MonoBehaviour
     }
     private void WetnessChanged()
     {
-        _wetnessManager.SetWetness(wetnessSlider.value);
+        _materialManager.SetWetness(wetnessSlider.value);
+    }
+
+    private void SnowChanged()
+    {
+        _materialManager.SetSnowStrength(snowSlider.value);
     }
 
     private void TimeChanged()
