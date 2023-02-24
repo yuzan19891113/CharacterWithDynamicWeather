@@ -6,16 +6,11 @@ public class Snowy : Weather
 {
     public GameObject SnowEffect;
     // Start is called before the first frame update
-    void Start()
+    new void Start()
     {
-        
+        base.Start();
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 
     public override void SetWeather()
     {
@@ -23,35 +18,32 @@ public class Snowy : Weather
         //RenderSettings.fogEndDistance = fogEndDistanceSunny;
         //RenderSettings.fogStartDistance = fogEndDistanceSunny - 1;
 
-        Debug.Log("Set Snowy!");
+        //Debug.Log("Set Snowy!");
     }
     public override void OnEnter()
     {
         SnowEffect.SetActive(true);
-        Debug.Log("Enter Snowy!");
+        //Debug.Log("Enter Snowy!");
     }
 
     public override void OnExit()
     {
         SnowEffect.SetActive(false);
 
-        Debug.Log("Exit Snowy!");
+        //Debug.Log("Exit Snowy!");
     }
 
     public override void InterpolateParameters(WeatherType lastWeather, float rate)
     {
         base.InterpolateParameters(lastWeather, rate);
-        //if (lastWeather == WeatherType.Rainy)
-        //{
-        //    float fogEndDistance = rate * fogEndDistanceSunny + (1 - rate) * fogEndDistanceRainy;
-        //    RenderSettings.fogEndDistance = fogEndDistance;
-        //    RenderSettings.fogStartDistance = rate * fogEndDistance;
-
-        //}
+        if (lastWeather == WeatherType.Rainy)
+        {
+            AudioManager.instance.SetVolume(-30 * rate);
+        }
 
     }
     public override void UpdateParameters()
     {
-        Debug.Log("Update Snowy!");
+        //Debug.Log("Update Snowy!");
     }
 }

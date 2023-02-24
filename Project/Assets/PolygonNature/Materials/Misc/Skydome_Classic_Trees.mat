@@ -4,8 +4,9 @@
 Material:
   serializedVersion: 6
   m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_Name: Skydome_Classic_Trees
   m_Shader: {fileID: 4800000, guid: fefd59ec9a96d744aa1f9f12938abd4e, type: 3}
   m_ShaderKeywords: _ALPHAPREMULTIPLY_ON
@@ -58,7 +59,7 @@ Material:
     - _BumpScale: 1
     - _Cutoff: 0.5
     - _DetailNormalMapScale: 1
-    - _Distance: 318
+    - _Distance: 316.5
     - _DstBlend: 10
     - _EmissionScaleUI: 0
     - _Falloff: 3.4
@@ -68,7 +69,7 @@ Material:
     - _Metallic: 0
     - _Mode: 3
     - _OcclusionStrength: 1
-    - _Offset: 205.1
+    - _Offset: 196.6
     - _Parallax: 0.02
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
@@ -79,7 +80,7 @@ Material:
     m_Colors:
     - _Color: {r: 1, g: 1, b: 1, a: 0.353}
     - _Color0: {r: 0.22794122, g: 0.778, b: 0.96593857, a: 0}
-    - _ColorBottom: {r: 1, g: 0.7911765, b: 0.47794116, a: 0}
-    - _ColorTop: {r: 0, g: 0.7103448, b: 1, a: 0}
+    - _ColorBottom: {r: 0.6509434, g: 0.4184636, b: 0.06755073, a: 0}
+    - _ColorTop: {r: 0, g: 0.70980406, b: 1, a: 0}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 0}
     - _EmissionColorUI: {r: 1, g: 1, b: 1, a: 1}

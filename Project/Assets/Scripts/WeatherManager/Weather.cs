@@ -41,11 +41,13 @@ public class Weather : MonoBehaviour
     //protected float fogEndDistanceRainy = 30;
     //protected float fogEndDistanceSunny = 400;
     
+    protected DynamicMaterialControl materialController;
     
 
-    void Start()
+    protected void Start()
     {
-
+        //Debug.Log("weather");
+        materialController = WetnessControllerObject.GetComponent<DynamicMaterialControl>();
     }
 
     void Update()
@@ -68,6 +70,9 @@ public class Weather : MonoBehaviour
         RenderSettings.skybox = skyMaterial;
         WetnessControllerObject.GetComponent<DynamicMaterialControl>().SetWetness(wetness);
         WetnessControllerObject.GetComponent<DynamicMaterialControl>().SetSnowStrength(snowStrength);
+
+        //materialController.SetWetness(wetness);
+        //materialController.SetSnowStrength(snowStrength);
         RenderSettings.fogDensity = fogDensity;
         OnEnter();
         try
@@ -121,8 +126,9 @@ public class Weather : MonoBehaviour
             skyMaterial.SetFloat("_MoonIntensity", left.moonIntensity * (1 - rate) + moonIntensity * rate);
 
             skyMaterial.SetFloat("_MoonMask", left.moonMask * (1 - rate) + moonMask * rate);
-            WetnessControllerObject.GetComponent<DynamicMaterialControl>().SetWetness(left.wetness * (1 - rate) + wetness * rate);
-            WetnessControllerObject.GetComponent<DynamicMaterialControl>().SetSnowStrength(left.snowStrength * (1 - rate) + snowStrength * rate);
+            materialController.GetComponent<DynamicMaterialControl>().SetWetness(left.wetness * (1 - rate) + wetness * rate);
+            materialController.GetComponent<DynamicMaterialControl>().SetSnowStrength(left.snowStrength * (1 - rate) + snowStrength * rate);
+
             RenderSettings.fogDensity = left.fogDensity * (1 - rate) + fogDensity * rate;
         }
         catch (Exception e)

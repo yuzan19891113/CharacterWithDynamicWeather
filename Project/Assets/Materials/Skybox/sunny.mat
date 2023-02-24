@@ -34,8 +34,10 @@ Material:
     m_Floats:
     - _CloudMove: 0
     - _DepthClip: 0.1
+    - _Distance: 0.76
     - _DistanceBlend: 0
     - _DistanceFade: 500
+    - _Falloff: 1.99
     - _Height: 50
     - _HorizonBias: 0
     - _HorizonContract: 50
@@ -43,6 +45,7 @@ Material:
     - _MoonIntensity: 2
     - _MoonMask: 0.15
     - _MoonRadius: 1.5
+    - _Offset: 0
     - _ShiftHorizonColorRampBias: -0.2
     - _ShiftHorizonIntensityRamp: 0.8
     - _ShiftSunAndMoonColorRamp: 0.75
@@ -55,7 +58,7 @@ Material:
     - _SunRadius: 3
     - _SunsetHorizonColorRamp: 1
     - _ThinCloudBrightness: 30
-    - _TimeMapping: 0.50965387
+    - _TimeMapping: -0.9586666
     - _Transparent: 1
     - _UVScale: 0.005
     m_Colors:

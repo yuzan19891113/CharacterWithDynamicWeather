@@ -13,6 +13,7 @@ Shader "Custom/RealTimeSkybox"
         [Header(Sky Settings)]
         _NoiseTexture("Star Noise Texture", 2D) = "black"{}
 
+
         //晴天
         _DaySkyColor("Day Sky Color", Color) = (0.25, 0.75, 0.9, 1)
         _NightSkyColor("Night Sky Color", Color) = (0.06, 0.09, 0.12, 1)
@@ -46,6 +47,8 @@ Shader "Custom/RealTimeSkybox"
          _MoonIntensity("Moon Intensity", Range(1, 10)) = 2
          _MoonMask("Moon Mask", Range(-1, 1)) = 0.15
 
+
+
          //雨天
          //_SunColor("Sun Color", Color) = (0.76, 0.71, 0.71)//C2B5B5
          //_SunRadius("Sun Radius", Range(0, 10)) = 0.5
@@ -60,7 +63,7 @@ Shader "Custom/RealTimeSkybox"
          _StarsHeight("Stars Height", Range(0, 1)) = 0.2
          _StarsScale("Stars Scale", Range(1, 5)) = 2.5
 
-             [Header(Testing Properties)]
+         [Header(Testing Properties)]
 
          //以下参数用于测试调整细节效果，如果不明白是干嘛的请保持其默认数值以使用经过多次调试后的效果
          //如果以下参数影响您分析此Shader，请将它们全部视为范围区间中点值的half数代入算法中，如 Range(-0.5, 0.5) 则视为 = 0
@@ -167,8 +170,16 @@ Shader "Custom/RealTimeSkybox"
                      fixed3 nightHorizonColor = _NightHorizonColor.rgb * horizonControlFactor * (0.5 - _ShiftHorizonColorRampBias - max(min(_TimeMapping * 10, 0.5 + _ShiftHorizonColorRampBias), -0.5 + _ShiftHorizonColorRampBias));
                      fixed3 horizionColor = dayHorizonColor + nightHorizonColor;//昼夜交替时昼夜地平线混色过度
                      horizionColor *= min(pow(_TimeMapping * 20, 4), _ShiftHorizonIntensityRamp) + (1 - _ShiftHorizonIntensityRamp);//昼夜交替时地平线颜色淡化过度
-                     fixed3 dayColor = (_DaySkyColor.rgb) * smoothstep(0, 0.4, saturate(dot(normalize(lightDirection), fixed3(0, 1, 0)))) * ceil(yFactor);
-                     fixed3 nightColor = (_NightSkyColor.rgb) * smoothstep(0, 0.4, saturate(dot(normalize(lightDirection), fixed3(0, 1, 0)))) * ceil(yFactor);
+
+                     //fixed3 worldPos = normalize(i.positionWS).xyz;
+			         //fixed height = clamp( ( ( _Offset + worldPos.y ) / _Distance ) , 0.0 , 1.0 );
+
+			         //fixed3 lerpDayColor = lerp( _DayHorizonColor , _DaySkyColor , saturate( pow( height , _Falloff ))).xyz;
+                     //fixed3 lerpNightColor = lerp( _NightHorizonColor , _NightSkyColor , saturate( pow( height , _Falloff ))).xyz;
+
+
+                     fixed3 dayColor = (_DaySkyColor) * smoothstep(0, 0.4, saturate(dot(normalize(lightDirection), fixed3(0, 1, 0)))) * ceil(yFactor);
+                     fixed3 nightColor = (_NightSkyColor) * smoothstep(0, 0.4, saturate(dot(normalize(lightDirection), fixed3(0, 1, 0)))) * ceil(yFactor);
                      nightColor += stars;
 
                      fixed3 groundColor = _GroundLineColor.rgb * abs(_TimeMapping) * (ceil(_TimeMapping) * (_DaySkyColor.r + _DaySkyColor.g + _DaySkyColor.b) / 3 + ceil(-_TimeMapping) * (_NightSkyColor.r + _NightSkyColor.g + _NightSkyColor.b) / 3) * ceil(-yFactor);
@@ -184,6 +195,8 @@ Shader "Custom/RealTimeSkybox"
 
                      sunColor += _SunColor.rgb * pow(sunDistance, 2 / saturate(_TimeMapping * 10)) * ceil(yFactor);
                      moonColor += _MoonColor.rgb * pow(moonDistance, 5 / saturate(-_TimeMapping * 10)) * 0.1 * ceil(yFactor);
+
+                     
 
                      //fixed time = _TimeMapping * 0.5 + 0.5;
                      fixed3 color = (dayColor + sunColor) * ceil(_TimeMapping) + (nightColor + moonColor) * ceil(-_TimeMapping) + horizionColor + groundColor;

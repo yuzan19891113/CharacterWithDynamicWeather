@@ -10,9 +10,9 @@ public class DynamicMaterialControl : MonoBehaviour
     //Material[] clothMats;
     //int matCount = 0;
     [SerializeField, SetProperty("wetness"),Range(0,1)]
-    public float _wetness;
+    private float _wetness;
     [SerializeField, SetProperty("snowStrength"), Range(0, 1)]
-    public float _snowStrength;
+    private float _snowStrength;
 
     public TerrainLayer[] terrainLayers;
 
@@ -38,21 +38,21 @@ public class DynamicMaterialControl : MonoBehaviour
     }
 
     // Start is called before the first frame update
-    void Start()
-    {
-        //clothMats = new Material[10];
-        //foreach (GameObject charactor in Charactors)
-        //{
-        //    SkinnedMeshRenderer[] childRenderers = charactor.GetComponentsInChildren<SkinnedMeshRenderer>();
-        //    foreach (SkinnedMeshRenderer childRenderer in childRenderers)
-        //    {
-        //        foreach (Material mat in childRenderer.materials)
-        //        {
-        //            clothMats[matCount++] = mat;
-        //        }
-        //    }
-        //}
-    }
+    //void Start()
+    //{
+    //    clothMats = new Material[10];
+    //    foreach (GameObject charactor in Charactors)
+    //    {
+    //        SkinnedMeshRenderer[] childRenderers = charactor.GetComponentsInChildren<SkinnedMeshRenderer>();
+    //        foreach (SkinnedMeshRenderer childRenderer in childRenderers)
+    //        {
+    //            foreach (Material mat in childRenderer.materials)
+    //            {
+    //                clothMats[matCount++] = mat;
+    //            }
+    //        }
+    //    }
+    //}
 
     void OnWetnessChanged()
     {
@@ -82,7 +82,7 @@ public class DynamicMaterialControl : MonoBehaviour
         }
     }
 
-    public void SetSnowStrength(float snowStrength)
+    public void SetSnowStrength(float newStrength)
     {
         //for (int i = 0; i < matCount; ++i)
         //{
@@ -93,7 +93,8 @@ public class DynamicMaterialControl : MonoBehaviour
         //{
         //    mat.SetFloat("_SnowStrength", snowStrength);
         //}
-        Shader.SetGlobalFloat("_SnowStrength", snowStrength);
+        newStrength = newStrength * newStrength;
+        Shader.SetGlobalFloat("_SnowStrength", newStrength);
     }
 
 }

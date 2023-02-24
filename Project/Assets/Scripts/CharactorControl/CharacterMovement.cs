@@ -11,8 +11,10 @@ public class CharacterMovement : MonoBehaviour
     public float turnSpeed = 10f;
     public KeyCode sprintJoystick = KeyCode.JoystickButton2;
     public KeyCode sprintKeyboard = KeyCode.Space;
+    public GameObject joyStick;
 
     private float turnSpeedMultiplier;
+    private JoyStickHandle joyStickHandle;
     private float speed = 0f;
     private float direction = 0f;
     private bool isSprinting = false;
@@ -28,6 +30,7 @@ public class CharacterMovement : MonoBehaviour
 	{
 	    anim = GetComponent<Animator>();
 	    mainCamera = Camera.main;
+        joyStickHandle = joyStick.GetComponent<JoyStickHandle>();
 	}
 
 	// Update is called once per frame
@@ -36,6 +39,8 @@ public class CharacterMovement : MonoBehaviour
 	    input.x = Input.GetAxis("Horizontal");
 	    input.y = Input.GetAxis("Vertical");
 
+        input.x += joyStickHandle.moveInput.x;
+        input.y += joyStickHandle.moveInput.y;
 		// set speed to both vertical and horizontal inputs
         if (useCharacterForward)
             speed = Mathf.Abs(input.x) + input.y;

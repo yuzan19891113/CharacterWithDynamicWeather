@@ -4,15 +4,9 @@ using UnityEngine;
 
 public class Sunny : Weather
 {
-
-    void Start()
+    new void Start()
     {
-        
-    }
-
-    void Update()
-    {
-
+        base.Start();
     }
 
     public override void SetWeather()
@@ -21,31 +15,29 @@ public class Sunny : Weather
         //RenderSettings.fogEndDistance = fogEndDistanceSunny;
         //RenderSettings.fogStartDistance = fogEndDistanceSunny - 1;
 
-        Debug.Log("Set Sunny!");
+        //Debug.Log("Set Sunny!");
     }
 
     public override void OnEnter()
     {
-        Debug.Log("Enter Sunny!");
+        //Debug.Log("Enter Sunny!");
     }
 
     public override void OnExit()
     {
-        Debug.Log("Exit Sunny!");
+        //Debug.Log("Exit Sunny!");
     }
     public override void InterpolateParameters(WeatherType lastWeather, float rate)
     {
         base.InterpolateParameters(lastWeather, rate);
 
-        //if (lastWeather == WeatherType.Rainy)
-        //{
-        //    float fogEndDistance = rate * fogEndDistanceSunny + (1 - rate) * fogEndDistanceRainy;
-        //    RenderSettings.fogEndDistance = fogEndDistance;
-        //    RenderSettings.fogStartDistance = rate * fogEndDistance;
-        //}
+        if (lastWeather == WeatherType.Rainy)
+        {
+            AudioManager.instance.SetVolume(-30 * rate);
+        }
     }
     public override void UpdateParameters()
     {
-        Debug.Log("Update Sunny!");
+        //Debug.Log("Update Sunny!");
     }
 }

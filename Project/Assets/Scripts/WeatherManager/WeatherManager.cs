@@ -38,6 +38,8 @@ public class WeatherManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+
+        RenderSettings.fog = true;
         RenderSettings.fogMode = FogMode.ExponentialSquared;
 
         foreach (WeatherType weather in Enum.GetValues(typeof(WeatherType)))
@@ -54,21 +56,25 @@ public class WeatherManager : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
-    {
-        //WeatherData.weatherInstance.weatherList[(int)currentWeather].UpdateParameters();
-        //WeatherData.weatherInstance.weatherList[(int)currentWeather].SetWeather();
-    }
+    //void Update()
+    //{
+    //    //WeatherData.weatherInstance.weatherList[(int)currentWeather].UpdateParameters();
+    //    //WeatherData.weatherInstance.weatherList[(int)currentWeather].SetWeather();
+    //}
 
     void InterpolateWeather()
     {
         interpolateTime += 1;
         WeatherData.weatherInstance.weatherList[(int)currentWeather].InterpolateParameters(_lastWeather, interpolateTime * changeRate / changeTime);
 
+        if(interpolateTime == (int)(changeTime / changeRate/2))
+        {
+            WeatherData.weatherInstance.weatherList[(int)_lastWeather].OnExit();
+        }
         if (interpolateTime >= changeTime/changeRate)
         {
             interpolateTime = 0;
-            WeatherData.weatherInstance.weatherList[(int)_lastWeather].OnExit();
+            //WeatherData.weatherInstance.weatherList[(int)_lastWeather].OnExit();
             CancelInvoke("InterpolateWeather");
         }
     }
@@ -81,6 +87,7 @@ public class WeatherManager : MonoBehaviour
             _lastWeather = _weatherBuffer;
             _weatherBuffer = _currentWeather;
             WeatherData.weatherInstance.weatherList[(int)currentWeather].OnEnter();
+           // WeatherData.weatherInstance.weatherList[(int)_lastWeather].OnExit();
             InvokeRepeating("InterpolateWeather", 0f, changeRate);
         }
     }
